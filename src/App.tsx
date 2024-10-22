@@ -36,7 +36,7 @@ export default function App() {
         ))}
       </div>
 
-      <div className="relative bg-gray-800 bg-opacity-70 backdrop-blur-lg rounded-3xl p-8 max-w-md w-full space-y-8 z-10">
+      <div className="relative bg-gray-800 bg-opacity-40 backdrop-blur-md rounded-3xl p-8 max-w-md w-full space-y-8 z-10">
         <h1
           className="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
           style={{ fontFamily: "'Orbitron', sans-serif" }}
@@ -60,7 +60,7 @@ export default function App() {
               >
                 <avatar.icon
                   className={`w-12 h-12 mx-auto ${
-                    selectedAvatar === index ? "text-white" : "text-purple-400"
+                    selectedAvatar === index ? "text-black fill-white" : "text-purple-400"
                   }`}
                 />
               </button>
