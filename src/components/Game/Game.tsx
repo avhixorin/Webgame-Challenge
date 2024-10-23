@@ -26,10 +26,10 @@ const Game: React.FC = () => {
   };
 
   return (
-    <div className="w-full p-4 h-screen flex gap-4 bg-gradient-to-r from-purple-500 to-indigo-600 bg-cover bg-center">
+    <div className="w-full p-4 h-screen flex flex-col md:flex-row gap-4 bg-gradient-to-r from-purple-500 to-indigo-600 bg-cover bg-center">
       {/* Game area */}
       <motion.main
-        className="w-3/4 h-full bg-white/10 rounded-md border border-white/20 backdrop-blur-lg flex flex-col justify-between shadow-lg p-4"
+        className="w-full md:w-3/4 h-full bg-white/10 rounded-md border border-white/20 backdrop-blur-lg flex flex-col justify-between shadow-lg p-4"
         style={{
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
@@ -80,7 +80,7 @@ const Game: React.FC = () => {
 
       {/* Chat section */}
       <aside
-        className="w-1/4 h-full bg-[rgba(255, 255, 255, 0.2)]  backdrop-blur-lg"
+        className="w-full md:w-1/4 h-full bg-[rgba(255, 255, 255, 0.2)]  backdrop-blur-lg"
         style={{
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
