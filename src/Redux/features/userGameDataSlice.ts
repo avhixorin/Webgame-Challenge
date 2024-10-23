@@ -6,12 +6,21 @@ enum DIFFICULTY {
     HARD = "hard"
 }
 
+enum VERDICT {
+    RIGHT = "right",
+    WRONG = "wrong"
+}
+
+type Answer = {
+    word: string,
+    verdict: VERDICT
+}
 type GameData = {
     score: number;
     powerUps: string[];
     participants: number;
     currentGameString: string;
-    ansWords: string[];
+    ansWords: Answer[];
     difficulty: DIFFICULTY;
 }
 
