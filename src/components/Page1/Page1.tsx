@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skull, Zap, Star, Target, Shield, Flame } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser, THEME, User } from "@/Redux/features/userSlice";
 
 const avatars = [
   { icon: Skull, name: "Skull" },
@@ -14,9 +16,22 @@ const avatars = [
 ];
 
 export default function Page1() {
+  const dispatch = useDispatch();
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
+
+
+  const handleEnter = () => {
+    const newUser:User = {
+      username: username,
+      avatar:selectedAvatar,
+      theme:THEME.LIGHT
+    }
+    dispatch(setUser(newUser))
+    navigate('/game')
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 overflow-hidden">
       <div className="absolute inset-0 opacity-50 bg-gradient-to-r from-purple-600 to-pink-600"></div>
@@ -77,7 +92,7 @@ export default function Page1() {
             className="w-full bg-gray-700 border-none placeholder-gray-400 text-white rounded-lg focus:ring-2 focus:ring-purple-500"
           />
           <Button className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-md hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 transition-all duration-300"
-          onClick={() => navigate("/pg1")}
+          onClick={handleEnter}
           >
             Enter Game
           </Button>
