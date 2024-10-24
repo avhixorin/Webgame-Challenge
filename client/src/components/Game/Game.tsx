@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import AlphaContainer from "./AlphaContainer/AlphaContainer";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -7,19 +6,37 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { motion } from "framer-motion";
 import { GameBg } from "../GameBg/GameBg";
-import useWords from "@/Hooks/useWords";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import {
+  DIFFICULTY,
+} from "@/Redux/features/userGameDataSlice";
+import useWords from "@/Hooks/getAllWords";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store/store";
+import AlphaContainer from "./AlphaContainer/AlphaContainer";
+// import useGameString from "@/Hooks/gameString";
 
 const Game: React.FC = () => {
-  const { getRandomAlphabet,validateWord } = useWords();
-  const [currentString, setCurrentString] = useState<string>("");
+  // const dispatch = useDispatch();
+  useWords();
+  const gameString = useSelector((state: RootState) =>
+    state.userGameData.currentGameString.split("")
+  );
 
-  // Using useEffect to call getRandomAlphabet once when the component mounts
-  useEffect(() => {
-    const randomWord = getRandomAlphabet(); 
-    const valid = validateWord(randomWord);
-    console.log("Validity of the word: ",valid);
-    setCurrentString(randomWord); // Split the generated string into an array
-  }, []); // Empty dependency array means this runs once on mount
+  // console.log("This current game string is: ", gameString);
+  // const [inputWord, setInputWord] = useState<string>("");
+  // const [numPlayers, setNumPlayers] = useState<number>(1);
+  // const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(
+  //   DIFFICULTY.EASY
+  // );
+
+  // const userGameData = useSelector((state: RootState) => state.userGameData);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,10 +48,30 @@ const Game: React.FC = () => {
     },
   };
 
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInputWord(e.target.value);
+  // };
+
+  // const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = parseInt(e.target.value);
+  //   setNumPlayers(value);
+  //   dispatch(setParticipants(value));
+  // };
+
+  // const handleSelectDifficulty = (value: DIFFICULTY) => {
+  //   setLocalDifficulty(value);
+  //   dispatch(setDifficulty(value));
+  // };
+
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   console.log("Word submitted:", inputWord);
+  //   setInputWord("");
+  // };
+
   return (
     <div className="relative w-full p-4 h-screen flex flex-col md:flex-row gap-4">
-      <GameBg /> {/* The background will be handled by this component */}
-      {/* Game area */}
+      <GameBg /> {/* Background component */}
       <motion.main
         className="w-full md:w-3/4 h-full bg-white/10 rounded-md border border-white/20 backdrop-blur-lg flex flex-col justify-between shadow-lg p-4"
         style={{
@@ -45,14 +82,13 @@ const Game: React.FC = () => {
         initial="hidden"
         animate="visible"
       >
-        {/* Alphabet display area */}
         <motion.div
           className="w-full py-4 flex justify-center items-center flex-wrap gap-4"
           variants={containerVariants}
         >
-          {/* {currentString.map((letter) => (
-            <AlphaContainer key={letter} alphabet={letter} />
-          ))} */}
+           {gameString.map((letter, index: number) => (
+            <AlphaContainer key={index} alphabet={letter} />
+          ))} 
         </motion.div>
 
         {/* Input Section */}
@@ -62,14 +98,22 @@ const Game: React.FC = () => {
               Input Section
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex space-x-2 mt-2">
-            <Input
-              type="text"
-              placeholder="Enter something..."
-              className="flex-1 text-gray-900"
-            />
-            <Button className="text-white">Enter</Button>
-          </CardContent>
+          <form 
+          // onSubmit={handleSubmit}
+          >
+            <CardContent className="flex space-x-2 mt-2">
+              <Input
+                type="text"
+                placeholder="Enter something..."
+                className="flex-1 text-gray-900"
+                // value={inputWord}
+                // onChange={handleInputChange}
+              />
+              <Button type="submit" className="text-white">
+                Enter
+              </Button>
+            </CardContent>
+          </form>
         </Card>
 
         {/* PowerUps Section */}
@@ -93,8 +137,33 @@ const Game: React.FC = () => {
             </CardContent>
           </Card>
         </CardContent>
-      </motion.main>
 
+        {/* Difficulty and Players Input */}
+        <div className="w-full py-4 flex justify-evenly items-center gap-4">
+          <Select 
+          // onValueChange={handleSelectDifficulty}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue 
+              // placeholder={difficulty} defaultValue={difficulty} 
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={DIFFICULTY.EASY}>Easy</SelectItem>
+              <SelectItem value={DIFFICULTY.MEDIUM}>Medium</SelectItem>
+              <SelectItem value={DIFFICULTY.HARD}>Hard</SelectItem>
+              <SelectItem value={DIFFICULTY.GOD}>God</SelectItem>
+            </SelectContent>
+          </Select>
+          <Input
+            type="number"
+            placeholder="Enter number of players"
+            className="flex-1 text-gray-900"
+            // value={numPlayers}
+            // onChange={handlePlayerChange}
+          />
+        </div>
+      </motion.main>
       {/* Chat section */}
       <aside
         className="w-full md:w-1/4 h-full bg-[rgba(255, 255, 255, 0.2)] backdrop-blur-lg"
@@ -105,21 +174,16 @@ const Game: React.FC = () => {
       >
         <Card className="h-full flex flex-col bg-transparent">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl md:text-2xl">Chat</CardTitle>
+            <CardTitle className="text-lg sm:text-xl md:text-2xl">
+              Chat
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col">
-            <ScrollArea className="flex-1 mb-4 p-2 sm:p-4 rounded-md border h-[200px] lg:h-[400px]">
-              <div className="space-y-4">
-                <p className="text-sm sm:text-base">Chat content goes here...</p>
-                <p className="text-sm sm:text-base">More chat messages...</p>
-                <p className="text-sm sm:text-base">Even more chat messages...</p>
-              </div>
+            <ScrollArea className="flex-1 pr-2">
+              {/* Chat messages will go here */}
             </ScrollArea>
-            <Separator className="my-2" />
-            <div className="flex items-center space-x-2">
-              <Input type="text" placeholder="Type a message..." className="flex-1" />
-              <Button>Send</Button>
-            </div>
+            <Separator />
+            {/* Chat input area can be added here */}
           </CardContent>
         </Card>
       </aside>
