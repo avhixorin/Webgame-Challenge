@@ -16,8 +16,18 @@ const useWords = () => {
   };
 
   const validateWord = async (word: string) => {
+    const bodyS = {
+      message: word, 
+    };
+
     try {
-      const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+      const response = await fetch(`http://localhost:3000/${5}/${"hard"}`, {
+        method: 'GET', 
+        headers: {
+          'Content-Type': 'application/json', 
+        }
+      });
+
       const data = await response.json();
 
       if (response.ok && data.length) {
