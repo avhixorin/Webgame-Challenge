@@ -10,6 +10,7 @@ import Game from './components/Game/Game.tsx';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './Redux/store/store.ts';
+import Memory from './components/Memory/Memory.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path='/pg1' element={<Page1/>}/>
       <Route path='/game' element={<Game/>} />
+      <Route path='/memory' element={<Memory />} />
     </Route>
   )
 );

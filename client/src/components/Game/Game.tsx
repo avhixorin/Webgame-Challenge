@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AlphaContainer from "./AlphaContainer/AlphaContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
@@ -6,14 +6,20 @@ import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { motion } from "framer-motion";
+import { GameBg } from "../GameBg/GameBg";
+import useWords from "@/Hooks/useWords";
 
 const Game: React.FC = () => {
-  const letters = [
-    "A", "B", "C", "D", "E", "F", "G", "H",
-    "I", "J", "K", "L", "M", "N", "O", "P",
-    "Q", "R", "S", "T", "U", "V", "W", "X",
-    "Y", "Z",
-  ];
+  const { getRandomAlphabet,validateWord } = useWords();
+  const [currentString, setCurrentString] = useState<string>("");
+
+  // Using useEffect to call getRandomAlphabet once when the component mounts
+  useEffect(() => {
+    const randomWord = getRandomAlphabet(); 
+    const valid = validateWord(randomWord);
+    console.log("Validity of the word: ",valid);
+    setCurrentString(randomWord); // Split the generated string into an array
+  }, []); // Empty dependency array means this runs once on mount
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -26,7 +32,8 @@ const Game: React.FC = () => {
   };
 
   return (
-    <div className="w-full p-4 h-screen flex flex-col md:flex-row gap-4 bg-gradient-to-r from-purple-500 to-indigo-600 bg-cover bg-center">
+    <div className="relative w-full p-4 h-screen flex flex-col md:flex-row gap-4">
+      <GameBg /> {/* The background will be handled by this component */}
       {/* Game area */}
       <motion.main
         className="w-full md:w-3/4 h-full bg-white/10 rounded-md border border-white/20 backdrop-blur-lg flex flex-col justify-between shadow-lg p-4"
@@ -43,15 +50,17 @@ const Game: React.FC = () => {
           className="w-full py-4 flex justify-center items-center flex-wrap gap-4"
           variants={containerVariants}
         >
-          {letters.map((letter) => (
+          {/* {currentString.map((letter) => (
             <AlphaContainer key={letter} alphabet={letter} />
-          ))}
+          ))} */}
         </motion.div>
 
         {/* Input Section */}
         <Card className="w-full bg-transparent border-none px-20">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl md:text-2xl text-white">Input Section</CardTitle>
+            <CardTitle className="text-lg sm:text-xl md:text-2xl text-white">
+              Input Section
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex space-x-2 mt-2">
             <Input
@@ -67,12 +76,20 @@ const Game: React.FC = () => {
         <CardContent className="p-4">
           <Card className="bg-green-500 rounded-md shadow-md">
             <CardHeader>
-              <CardTitle className="text-white text-lg sm:text-xl md:text-2xl">PowerUps Section</CardTitle>
+              <CardTitle className="text-white text-lg sm:text-xl md:text-2xl">
+                PowerUps Section
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap justify-center gap-4 p-4">
-              <Button className="bg-white text-green-700 hover:bg-gray-100">Power Up 1</Button>
-              <Button className="bg-white text-green-700 hover:bg-gray-100">Power Up 2</Button>
-              <Button className="bg-white text-green-700 hover:bg-gray-100">Power Up 3</Button>
+              <Button className="bg-white text-green-700 hover:bg-gray-100">
+                Power Up 1
+              </Button>
+              <Button className="bg-white text-green-700 hover:bg-gray-100">
+                Power Up 2
+              </Button>
+              <Button className="bg-white text-green-700 hover:bg-gray-100">
+                Power Up 3
+              </Button>
             </CardContent>
           </Card>
         </CardContent>
@@ -80,7 +97,7 @@ const Game: React.FC = () => {
 
       {/* Chat section */}
       <aside
-        className="w-full md:w-1/4 h-full bg-[rgba(255, 255, 255, 0.2)]  backdrop-blur-lg"
+        className="w-full md:w-1/4 h-full bg-[rgba(255, 255, 255, 0.2)] backdrop-blur-lg"
         style={{
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
