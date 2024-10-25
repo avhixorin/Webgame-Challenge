@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useToast } from "@/hooks/use-toast";
+
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
@@ -19,19 +21,20 @@ import {
   setParticipants,
   setScore,
 } from "@/Redux/features/userGameDataSlice";
-import useWords from "@/Hooks/getAllWords";
+import useWords from "@/hooks/getAllWords";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/store/store";
 import AlphaContainer from "./AlphaContainer/AlphaContainer";
 import { setWordCount, setWordsFetched } from "@/Redux/features/wordsData";
-import useValidate from "@/Hooks/validateWord";
-import useComplexity from "@/Hooks/checkComplexity";
-import useMistake from "@/Hooks/checkNegatives";
+import useValidate from "@/hooks/validateWord";
+import useComplexity from "@/hooks/checkComplexity";
+import useMistake from "@/hooks/checkNegatives";
 
 const Game: React.FC = () => {
+  const { toast } = useToast();
   const dispatch = useDispatch();
   useWords();
-  
+
   // Make sure the casing matches your actual Redux state slice
   const gameString = useSelector((state: RootState) =>
     state.userGameData.currentGameString.toUpperCase().split("")
@@ -39,7 +42,9 @@ const Game: React.FC = () => {
 
   const [inputWord, setInputWord] = useState<string>("");
   const [numPlayers, setNumPlayers] = useState<number>(1);
-  const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(DIFFICULTY.EASY);
+  const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(
+    DIFFICULTY.EASY
+  );
 
   const validate = useValidate(inputWord.toLowerCase());
   const { getScore } = useComplexity();
@@ -68,7 +73,12 @@ const Game: React.FC = () => {
   const handleSelectDifficulty = (value: DIFFICULTY) => {
     setLocalDifficulty(value);
     dispatch(setDifficulty(value));
-    const wordCount = value === DIFFICULTY.GOD ? 1 : (value === DIFFICULTY.HARD || value === DIFFICULTY.MEDIUM ? 3 : 5);
+    const wordCount =
+      value === DIFFICULTY.GOD
+        ? 1
+        : value === DIFFICULTY.HARD || value === DIFFICULTY.MEDIUM
+        ? 3
+        : 5;
     dispatch(setWordCount(wordCount));
     dispatch(setWordsFetched(false));
     dispatch(setScore(0));
@@ -78,12 +88,17 @@ const Game: React.FC = () => {
     e.preventDefault();
     const isValid = await validate();
     if (isValid) {
-      alert("It's a valid word");
-      getScore(inputWord.toLowerCase());
+      const finalScore = getScore(inputWord.toLowerCase());
+      toast({
+        title: "🎉 Hooray! You did it! 🎉",
+        description: `That's a valid word! You just scored a sweet +${finalScore} points! 🥳`,
+        className:
+          "bg-white/25 rounded-md border border-white/20 backdrop-blur-lg text-white",
+      });
+
       setInputWord("");
     } else {
       getNegativeScore(gameString.join(""), inputWord);
-      alert("Not a valid word");
     }
   };
 
@@ -188,11 +203,12 @@ const Game: React.FC = () => {
       >
         <Card className="h-full flex flex-col bg-transparent">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl md:text-2xl">Chat</CardTitle>
+            <CardTitle className="text-lg sm:text-xl md:text-2xl">
+              Chat
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col">
-            <ScrollArea className="flex-1 pr-2">
-            </ScrollArea>
+            <ScrollArea className="flex-1 pr-2"></ScrollArea>
             <Separator />
           </CardContent>
         </Card>

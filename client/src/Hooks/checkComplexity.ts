@@ -31,7 +31,7 @@ const useComplexity = () => {
 
     const finalScore = Math.min(Math.max(score, 1), 5);
     dispatch(addScore(finalScore));
-    
+    return finalScore
   };
 
   return { getScore };

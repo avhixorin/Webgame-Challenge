@@ -1,8 +1,10 @@
 import { RootState } from "@/Redux/store/store";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
+import { useToast } from "@/hooks/use-toast"
 
 const useValidate = (word: string) => {
+  const {toast} = useToast();
   const currentGameString = useSelector(
     (state: RootState) => state.userGameData.currentGameString
   );
@@ -27,7 +29,6 @@ const useValidate = (word: string) => {
       return true; 
     } else {
       console.warn("Words are missing");
-      alert("Words are missing");
       return false;
     }
   };
@@ -51,10 +52,16 @@ const useValidate = (word: string) => {
         }
       }
     } else {
-      alert("Please enter a word that uses only the allowed letters.");
+      toast({ 
+        variant: "destructive",
+        title: "Oh no! 😬",
+        description: `It seems you've ventured into forbidden territory! Make sure your word sticks to the rules!`,
+        className: "bg-red-700 rounded-md border border-white/20 backdrop-blur-md text-white shadow-lg",
+    });
       return false;
     }
     return false;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [word, currentGameString]);
 
   return validate;
