@@ -24,7 +24,7 @@ const PowerUpSection:React.FC = () => {
           <CardContent className="p-4">
           <Card className={`
           ${backGround}
-          bg-
+          
            rounded-md shadow-md
           transition-all
           `} style={{"transitionDuration": "0.2s",backdropFilter: "blur(10px)",
