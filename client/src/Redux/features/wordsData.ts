@@ -8,7 +8,7 @@ type Words = {
 
 const initialState:Words = {
   words: [],
-  wordCount: 0,
+  wordCount: 5,
   wordsFetched: false,
 };
 
@@ -23,10 +23,13 @@ const wordsDataSlice = createSlice({
     setWordCount: (state,action:PayloadAction<number>) => {
       state.wordCount = action.payload
     },
+    setWordsFetched: (state,action:PayloadAction<boolean>) => {
+      state.wordsFetched = action.payload
+    },
     resetWords: () => initialState,
   },
 });
 
-export const { setWords } =
+export const { setWords,setWordsFetched,setWordCount,resetWords } =
   wordsDataSlice.actions;
 export default wordsDataSlice.reducer;

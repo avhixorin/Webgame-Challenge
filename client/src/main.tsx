@@ -9,7 +9,7 @@ import Game from './components/Game/Game.tsx';
 
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './Redux/store/store.ts';
+import { persistor, store } from './Redux/store/store.ts';
 import Memory from './components/Memory/Memory.tsx';
 
 const router = createBrowserRouter(

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -15,28 +15,31 @@ import {
 } from "../ui/select";
 import {
   DIFFICULTY,
+  setDifficulty,
+  setParticipants,
 } from "@/Redux/features/userGameDataSlice";
 import useWords from "@/Hooks/getAllWords";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/store/store";
 import AlphaContainer from "./AlphaContainer/AlphaContainer";
+import { setWordCount, setWordsFetched } from "@/Redux/features/wordsData";
 // import useGameString from "@/Hooks/gameString";
 
 const Game: React.FC = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   useWords();
   const gameString = useSelector((state: RootState) =>
     state.userGameData.currentGameString.split("")
   );
 
-  // console.log("This current game string is: ", gameString);
-  // const [inputWord, setInputWord] = useState<string>("");
-  // const [numPlayers, setNumPlayers] = useState<number>(1);
-  // const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(
-  //   DIFFICULTY.EASY
-  // );
+  console.log("This current game string is: ", gameString);
+  const [inputWord, setInputWord] = useState<string>("");
+  const [numPlayers, setNumPlayers] = useState<number>(1);
+  const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(
+    DIFFICULTY.EASY
+  );
 
-  // const userGameData = useSelector((state: RootState) => state.userGameData);
+  const userGameData = useSelector((state: RootState) => state.userGameData);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -48,26 +51,36 @@ const Game: React.FC = () => {
     },
   };
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setInputWord(e.target.value);
-  // };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputWord(e.target.value);
+  };
 
-  // const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = parseInt(e.target.value);
-  //   setNumPlayers(value);
-  //   dispatch(setParticipants(value));
-  // };
+  const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    setNumPlayers(value);
+    dispatch(setParticipants(value));
+  };
 
-  // const handleSelectDifficulty = (value: DIFFICULTY) => {
-  //   setLocalDifficulty(value);
-  //   dispatch(setDifficulty(value));
-  // };
+  const handleSelectDifficulty = (value: DIFFICULTY) => {
+    setLocalDifficulty(value);
+    dispatch(setDifficulty(value));
+    if(value === DIFFICULTY.MEDIUM){
+      dispatch(setWordCount(3))
+    }else if(value === DIFFICULTY.HARD){
+      dispatch(setWordCount(3))
+    }else if(value === DIFFICULTY.GOD){
+      dispatch(setWordCount(1))
+    }else{
+      dispatch(setWordCount(5))
+    }
+    dispatch(setWordsFetched(false))
+  };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log("Word submitted:", inputWord);
-  //   setInputWord("");
-  // };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Word submitted:", inputWord);
+    setInputWord("");
+  };
 
   return (
     <div className="relative w-full p-4 h-screen flex flex-col md:flex-row gap-4">
@@ -99,15 +112,15 @@ const Game: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <form 
-          // onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           >
             <CardContent className="flex space-x-2 mt-2">
               <Input
                 type="text"
                 placeholder="Enter something..."
                 className="flex-1 text-gray-900"
-                // value={inputWord}
-                // onChange={handleInputChange}
+                value={inputWord}
+                onChange={handleInputChange}
               />
               <Button type="submit" className="text-white">
                 Enter
@@ -141,11 +154,11 @@ const Game: React.FC = () => {
         {/* Difficulty and Players Input */}
         <div className="w-full py-4 flex justify-evenly items-center gap-4">
           <Select 
-          // onValueChange={handleSelectDifficulty}
+          onValueChange={handleSelectDifficulty}
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue 
-              // placeholder={difficulty} defaultValue={difficulty} 
+              placeholder={difficulty} defaultValue={difficulty} 
               />
             </SelectTrigger>
             <SelectContent>
@@ -159,8 +172,8 @@ const Game: React.FC = () => {
             type="number"
             placeholder="Enter number of players"
             className="flex-1 text-gray-900"
-            // value={numPlayers}
-            // onChange={handlePlayerChange}
+            value={numPlayers}
+            onChange={handlePlayerChange}
           />
         </div>
       </motion.main>

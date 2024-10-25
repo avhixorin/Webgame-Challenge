@@ -1,5 +1,5 @@
 import { setCurrentGameString } from "@/Redux/features/userGameDataSlice";
-import { setWords } from "@/Redux/features/wordsData";
+import { setWords, setWordsFetched } from "@/Redux/features/wordsData";
 import { RootState } from "@/Redux/store/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 const useWords = () => {
   const dispatch = useDispatch();
   const wordCount = useSelector((state: RootState) => state.wordsData.wordCount);
+  const areWordsFetched = useSelector((state: RootState) => state.wordsData.wordsFetched);
   const difficulty = useSelector((state: RootState) => state.userGameData.difficulty);
   const words = useSelector((state: RootState) => state.wordsData.words);
 
@@ -19,9 +20,11 @@ const useWords = () => {
     return lettersArray.join('');
   }
 
+  // Fetch words only if they haven't been fetched yet
   useEffect(() => {
     const fetchWords = async () => {
-      if (wordCount && wordCount > 0) { 
+      console.log("This is randi",areWordsFetched)
+      if (wordCount && wordCount > 0 && !areWordsFetched) { 
         try {
           const response = await fetch(
             `http://localhost:3000/api/words/getWords/${wordCount}/${difficulty}`,
@@ -29,9 +32,10 @@ const useWords = () => {
           );
 
           const data = await response.json();
-
+          console.log("DB called")
           if (response.ok && data?.data.length) {
-            dispatch(setWords(data.data)); // Set words in Redux state
+            dispatch(setWords(data.data));
+            dispatch(setWordsFetched(true));
             console.log(`The words for the ${difficulty} difficulty are:`, data.data);
           } else {
             console.error("No valid words fetched.");
@@ -39,14 +43,13 @@ const useWords = () => {
         } catch (error) {
           console.error("Error fetching words: ", error);
         }
-      } else {
-        console.warn("wordCount is not properly defined yet.");
       }
     };
 
     fetchWords();
-  }, [difficulty, wordCount, dispatch]);
+  }, [difficulty, wordCount, areWordsFetched, dispatch]);
 
+  // Generate and shuffle the game string once words are available
   useEffect(() => {
     if (words.length > 0 && wordCount) {
       let tempString = '';
