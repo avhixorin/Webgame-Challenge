@@ -27,6 +27,8 @@ import { setWordCount, setWordsFetched } from "@/Redux/features/wordsData";
 import useValidate from "@/Hooks/validateWord";
 import useComplexity from "@/Hooks/checkComplexity";
 import useMistake from "@/Hooks/checkNegatives";
+import ScoreCard from "../ScoreCard/ScoreCard";
+import StartUpPage from "./StartUpPage/StartUpPage";
 
 const Game: React.FC = () => {
   const dispatch = useDispatch();
@@ -34,7 +36,8 @@ const Game: React.FC = () => {
   const gameString = useSelector((state: RootState) =>
     state.userGameData.currentGameString.split("")
   );
-  
+  const [showGame, setShowGame] = useState(false);
+  const [gameDifficulty, setGameDifficulty] = useState(DIFFICULTY.EASY);
   const [inputWord, setInputWord] = useState<string>("");
   const [numPlayers, setNumPlayers] = useState<number>(1);
   const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(
@@ -56,6 +59,14 @@ const Game: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputWord(e.target.value);
+  };
+
+  const handleStartGame = (difficulty: string, participants: number) => {
+    setGameDifficulty(difficulty as DIFFICULTY);
+    setNumPlayers(participants);
+    dispatch(setParticipants(participants));
+    dispatch(setDifficulty(difficulty as DIFFICULTY));
+    setShowGame(true);
   };
 
   const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +102,10 @@ const Game: React.FC = () => {
   
 
   return (
+    <div className="relative w-full h-screen">
+      {!showGame ? (
+        <StartUpPage onStartGame={handleStartGame} />
+      ) : (
     <div className="relative w-full p-4 h-screen flex flex-col md:flex-row gap-4">
       <GameBg /> {/* Background component */}
       <motion.main
@@ -112,14 +127,7 @@ const Game: React.FC = () => {
           ))}
         </motion.div>
           <div className="w-full px-10 py-2">
-          <Input
-                type="text"
-                contentEditable={false}
-                placeholder="Enter something..."
-                className="flex-1 text-gray-900 w-1/2"
-                value={score}
-                
-              />
+          {/* <ScoreCard score={score} /> */}
           </div>
         {/* Input Section */}
         <Card className="w-full bg-transparent border-none px-20">
@@ -209,6 +217,7 @@ const Game: React.FC = () => {
           </CardContent>
         </Card>
       </aside>
+    </div>)}
     </div>
   );
 };

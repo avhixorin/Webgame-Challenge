@@ -18,6 +18,14 @@ module.exports = {
     },
     extend: {
       keyframes: {
+        'pulse-neon': {
+          '0%': {
+            textShadow: '0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #ff00de, 0 0 82px #ff00de, 0 0 92px #ff00de, 0 0 102px #ff00de, 0 0 151px #ff00de',
+          },
+          '100%': {
+            textShadow: '0 0 4px #fff, 0 0 7px #fff, 0 0 13px #fff, 0 0 26px #ff00de, 0 0 51px #ff00de, 0 0 57px #ff00de, 0 0 64px #ff00de, 0 0 95px #ff00de',
+          },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -26,19 +34,6 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
-      animation: {
-        first: "moveVertical 30s ease infinite",
-        second: "moveInCircle 20s reverse infinite",
-        third: "moveInCircle 40s linear infinite",
-        fourth: "moveHorizontal 40s ease infinite",
-        fifth: "moveInCircle 20s ease infinite",
-      },
-      keyframes: {
         moveHorizontal: {
           "0%": {
             transform: "translateX(-50%) translateY(-10%)",
@@ -72,8 +67,18 @@ module.exports = {
             transform: "translateY(-50%)",
           },
         },
+      },
+      animation: {
+        'pulse-neon': 'pulse-neon 1.5s ease-in-out infinite alternate',
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        first: "moveVertical 30s ease infinite",
+        second: "moveInCircle 20s reverse infinite",
+        third: "moveInCircle 40s linear infinite",
+        fourth: "moveHorizontal 40s ease infinite",
+        fifth: "moveInCircle 20s ease infinite",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
-}
+};
