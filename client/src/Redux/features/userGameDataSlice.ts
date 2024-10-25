@@ -43,8 +43,12 @@ const gameDataSlice = createSlice({
     setDifficulty: (state, action: PayloadAction<DIFFICULTY>) => {
       state.difficulty = action.payload;
     },
+    addScore: (state, action: PayloadAction<number>) => {
+      console.log(`Updating score: ${state.score} + ${action.payload}`);
+      state.score += action.payload;
+    },
     setScore: (state, action: PayloadAction<number>) => {
-      state.score = action.payload;
+      state.score = action.payload
     },
     setCurrentGameString: (state, action: PayloadAction<string>) => {
       state.currentGameString = shuffleString(action.payload);
@@ -61,11 +65,11 @@ const gameDataSlice = createSlice({
 
 export const {
   setGameData,
-  addAnswer,
   addPowerUp,
   setCurrentGameString,
   setDifficulty,
   setParticipants,
+  addScore,
   setScore,
   resetGameData
 } = gameDataSlice.actions;

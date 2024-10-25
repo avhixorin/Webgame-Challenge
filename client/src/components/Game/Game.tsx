@@ -17,6 +17,7 @@ import {
   DIFFICULTY,
   setDifficulty,
   setParticipants,
+  setScore,
 } from "@/Redux/features/userGameDataSlice";
 import useWords from "@/Hooks/getAllWords";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +25,8 @@ import { RootState } from "@/Redux/store/store";
 import AlphaContainer from "./AlphaContainer/AlphaContainer";
 import { setWordCount, setWordsFetched } from "@/Redux/features/wordsData";
 import useValidate from "@/Hooks/validateWord";
+import useComplexity from "@/Hooks/checkComplexity";
+import useMistake from "@/Hooks/checkNegatives";
 
 const Game: React.FC = () => {
   const dispatch = useDispatch();
@@ -31,7 +34,7 @@ const Game: React.FC = () => {
   const gameString = useSelector((state: RootState) =>
     state.userGameData.currentGameString.split("")
   );
-
+  
   const [inputWord, setInputWord] = useState<string>("");
   const [numPlayers, setNumPlayers] = useState<number>(1);
   const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(
@@ -39,7 +42,8 @@ const Game: React.FC = () => {
   );
 
   const validate = useValidate(inputWord);
-
+  
+  const {getScore} = useComplexity()
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -66,19 +70,25 @@ const Game: React.FC = () => {
     const wordCount = value === DIFFICULTY.GOD ? 1 : value === DIFFICULTY.HARD || value === DIFFICULTY.MEDIUM ? 3 : 5;
     dispatch(setWordCount(wordCount));
     dispatch(setWordsFetched(false));
+    dispatch(setScore(0))
   };
-
+  const {getNegativeScore} = useMistake()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isValid = await validate();
     if (isValid) {
       alert("It's a valid word");
       console.log("Word submitted:", inputWord);
+      getScore(inputWord);
       setInputWord("");
     } else {
+      getNegativeScore(gameString.join(""),inputWord)
       alert("Not a valid word");
     }
+    
   };
+  const score = useSelector((state:RootState) => state.userGameData.score)
+  
 
   return (
     <div className="relative w-full p-4 h-screen flex flex-col md:flex-row gap-4">
@@ -97,11 +107,20 @@ const Game: React.FC = () => {
           className="w-full py-4 flex justify-center items-center flex-wrap gap-4"
           variants={containerVariants}
         >
-          {gameString.map((letter, index: number) => (
+          {gameString.map((letter:string, index: number) => (
             <AlphaContainer key={index} alphabet={letter} />
           ))}
         </motion.div>
-
+          <div className="w-full px-10 py-2">
+          <Input
+                type="text"
+                contentEditable={false}
+                placeholder="Enter something..."
+                className="flex-1 text-gray-900 w-1/2"
+                value={score}
+                
+              />
+          </div>
         {/* Input Section */}
         <Card className="w-full bg-transparent border-none px-20">
           <CardHeader>
