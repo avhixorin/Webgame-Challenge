@@ -8,7 +8,7 @@ type Props = {
 const AlphaContainer: React.FC<Props> = ({ alphabet }) => {
     return (
         <motion.div
-            className='flex items-center justify-center w-16 h-16 mx-2 mb-4 rounded-lg bg-gradient-to-r from-orange-500 to-yellow-400 text-white text-3xl font-frick shadow-lg hover:shadow-xl transition-transform transform hover:scale-110 relative'
+            className='flex items-center justify-center w-16 h-16 mx-2 mb-4 rounded-lg bg-gradient-to-r from-orange-500 to-yellow-400 text-white text-xl md:text-3xl font-frick shadow-lg hover:shadow-xl transition-transform transform hover:scale-110 relative'
             variants={{
                 hidden: { y: '-100vh', opacity: 0 },
                 visible: { y: 0, opacity: 1 },

@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import {
+  addScore,
   DIFFICULTY,
   setDifficulty,
   setParticipants,
@@ -29,13 +30,14 @@ import { setWordCount, setWordsFetched } from "@/Redux/features/wordsData";
 import useValidate from "@/hooks/validateWord";
 import useComplexity from "@/hooks/checkComplexity";
 import useMistake from "@/hooks/checkNegatives";
+import { Filter } from "bad-words";
+
 
 const Game: React.FC = () => {
   const { toast } = useToast();
   const dispatch = useDispatch();
   useWords();
-
-  // Make sure the casing matches your actual Redux state slice
+  const filter = new Filter();
   const gameString = useSelector((state: RootState) =>
     state.userGameData.currentGameString.toUpperCase().split("")
   );
@@ -86,6 +88,16 @@ const Game: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (filter.isProfane(inputWord)) {
+      toast({
+        title: "🚫 Offensive Word Detected!",
+        description: "Please refrain from using inappropriate language.",
+        className: "bg-red-500 rounded-md text-white",
+        color: "white"
+      });
+      dispatch(addScore(-3))
+      return; 
+    }
     const isValid = await validate();
     if (isValid) {
       const finalScore = getScore(inputWord.toLowerCase());
@@ -94,6 +106,7 @@ const Game: React.FC = () => {
         description: `That's a valid word! You just scored a sweet +${finalScore} points! 🥳`,
         className:
           "bg-white/25 rounded-md border border-white/20 backdrop-blur-lg text-white",
+          color: "white"
       });
 
       setInputWord("");
