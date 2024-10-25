@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 
 type Friend = {
@@ -14,11 +14,11 @@ type FriendsSectionProps = {
 const FriendsSection: React.FC<FriendsSectionProps> = ({ friend }) => {
   return (
     <Card className="bg-transparent transform hover:scale-105 transition-all duration-300 ease-in-out border-none rounded-none">
-      <CardContent className="w-full flex gap-4 items-center p-4 ">
+      <CardContent className="w-full flex gap-4 items-center px-4 ">
         <img
           src={friend.avatar}
           alt="Friend Avatar"
-          className="rounded-full w-12 h-12 border-2 border-white shadow-md"
+          className="rounded-full w-10 h-10 border-2 border-white shadow-md"
         />
         <div className="text-center">
           <p className="text-zinc-500 text-lg font-semibold">{friend.username}</p>
