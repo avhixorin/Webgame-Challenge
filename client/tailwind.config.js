@@ -78,6 +78,9 @@ module.exports = {
         fourth: "moveHorizontal 40s ease infinite",
         fifth: "moveInCircle 20s ease infinite",
       },
+      fontFamily: {
+        frick: ['Frick', 'sans-serif'],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
