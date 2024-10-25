@@ -1,11 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { GameBg } from "../GameBg/GameBg";
-import AlphabetSection from "./AlphabetSection/AlphabetSection";
+import AlphabetSection from "./AlphabetSection/Alphabets";
 import GuessedWords from "./GuessedWords/GuessedWords";
-import InputSection from "./InputSection/InputSection";
-import PowerUpSection from "./PowerUpSection/PowerUpSection";
-import ChatSection from "./Chats/ChatSection";
+import InputSection from "./InputSection/Input";
+import PowerUpSection from "./PowerUpSection/PowerUp";
+import ChatSection from "./ChatSection/Chats";
 import Profile from "./Profile/Profile";
 
 

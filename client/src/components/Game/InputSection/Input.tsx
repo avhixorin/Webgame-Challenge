@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useState } from "react";
-import FriendsSection from "../FriendsSection/FriendsSection";
+import FriendsSection from "../FriendsScoreSection/FriendsSection/FriendsSection";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,25 +11,11 @@ import { addScore } from "@/Redux/features/userGameDataSlice";
 import useValidate from "@/hooks/validateWord";
 import useComplexity from "@/hooks/checkComplexity";
 import useMistake from "@/hooks/checkNegatives";
+import FriendsScore from "../FriendsScoreSection/FriendsScore";
+import MyScore from "../MyScoreSection/MyScore";
 
 const InputSection: React.FC = () => {
-  const friends = [
-    {
-      avatar: "https://randomuser.me/api/portraits/thumb/women/71.jpg",
-      username: "GalaxyWarrior",
-      score: 1240,
-    },
-    {
-      avatar: "https://randomuser.me/api/portraits/thumb/women/75.jpg",
-      username: "StarShooter",
-      score: 980,
-    },
-    {
-      avatar: "https://randomuser.me/api/portraits/thumb/women/77.jpg",
-      username: "LunarLad",
-      score: 1150,
-    },
-  ];
+  
   const { toast } = useToast();
   const dispatch = useDispatch();
   const filter = new Filter();
@@ -74,15 +60,8 @@ const InputSection: React.FC = () => {
   };
   return (
     <Card className="w-full flex flex-col md:flex-row bg-transparent gap-4 justify-between items-center border-none shadow-none">
-      <Card className="w-full">
-        <CardHeader>Scores:</CardHeader>
-        {friends.map((friend, index) => (
-          <FriendsSection key={index} friend={friend} />
-        ))}
-      </Card>
-      <Card className="w-full">
-        <p>My score Section</p>
-      </Card>
+      <FriendsScore />
+      <MyScore />
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-lg sm:text-xl md:text-2xl text-white">
