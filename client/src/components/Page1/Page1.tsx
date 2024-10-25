@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skull, Zap, Star, Target, Shield, Flame } from "lucide-react";
@@ -21,35 +21,39 @@ export default function Page1() {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
-
   const handleEnter = () => {
-    const newUser:User = {
+    const newUser: User = {
       username: username,
-      avatar:selectedAvatar,
-      theme:THEME.LIGHT
-    }
-    dispatch(setUser(newUser))
-    navigate('/game')
-  }
+      avatar: selectedAvatar,
+      theme: THEME.LIGHT,
+    };
+    dispatch(setUser(newUser));
+    navigate("/game");
+  };
+
+  // Use useMemo to generate the background elements only once
+  const backgroundElements = useMemo(() => {
+    return [...Array(20)].map((_, i) => (
+      <div
+        key={i}
+        className="absolute bg-purple-500 opacity-30 rounded-full"
+        style={{
+          width: `${Math.random() * 300}px`,
+          height: `${Math.random() * 300}px`,
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          animation: `float ${10 + Math.random() * 10}s infinite ease-in-out ${Math.random() * 5}s`,
+        }}
+      ></div>
+    ));
+  }, []); // Empty dependency array ensures it only runs once
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 overflow-hidden">
       <div className="absolute inset-0 opacity-50 bg-gradient-to-r from-purple-600 to-pink-600"></div>
-      
+
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute bg-purple-500 opacity-30 rounded-full"
-            style={{
-              width: `${Math.random() * 300}px`,
-              height: `${Math.random() * 300}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animation: `float ${10 + Math.random() * 10}s infinite ease-in-out ${Math.random() * 5}s`,
-            }}
-          ></div>
-        ))}
+        {backgroundElements} {/* Render memoized background elements */}
       </div>
 
       <div className="relative bg-gray-800 bg-opacity-40 backdrop-blur-md rounded-3xl p-8 max-w-md w-full space-y-8 z-10">
@@ -76,7 +80,9 @@ export default function Page1() {
               >
                 <avatar.icon
                   className={`w-12 h-12 mx-auto ${
-                    selectedAvatar === index ? "text-black fill-white" : "text-purple-400"
+                    selectedAvatar === index
+                      ? "text-black fill-white"
+                      : "text-purple-400"
                   }`}
                 />
               </button>
@@ -91,8 +97,9 @@ export default function Page1() {
             onChange={(e) => setUsername(e.target.value)}
             className="w-full bg-gray-700 border-none placeholder-gray-400 text-white rounded-lg focus:ring-2 focus:ring-purple-500"
           />
-          <Button className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-md hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 transition-all duration-300"
-          onClick={handleEnter}
+          <Button
+            className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-md hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 transition-all duration-300"
+            onClick={handleEnter}
           >
             Enter Game
           </Button>

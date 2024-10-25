@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 
 const useMistake = () => {
   const dispatch = useDispatch();
-
   const buildCharCount = (word: string) => {
     const charCount: { [key: string]: number } = {};
     for (const char of word) {
