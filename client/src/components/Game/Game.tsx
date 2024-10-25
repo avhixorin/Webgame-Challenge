@@ -31,6 +31,7 @@ import useValidate from "@/hooks/validateWord";
 import useComplexity from "@/hooks/checkComplexity";
 import useMistake from "@/hooks/checkNegatives";
 import { Filter } from "bad-words";
+import FriendsSection from "./FriendsSection/FriendsSection";
 
 
 const Game: React.FC = () => {
@@ -47,6 +48,7 @@ const Game: React.FC = () => {
   const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(
     DIFFICULTY.EASY
   );
+  const [backGround,setBackground] = useState<string>("bg-green-400")
 
   const validate = useValidate(inputWord.toLowerCase());
   const { getScore } = useComplexity();
@@ -114,9 +116,43 @@ const Game: React.FC = () => {
       getNegativeScore(gameString.join(""), inputWord);
     }
   };
+  
+  const handlePowerUpClick = (power: number) => {
+    if (power === 1) {
+      setBackground("bg-power1");
+    } else if (power === 2) {
+      setBackground("bg-power2 bg-center object-contain");
+    } else if (power === 3) {
+      setBackground("bg-power3");
+    }
+  
+    // Reset the background to green after 2 seconds
+    setTimeout(() => {
+      setBackground("bg-green-400");
+    }, 4000);
+  };
+  
+  const friends = [
+    {
+      avatar: "https://randomuser.me/api/portraits/thumb/women/71.jpg",
+      username: "GalaxyWarrior",
+      score: 1240,
+    },
+    {
+      avatar: "https://randomuser.me/api/portraits/thumb/women/75.jpg",
+      username: "StarShooter",
+      score: 980,
+    },
+    {
+      avatar: "https://randomuser.me/api/portraits/thumb/women/77.jpg",
+      username: "LunarLad",
+      score: 1150,
+    },
+  ];
+  
 
   return (
-    <div className="relative w-full p-4 h-screen flex flex-col md:flex-row gap-4">
+    <div className="relative w-full p-4 h-full flex flex-col md:flex-row gap-4">
       <GameBg />
       <motion.main
         className="w-full md:w-3/4 h-full bg-white/10 rounded-md border border-white/20 backdrop-blur-lg flex flex-col justify-between shadow-lg p-4"
@@ -136,10 +172,24 @@ const Game: React.FC = () => {
             <AlphaContainer key={index} alphabet={letter} />
           ))}
         </motion.div>
-
+        <Card className="w-full flex-wrap bg-transparent flex justify-center items-center py-4 border-none shadow-none">
+          <p>Guessed Words Section</p>
+        </Card>
         {/* Input Section */}
-        <Card className="w-full bg-transparent border-none px-20">
-          <CardHeader>
+        <Card className="w-full flex flex-col md:flex-row bg-transparent gap-4 justify-between items-center border-none shadow-none">
+          <Card className="w-full">
+            <CardHeader>Scores:</CardHeader>
+            {
+              friends.map((friend,index) => (
+                <FriendsSection key={index} friend={friend} />
+              ))
+            }
+          </Card>
+          <Card className="w-full">
+            <p>My score Section</p>
+          </Card>
+          <Card className="w-full">
+            <CardHeader>
             <CardTitle className="text-lg sm:text-xl md:text-2xl text-white">
               Input Section
             </CardTitle>
@@ -158,29 +208,50 @@ const Game: React.FC = () => {
               </Button>
             </CardContent>
           </form>
+          </Card>
+          
         </Card>
 
         {/* PowerUps Section */}
-        <CardContent className="p-4">
-          <Card className="bg-green-500 rounded-md shadow-md">
+        <div className="w-full flex flex-col md:flex-row justify-between items-center">
+          <div>
+
+          </div>
+          <CardContent className="p-4">
+          <Card className={`
+          ${backGround}
+          bg-
+           rounded-md shadow-md
+          transition-all
+          `} style={{"transitionDuration": "0.2s",backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",}} >
             <CardHeader>
-              <CardTitle className="text-white text-lg sm:text-xl md:text-2xl">
+              <CardTitle className="
+              text-white text-lg sm:text-xl md:text-2xl">
                 PowerUps Section
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap justify-center gap-4 p-4">
-              <Button className="bg-white text-green-700 hover:bg-gray-100">
+              <Button className="bg-white text-green-700 hover:bg-gray-100"
+              onClick={() => handlePowerUpClick(1)}
+              >
                 Power Up 1
               </Button>
-              <Button className="bg-white text-green-700 hover:bg-gray-100">
+              <Button className="bg-white text-green-700 hover:bg-gray-100"
+              onClick={() => handlePowerUpClick(2)}
+              >
                 Power Up 2
               </Button>
-              <Button className="bg-white text-green-700 hover:bg-gray-100">
+              <Button className="bg-white text-green-700 hover:bg-gray-100"
+              onClick={() => handlePowerUpClick(3)}
+              >
                 Power Up 3
               </Button>
             </CardContent>
           </Card>
         </CardContent>
+        </div>
+        
 
         {/* Difficulty and Players Input */}
         <div className="w-full py-4 flex justify-evenly items-center gap-4">

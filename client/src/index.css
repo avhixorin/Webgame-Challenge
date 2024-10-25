@@ -1,19 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
-@font-face {
-    font-family: 'Frick';
-    src:url('/fonts/Frick/Frick.woff') format('woff');
-    font-weight: 400; 
-    font-style: normal; 
-  }
-  
-  @font-face {
-    font-family: 'Frick';
-    src:url('/fonts/Frick/Frick-Bold.woff') format('woff');
-    font-weight: 700;
-    font-style: normal;
-  }
-  
+@import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 
+@font-face {
+  font-family: "Frick";
+  src: url("/fonts/Frick/Frick.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Frick";
+  src: url("/fonts/Frick/Frick-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  font-family: "Quicksand", cursive;
+}

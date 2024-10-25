@@ -25,7 +25,7 @@ const StartUpPage: React.FC<StartUpPageProps> = ({ showGame, setShowGame }) => {
   };
 
   return (
-    <div className="relative w-full h-screen bg-transparent text-white font-sans">
+    <div className="relative w-full h-full bg-transparent text-white font-sans">
       <Dialog open={showGame} onOpenChange={setShowGame}>
         <DialogContent className="bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-900 border-2 border-cyan-400 shadow-lg shadow-cyan-400/50 max-w-md w-11/12">
           <DialogHeader>

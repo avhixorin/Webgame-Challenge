@@ -74,7 +74,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-pink-900">
+    <div className="relative min-h-full overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-pink-900">
       {shapes.map((shape) => (
         <motion.div
           key={shape.id}
@@ -96,7 +96,7 @@ export default function Home() {
           }}
         />
       ))}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-full px-4">
         <motion.h1
           className="mb-8 text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 md:text-6xl lg:text-7xl"
           initial={{ opacity: 0, y: -50 }}
