@@ -54,9 +54,14 @@ const useWords = () => {
     if (words.length > 0 && wordCount) {
       let tempString = '';
       const randomIndex = Math.floor(Math.random() * wordCount);
-      for (let i = 0; i < 2; i++) {
-        tempString += words[randomIndex];
+      if(wordCount === 1){
+        tempString += words[0]
+      }else{
+        for (let i = 0; i < 2; i++) {
+          tempString += words[randomIndex];
+        }
       }
+      
       const shuffledString = shuffleString(tempString);
       dispatch(setCurrentGameString(shuffledString));
     }
