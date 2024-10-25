@@ -7,22 +7,12 @@ export enum DIFFICULTY {
   GOD = "god"
 }
 
-export enum VERDICT {
-  RIGHT = "right",
-  WRONG = "wrong"
-}
-
-type Answer = {
-  word: string,
-  verdict: VERDICT
-};
 
 type GameData = {
   score: number;
   powerUps: string[];
   participants: number;
   currentGameString: string;
-  ansWords: Answer[];
   difficulty: DIFFICULTY;
 };
 
@@ -40,7 +30,6 @@ const initialState: GameData = {
   powerUps: [],
   participants: 1,
   currentGameString: '',
-  ansWords: [],
   difficulty: DIFFICULTY.EASY
 };
 
@@ -62,9 +51,6 @@ const gameDataSlice = createSlice({
     },
     addPowerUp: (state, action: PayloadAction<string>) => {
       state.powerUps.push(action.payload);
-    },
-    addAnswer: (state, action: PayloadAction<Answer>) => {
-      state.ansWords.push(action.payload);
     },
     setParticipants: (state, action: PayloadAction<number>) => {
       state.participants = action.payload;
