@@ -49,7 +49,7 @@ export default function Page1() {
   }, []); // Empty dependency array ensures it only runs once
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 overflow-hidden">
+    <div className="w-full h-full bg-gray-900 flex items-center justify-center p-4 overflow-hidden">
       <div className="absolute inset-0 opacity-50 bg-gradient-to-r from-purple-600 to-pink-600"></div>
 
       <div className="absolute inset-0 overflow-hidden">

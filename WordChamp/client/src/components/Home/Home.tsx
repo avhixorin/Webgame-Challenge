@@ -73,8 +73,8 @@ export default function Home() {
     }, 1500)
   }
 
-  return (
-    <div className="relative w-full min-h-screen flex justify-center items-center overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-pink-900">
+  return (<>
+   <div className="relative w-full h-full flex justify-center items-center overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-pink-900">
       {shapes.map((shape) => (
         <motion.div
           key={shape.id}
@@ -135,5 +135,8 @@ export default function Home() {
         )}
       </AnimatePresence>
     </div>
+  
+  </>
+   
   )
 }
