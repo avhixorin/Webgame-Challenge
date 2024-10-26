@@ -74,7 +74,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative min-h-full overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-pink-900">
+    <div className="relative w-full min-h-screen flex justify-center items-center overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-pink-900">
       {shapes.map((shape) => (
         <motion.div
           key={shape.id}

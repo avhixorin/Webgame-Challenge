@@ -6,25 +6,31 @@ import { useDispatch, useSelector } from "react-redux";
 
 const useWords = () => {
   const dispatch = useDispatch();
-  const wordCount = useSelector((state: RootState) => state.wordsData.wordCount);
-  const areWordsFetched = useSelector((state: RootState) => state.wordsData.wordsFetched);
-  const difficulty = useSelector((state: RootState) => state.userGameData.difficulty);
+  const wordCount = useSelector(
+    (state: RootState) => state.wordsData.wordCount
+  );
+  const areWordsFetched = useSelector(
+    (state: RootState) => state.wordsData.wordsFetched
+  );
+  const difficulty = useSelector(
+    (state: RootState) => state.userGameData.difficulty
+  );
   const words = useSelector((state: RootState) => state.wordsData.words);
 
   function shuffleString(gameString: string): string {
-    const lettersArray = gameString.split('');
+    const lettersArray = gameString.split("");
     for (let i = lettersArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [lettersArray[i], lettersArray[j]] = [lettersArray[j], lettersArray[i]];
     }
-    return lettersArray.join('');
+    return lettersArray.join("");
   }
 
   // Fetch words only if they haven't been fetched yet
   useEffect(() => {
     const fetchWords = async () => {
-      console.log("This is randi",areWordsFetched)
-      if (wordCount && wordCount > 0 && !areWordsFetched) { 
+      console.log("This is randi", areWordsFetched);
+      if (wordCount && wordCount > 0 && !areWordsFetched) {
         try {
           const response = await fetch(
             `http://localhost:3000/api/words/getWords/${wordCount}/${difficulty}`,
@@ -32,11 +38,14 @@ const useWords = () => {
           );
 
           const data = await response.json();
-          console.log("DB called")
+          console.log("DB called");
           if (response.ok && data?.data.length) {
             dispatch(setWords(data.data));
             dispatch(setWordsFetched(true));
-            console.log(`The words for the ${difficulty} difficulty are:`, data.data);
+            console.log(
+              `The words for the ${difficulty} difficulty are:`,
+              data.data
+            );
           } else {
             console.error("No valid words fetched.");
           }
@@ -52,16 +61,19 @@ const useWords = () => {
   // Generate and shuffle the game string once words are available
   useEffect(() => {
     if (words.length > 0 && wordCount) {
-      let tempString = '';
+      let tempString = "";
       const randomIndex = Math.floor(Math.random() * wordCount);
-      if(wordCount === 1){
-        tempString += words[0]
-      }else{
+
+      if (wordCount === 1) {
+        tempString += words[0];
+      } else {
         for (let i = 0; i < 2; i++) {
           tempString += words[randomIndex];
         }
+        
+        tempString = tempString.slice(0, 10);
       }
-      
+
       const shuffledString = shuffleString(tempString);
       dispatch(setCurrentGameString(shuffledString));
     }

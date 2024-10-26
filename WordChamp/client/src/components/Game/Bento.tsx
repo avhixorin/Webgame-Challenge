@@ -1,34 +1,34 @@
 import React from 'react'
 import { Card } from "@/components/ui/card"
 
-const GaugeChart = ({ value, max, unit }: { value: number; max: number; unit: string }) => (
-  <div className="relative w-full h-full">
-    <svg viewBox="0 0 100 100" className="transform -rotate-90 w-full h-full">
-      <circle
-        cx="50"
-        cy="50"
-        r="45"
-        fill="none"
-        stroke="#e0e0e0"
-        strokeWidth="10"
-      />
-      <circle
-        cx="50"
-        cy="50"
-        r="45"
-        fill="none"
-        stroke="#3b82f6"
-        strokeWidth="10"
-        strokeDasharray={`${2 * Math.PI * 45}`}
-        strokeDashoffset={`${2 * Math.PI * 45 * (1 - value / max)}`}
-      />
-    </svg>
-    <div className="absolute inset-0 flex flex-col items-center justify-center">
-      <span className="text-3xl font-bold">{value}</span>
-      <span className="text-sm">{unit}</span>
-    </div>
-  </div>
-)
+// const GaugeChart = ({ value, max, unit }: { value: number; max: number; unit: string }) => (
+//   <div className="relative w-full h-full">
+//     <svg viewBox="0 0 100 100" className="transform -rotate-90 w-full h-full">
+//       <circle
+//         cx="50"
+//         cy="50"
+//         r="45"
+//         fill="none"
+//         stroke="#e0e0e0"
+//         strokeWidth="10"
+//       />
+//       <circle
+//         cx="50"
+//         cy="50"
+//         r="45"
+//         fill="none"
+//         stroke="#3b82f6"
+//         strokeWidth="10"
+//         strokeDasharray={`${2 * Math.PI * 45}`}
+//         strokeDashoffset={`${2 * Math.PI * 45 * (1 - value / max)}`}
+//       />
+//     </svg>
+//     <div className="absolute inset-0 flex flex-col items-center justify-center">
+//       <span className="text-3xl font-bold">{value}</span>
+//       <span className="text-sm">{unit}</span>
+//     </div>
+//   </div>
+// )
 
 export  const Bento:React.FC = () => {
   return (
@@ -91,7 +91,7 @@ export  const Bento:React.FC = () => {
         </Card>
 
         <Card className="p-4 bg-white shadow-lg rounded-xl">
-          <GaugeChart value={4550} max={8000} unit="RPM" />
+          {/* <GaugeChart value={4550} max={8000} unit="RPM" /> */}
           <div className="flex justify-between text-xs mt-2">
             <span>100 kW</span>
             <span>135 MPH</span>

@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 
 const App:React.FC = () => {
   return (
-    <div className='w-full h-full'>
+    <div className='w-full min-h-screen'>
       <Outlet />
       <Toaster />
     </div>
