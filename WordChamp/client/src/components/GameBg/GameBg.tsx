@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
@@ -56,6 +57,7 @@ export const GameBg = ({
     document.body.style.setProperty("--pointer-color", pointerColor);
     document.body.style.setProperty("--size", size);
     document.body.style.setProperty("--blending-value", blendingValue);
+
   }, []);
 
   useEffect(() => {

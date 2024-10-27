@@ -53,7 +53,7 @@ const Game: React.FC = () => {
     <div className="relative w-full p-4 h-full">
       <GameBg  />
       <motion.main
-        className="w-full h-full  grid grid-cols-4 gap-4"
+        className="w-full h-full  grid grid-cols-4 grid-rows-3 gap-4"
         style={{
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
@@ -62,24 +62,28 @@ const Game: React.FC = () => {
         initial="hidden"
         animate="visible"
       >
-        <Card className="col-span-2 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg">
-         <AlphabetSection />
+        <Card className="col-span-2 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
+         {/* <AlphabetSection /> */}
+         Section 1
          </Card>
-        <Card className="col-span-2 row-span-1 p-6 bg-white shadow-lg rounded-xl relative overflow-hidden">
+        <Card className="col-span-2 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
           
         <InputSection />
       </Card>
-      <Card className="p-4 bg-white shadow-lg rounded-xl">
-      <FriendsScore />
-    </Card>
-    <Card className="p-4 bg-gray-900 text-white shadow-lg rounded-xl flex items-center justify-center">
+      <Card className="col-span-2 row-span-1 p-4 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
           <GuessedWords />
         </Card>
-    <Card className="col-span-1 row-span-1 p-6 bg-white shadow-lg rounded-xl relative overflow-hidden">
+      <Card className="p-4 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
+      <FriendsScore />
+    </Card>
+    <Card className="p-4 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
+          <GuessedWords />
+        </Card>
+    <Card className="col-span-1 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
           
           <PowerUpSection />
         </Card>
-    <Card className="col-span-1 row-span-1 p-6 bg-white shadow-lg rounded-xl relative overflow-hidden">
+    <Card className="col-span-1 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
           
           <ChatSection />
         </Card>
