@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Skull, Zap, Star, Target, Shield, Flame } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUser, THEME, User } from "@/Redux/features/userSlice";
+import { setUser, User } from "@/Redux/features/userSlice";
 
 const avatars = [
   { icon: Skull, name: "Skull" },
@@ -24,8 +24,7 @@ export default function Page1() {
   const handleEnter = () => {
     const newUser: User = {
       username: username,
-      avatar: selectedAvatar,
-      theme: THEME.LIGHT,
+      avatar: selectedAvatar
     };
     dispatch(setUser(newUser));
     navigate("/game");

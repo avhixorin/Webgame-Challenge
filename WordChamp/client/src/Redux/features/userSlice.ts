@@ -6,7 +6,7 @@ export enum THEME {
 export type User = {
   username: string;
   avatar: number | null;
-  theme: THEME.LIGHT
+  theme: THEME
 };
 
 type UserState = {
@@ -24,9 +24,15 @@ const userSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
+    setTheme: (state,action:PayloadAction<THEME>) => {
+      if (state.user) {
+        state.user.theme = action.payload;
+      }
+      
+    }
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser,setTheme } = userSlice.actions;
 
 export default userSlice.reducer;
