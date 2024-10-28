@@ -8,7 +8,7 @@ import { RootState } from '@/Redux/store/store';
 const Page2: React.FC = () => {
   const dispatch = useDispatch();
   const { createRoomId } = useRoomID();
-  
+
   const [isHosting, setIsHosting] = useState(false);
   const [isJoiningRoom, setIsJoiningRoom] = useState(false);
   const [roomPassword, setRoomPasswordInput] = useState('');
@@ -37,65 +37,90 @@ const Page2: React.FC = () => {
       alert('Please enter both Room ID and Room Password to join');
       return;
     }
-    // Add logic to verify room credentials before proceeding
     console.log(`Joining Room ID: ${joinRoomId} with password: ${joinRoomPassword}`);
   };
 
   return (
-    <div className='w-full h-full p-6 flex flex-col justify-center items-center gap-4 bg-fuchsia-500'>
-      <div className='px-4 py-2'>
-        {!isJoiningRoom && (
-          <Button onClick={() => setIsHosting(prev => !prev)}>
-            {isHosting ? 'Cancel Host' : 'Host'}
-          </Button>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 p-8">
+      <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-lg flex flex-col items-center gap-6">
+        
+        {/* Header Buttons */}
+        <div className="flex gap-4">
+          {!isJoiningRoom && (
+            <Button
+              onClick={() => setIsHosting(prev => !prev)}
+              className="text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 rounded-lg shadow-md transition"
+            >
+              {isHosting ? 'Cancel Host' : 'Host'}
+            </Button>
+          )}
+          {!isHosting && (
+            <Button
+              onClick={() => setIsJoiningRoom(prev => !prev)}
+              className="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 rounded-lg shadow-md transition"
+            >
+              {isJoiningRoom ? 'Cancel Join' : 'Join Room'}
+            </Button>
+          )}
+        </div>
+
+        {/* Host Room Section */}
+        {isHosting && (
+          <div className="w-full px-4 py-4 bg-white/20 backdrop-blur-md rounded-lg shadow-lg flex flex-col gap-4">
+            <input
+              type="text"
+              value={roomId}
+              readOnly
+              className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+            />
+            <input
+              type="password"
+              placeholder="Room Password"
+              value={roomPassword}
+              onChange={(e) => setRoomPasswordInput(e.target.value)}
+              className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+            />
+          </div>
         )}
 
-        {!isHosting && (
-          <Button onClick={() => setIsJoiningRoom(prev => !prev)}>
-            {isJoiningRoom ? 'Cancel Join' : 'Join Room'}
-          </Button>
+        {/* Join Room Section */}
+        {isJoiningRoom && !isHosting && (
+          <div className="w-full px-4 py-4 bg-white/20 backdrop-blur-md rounded-lg shadow-lg flex flex-col gap-4">
+            <input
+              type="text"
+              placeholder="Room ID"
+              value={joinRoomId}
+              onChange={(e) => setJoinRoomId(e.target.value)}
+              className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+            />
+            <input
+              type="password"
+              placeholder="Room Password"
+              value={joinRoomPassword}
+              onChange={(e) => setJoinRoomPassword(e.target.value)}
+              className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+            />
+            <Button
+              onClick={handleJoinRoom}
+              className="w-full text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 rounded-lg shadow-md transition"
+            >
+              Join Room
+            </Button>
+          </div>
         )}
+
+        {/* Start Game Button */}
+        {
+          isHosting ? (<Button
+            onClick={handleStartGame}
+            disabled={!isHosting || roomPassword.trim() === ''}
+            className="w-full text-white bg-purple-700 hover:bg-purple-600 focus:ring-4 focus:ring-purple-300 rounded-lg shadow-md transition disabled:bg-purple-400"
+          >
+            Start Game
+          </Button>) : ("")
+        }
+        
       </div>
-
-      {isHosting && (
-        <div className='w-1/2 px-4 py-2 flex flex-col gap-2'>
-          <input type='text' value={roomId} className='px-2 py-1' readOnly />
-          <input 
-            type='text' 
-            placeholder='Room Password' 
-            className='px-2 py-1' 
-            value={roomPassword}
-            onChange={(e) => setRoomPasswordInput(e.target.value)}
-          />
-        </div>
-      )}
-
-      {isJoiningRoom && !isHosting && (
-        <div className='w-1/2 px-4 py-2 flex flex-col gap-2'>
-          <input 
-            type='text' 
-            placeholder='Room ID' 
-            className='px-2 py-1' 
-            value={joinRoomId}
-            onChange={(e) => setJoinRoomId(e.target.value)}
-          />
-          <input 
-            type='text' 
-            placeholder='Room Password' 
-            className='px-2 py-1' 
-            value={joinRoomPassword}
-            onChange={(e) => setJoinRoomPassword(e.target.value)}
-          />
-          <Button onClick={handleJoinRoom}>Join Room</Button>
-        </div>
-      )}
-
-      <Button
-        onClick={handleStartGame}
-        disabled={!isHosting || roomPassword.trim() === ''}
-      >
-        Start Game
-      </Button>
     </div>
   );
 };
