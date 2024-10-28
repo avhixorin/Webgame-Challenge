@@ -1,18 +1,17 @@
 import { User } from "../types/user";
-import ApiResponse from "../utils/ApiResponse/ApiResponse";
 
 class Room {
   private users: User[] = [];
   private maxParticipants: number = 3;
 
-  constructor(public roomId: string, public password: string) {}
+  constructor(public roomId: string, public roomPassword: string) {}
 
-  addUser(user: User): ApiResponse {
+  addUser(user: User): string {
     if (this.users.length >= this.maxParticipants) {
-      return new ApiResponse(500,"Room is full. Cannot add more participants.");
+      return "Room is full. Cannot add more participants.";
     }
     this.users.push(user);
-    return new ApiResponse(200,`${user.username} has joined the room.`);
+    return "User added successfully";
   }
 
   removeUser(userId: string): void {
@@ -22,14 +21,12 @@ class Room {
   getUsers(): User[] {
     return this.users;
   }
-
-  getRoomId(): string {
-    return this.roomId;
-  }
-
   getPassword(): string {
-    return this.password;
+    return this.roomPassword
+  }
+  validatePassword(password: string): boolean {
+    return this.roomPassword === password;
   }
 }
 
-export default Room
+export default Room;

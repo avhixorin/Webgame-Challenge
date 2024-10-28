@@ -1,11 +1,20 @@
-import Room from "../../rooms/room"
-import { roomData, User } from "../../types/user"
-import ApiResponse from "../ApiResponse/ApiResponse"
-const handleHosting = (data:roomData,user:User) => {
-    let newRoom = new Room(data.roomId,data.roomPassword)
-    newRoom.addUser(user),
-    console.log(`${user.username} is hosting a room with password as ${newRoom.getPassword()}`)
-    return new ApiResponse(200,"Room hosted successfully",newRoom)
-}
+import Room from "../../rooms/room";
+import { User } from "../../types/user";
+import ApiResponse from "../ApiResponse/ApiResponse";
+import roomHandlerInstance from "./handleAllRooms";
 
-export default handleHosting
+const handleHosting = (data: Room, user: User): ApiResponse => {
+    const newRoom = new Room(data.roomId, data.roomPassword);
+    newRoom.addUser(user);
+    console.log(`${user.username} is hosting a room with password as ${newRoom.getPassword()}`);
+    
+    const response = roomHandlerInstance.handleRequest("hostRoom", { roomId: data.roomId, roomPassword: data.roomPassword }, user);
+
+    if (response.statusCode === 200) {
+        return new ApiResponse(200, "Room hosted successfully", newRoom);
+    } else {
+        return response; 
+    }
+};
+
+export default handleHosting;

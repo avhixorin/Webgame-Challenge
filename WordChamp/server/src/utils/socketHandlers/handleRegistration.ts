@@ -1,7 +1,7 @@
 import { User } from "../../types/user"
 
-const handleRegistration = (user:User) => {
-    
+class allUsers  {
+    private
 }
 
 export default handleRegistration

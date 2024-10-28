@@ -23,16 +23,22 @@ const connectSocket = (app: any) => {
     socket.on("hostRoom",(data) => {
       console.log("The room data is: ",data?.newRoom)
       console.log("The user is: ",data?.user)
-      // const hostingData = handleHosting(data,user);
-      // if(hostingData){
-      //   socket.emit("hostingResponse",hostingData)
-      // }else{
-      //   socket.emit("hostingResponse",new ApiResponse(500,"Cannot host the room"))
-      // }
+      if(data?.newRoom && data?.newRoom.roomId && data?.user){
+
+        const hostingData = handleHosting(data.newRoom,data.user);
+        if(hostingData){
+          socket.emit("hostingResponse",hostingData)
+        }else{
+          socket.emit("hostingResponse",new ApiResponse(500,"Cannot host the room"))
+        }
+      }
+      
+      
     })
 
     socket.on("joinRoom",(data) => {
-      handleJoining(data);
+      console.log(data)
+      handleJoining(data?.newRoom,data.user);
     })
 
     socket.on('disconnect', () => {
