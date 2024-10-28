@@ -14,6 +14,8 @@ type GameData = {
   participants: number;
   currentGameString: string;
   difficulty: DIFFICULTY;
+  isHosting:boolean,
+  isJoiningRoom:boolean
 };
 
 function shuffleString(gameString: string): string {
@@ -30,7 +32,9 @@ const initialState: GameData = {
   powerUps: [],
   participants: 1,
   currentGameString: '',
-  difficulty: DIFFICULTY.EASY
+  difficulty: DIFFICULTY.EASY,
+  isHosting:true,
+  isJoiningRoom:false
 };
 
 const gameDataSlice = createSlice({

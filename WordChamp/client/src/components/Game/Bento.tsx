@@ -9,16 +9,17 @@ import useTheme from '@/hooks/useTheme';
 import { THEME } from '@/Redux/features/userSlice';
 
 export const Bento: React.FC = () => {
-  const [bgColorStart, setBgColorStart] = React.useState("rgb(108, 0, 162)");
-  const [bgColorEnd, setBgColorEnd] = React.useState("rgb(0, 17, 82)");
+  const [bgColor, setBgColor] = React.useState("rgb(108, 0, 162)");
   const theme = useSelector((state: RootState) => state.user.user?.theme);
   const { toggleTheme } = useTheme();
 
   useEffect(() => {
-    setBgColorStart(theme === THEME.DARK ? "black" : "rgb(0, 17, 82)");
-    setBgColorEnd(theme === THEME.DARK ? "black" : "rgb(108, 0, 162)");
+    setBgColor(theme === THEME.DARK ? "black" : "rgb(0, 17, 82)");
+
+    
   }, [theme]);
 
+  
   const handleClick = () => {
     toggleTheme(theme === THEME.DARK ? THEME.LIGHT : THEME.DARK);
   };
@@ -42,7 +43,7 @@ export const Bento: React.FC = () => {
 
   return (
     <div className="relative w-full p-4 h-full">
-      <GameBg gradientBackgroundStart={bgColorStart} gradientBackgroundEnd={bgColorEnd} />
+      <GameBg gradientBackgroundStart={bgColor} gradientBackgroundEnd={bgColor} />
       <motion.main
         className="w-full h-full grid grid-cols-4 grid-rows-3 gap-4"
         style={{

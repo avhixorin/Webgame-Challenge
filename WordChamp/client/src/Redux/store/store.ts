@@ -3,6 +3,7 @@ import userSlice from "../features/userSlice";
 import userGameDataSlice from "../features/userGameDataSlice";
 import wordsDataSlice from "../features/wordsData"
 import answerSlice from "../features/answersSlice"
+import roomSlice from "../features/roomSlice"
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   user: userSlice,
   userGameData: userGameDataSlice,
   wordsData:wordsDataSlice,
-  answers:answerSlice
+  answers:answerSlice,
+  room: roomSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
