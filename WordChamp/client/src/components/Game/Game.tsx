@@ -2,13 +2,10 @@ import React, { useEffect } from "react";
 import "../../index.css"
 import { motion } from "framer-motion";
 import { GameBg } from "../GameBg/GameBg";
-import AlphabetSection from "./AlphabetSection/Alphabets";
 import GuessedWords from "./GuessedWords/GuessedWords";
 import InputSection from "./InputSection/Input";
 import PowerUpSection from "./PowerUpSection/PowerUp";
 import ChatSection from "./ChatSection/Chats";
-import Profile from "./Profile/Profile";
-import { Bento } from "./Bento";
 import { Card } from "../ui/card";
 import FriendsScore from "./FriendsScoreSection/FriendsScore";
 

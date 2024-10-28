@@ -1,16 +1,25 @@
+import { User } from '@/Redux/features/userSlice';
 import { useEffect } from 'react';
 import io from 'socket.io-client';
 
 const useSocket = () => {
   const socket = io('http://localhost:3000');
 
-  const hostRoom = (roomId: string, roomPassword: string) => {
-    socket.emit("hostRoom", { roomId, roomPassword });
+  const hostRoom = (roomId: string, roomPassword: string,user:User) => {
+    const newRoom = {
+      roomId,
+      roomPassword
+    }
+    socket.emit("hostRoom", { newRoom, user });
   };
   console.log("The is rendering in the useSecket hook")
 
-  const joinRoom = (roomId: string, roomPassword: string) => {
-    socket.emit("joinRoom", { roomId, roomPassword });
+  const joinRoom = (roomId: string, roomPassword: string,user:User) => {
+    const newRoom = {
+      roomId,
+      roomPassword
+    }
+    socket.emit("joinRoom", { newRoom, user });
   };
 
   useEffect(() => {

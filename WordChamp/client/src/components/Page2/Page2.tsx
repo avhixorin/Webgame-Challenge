@@ -33,6 +33,8 @@ const Page2: React.FC = () => {
     }),
   });
 
+  const user = useSelector((state:RootState) => state.user.user);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 p-8">
       <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-lg flex flex-col items-center gap-6">
@@ -64,10 +66,14 @@ const Page2: React.FC = () => {
               initialValues={{ roomPassword: '' }}
               validationSchema={validationSchema}
               onSubmit={(values) => {
-                hostRoom(roomId, values.roomPassword);
-                dispatch(setRoomId(roomId));
-                dispatch(setRoomStatus(RoomStatus.HOSTING));
-                dispatch(setRoomPassword(values.roomPassword));
+                if (user) {
+                  hostRoom(roomId, values.roomPassword, user);
+                  dispatch(setRoomId(roomId));
+                  dispatch(setRoomStatus(RoomStatus.HOSTING));
+                  dispatch(setRoomPassword(values.roomPassword));
+                } else {
+                  console.error('User is not logged in');
+                }
               }}
             >
               {({ isSubmitting }) => (
@@ -105,10 +111,14 @@ const Page2: React.FC = () => {
               initialValues={{ roomId: '', roomPassword: '' }}
               validationSchema={validationSchema}
               onSubmit={(values) => {
-                joinRoom(values.roomId, values.roomPassword);
-                dispatch(setRoomStatus(RoomStatus.JOINING));
-                dispatch(setRoomId(values.roomId));
-                dispatch(setRoomPassword(values.roomPassword));
+                if (user) {
+                  joinRoom(values.roomId, values.roomPassword, user);
+                  dispatch(setRoomStatus(RoomStatus.JOINING));
+                  dispatch(setRoomId(values.roomId));
+                  dispatch(setRoomPassword(values.roomPassword));
+                } else {
+                  console.error('User is not logged in');
+                }
               }}
               validateOnChange={false}
               validateOnBlur={false}

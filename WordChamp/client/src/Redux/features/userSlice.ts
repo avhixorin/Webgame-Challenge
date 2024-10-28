@@ -4,6 +4,7 @@ export enum THEME {
     DARK = "dark"
 }
 export type User = {
+  id:string;
   username: string;
   avatar: number | null;
   theme: THEME

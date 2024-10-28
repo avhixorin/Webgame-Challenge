@@ -3,6 +3,7 @@ import http from 'http';
 import dotenv from 'dotenv';
 import handleHosting from '../socketHandlers/handleHosting';
 import handleJoining from '../socketHandlers/handleJoining';
+import ApiResponse from '../ApiResponse/ApiResponse';
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
@@ -20,7 +21,14 @@ const connectSocket = (app: any) => {
 
 
     socket.on("hostRoom",(data) => {
-      handleHosting(data);
+      console.log("The room data is: ",data?.newRoom)
+      console.log("The user is: ",data?.user)
+      // const hostingData = handleHosting(data,user);
+      // if(hostingData){
+      //   socket.emit("hostingResponse",hostingData)
+      // }else{
+      //   socket.emit("hostingResponse",new ApiResponse(500,"Cannot host the room"))
+      // }
     })
 
     socket.on("joinRoom",(data) => {
