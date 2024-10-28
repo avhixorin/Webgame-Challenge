@@ -64,8 +64,8 @@ const Page2: React.FC = () => {
               initialValues={{ roomPassword: '' }}
               validationSchema={validationSchema}
               onSubmit={(values) => {
-                console.log("Hosting with values: ", values);
                 hostRoom(roomId, values.roomPassword);
+                dispatch(setRoomId(roomId));
                 dispatch(setRoomStatus(RoomStatus.HOSTING));
                 dispatch(setRoomPassword(values.roomPassword));
               }}
@@ -105,7 +105,6 @@ const Page2: React.FC = () => {
               initialValues={{ roomId: '', roomPassword: '' }}
               validationSchema={validationSchema}
               onSubmit={(values) => {
-                console.log("Joining with values: ", values);
                 joinRoom(values.roomId, values.roomPassword);
                 dispatch(setRoomStatus(RoomStatus.JOINING));
                 dispatch(setRoomId(values.roomId));
