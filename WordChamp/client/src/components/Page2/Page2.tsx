@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useRoomID from '@/hooks/getRoomId';
 import { setRoomId, setRoomPassword } from '@/Redux/features/roomSlice';
 import { RootState } from '@/Redux/store/store';
+import io from 'socket.io-client';
 
 const Page2: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,22 @@ const Page2: React.FC = () => {
     }
     console.log(`Joining Room ID: ${joinRoomId} with password: ${joinRoomPassword}`);
   };
+
+  useEffect(() => {
+    const socket = io('http://localhost:3000'); // Connect to the socket server
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    return () => {
+      socket.disconnect(); // Clean up on unmount
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 p-8">
@@ -110,16 +127,15 @@ const Page2: React.FC = () => {
         )}
 
         {/* Start Game Button */}
-        {
-          isHosting ? (<Button
+        {isHosting && (
+          <Button
             onClick={handleStartGame}
             disabled={!isHosting || roomPassword.trim() === ''}
             className="w-full text-white bg-purple-700 hover:bg-purple-600 focus:ring-4 focus:ring-purple-300 rounded-lg shadow-md transition disabled:bg-purple-400"
           >
             Start Game
-          </Button>) : ("")
-        }
-        
+          </Button>
+        )}
       </div>
     </div>
   );
