@@ -1,0 +1,22 @@
+export const SOCKET_EVENTS = {
+    CONNECTION: "connection",
+    DISCONNECT: "disconnect",
+    REGISTER: "register",
+    CREATE_ROOM: "createRoom",
+    HOST_ROOM: "hostRoom",
+    JOIN_ROOM: "joinRoom",
+    ENQUIRY: "enquiry",
+    LEAVE_ROOM: "leaveRoom",
+    MESSAGE_SEND: "messageSend",
+    MESSAGE_RECEIVE: "messageReceive",
+    USER_TYPING: "userTyping",
+    USER_STOPPED_TYPING: "userStoppedTyping",
+    ANNOUNCE: "announce",
+    HOSTING_RESPONSE: "hostingResponse",
+    JOINING_RESPONSE: "joiningResponse",
+    REGISTRATION_RESPONSE: "registrationResponse", // Corrected
+    CREATE_ROOM_RESPONSE: "createRoomResponse",
+    ENQUIRY_RESPONSE: "enquiryResponse",
+    ROOM_FULL: "roomFull",
+    ERROR: "error",
+} as const;
