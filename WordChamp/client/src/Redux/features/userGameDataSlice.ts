@@ -1,22 +1,7 @@
+import { Difficulty, GameData } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export enum DIFFICULTY {
-  EASY = "easy",
-  MEDIUM = "medium",
-  HARD = "hard",
-  GOD = "god"
-}
 
-
-type GameData = {
-  score: number;
-  powerUps: string[];
-  participants: number;
-  currentGameString: string;
-  difficulty: DIFFICULTY;
-  isHosting:boolean,
-  isJoiningRoom:boolean
-};
 
 function shuffleString(gameString: string): string {
   const lettersArray = gameString.split('');
@@ -32,7 +17,7 @@ const initialState: GameData = {
   powerUps: [],
   participants: 1,
   currentGameString: '',
-  difficulty: DIFFICULTY.EASY,
+  difficulty: Difficulty.EASY,
   isHosting:true,
   isJoiningRoom:false
 };
@@ -44,7 +29,7 @@ const gameDataSlice = createSlice({
     setGameData: (state, action: PayloadAction<GameData>) => {
       return { ...state, ...action.payload };
     },
-    setDifficulty: (state, action: PayloadAction<DIFFICULTY>) => {
+    setDifficulty: (state, action: PayloadAction<Difficulty>) => {
       state.difficulty = action.payload;
     },
     addScore: (state, action: PayloadAction<number>) => {

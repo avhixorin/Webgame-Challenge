@@ -1,14 +1,7 @@
+import { THEME, User } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-export enum THEME {
-    LIGHT = "light",
-    DARK = "dark"
-}
-export type User = {
-  id:string;
-  username: string;
-  avatar: number | null;
-  theme: THEME
-};
+
+
 
 type UserState = {
   user: User | null;

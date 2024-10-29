@@ -1,14 +1,7 @@
+import { Answer } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export enum VERDICT {
-  RIGHT = "right",
-  WRONG = "wrong",
-}
 
-export type Answer = {
-  word: string;
-  verdict: VERDICT;
-};
 
 export type AnswerState = {
     words: Answer[];

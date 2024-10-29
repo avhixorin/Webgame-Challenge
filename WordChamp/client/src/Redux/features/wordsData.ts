@@ -1,10 +1,7 @@
+import { Words } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type Words = {
-  wordCount:number,
-  words: string[],
-  wordsFetched:boolean
-};
+
 
 const initialState:Words = {
   words: [],

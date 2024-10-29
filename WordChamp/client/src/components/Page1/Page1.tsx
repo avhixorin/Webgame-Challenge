@@ -29,7 +29,7 @@ export default function Page1() {
       theme: THEME.LIGHT,
     };
     dispatch(setUser(newUser));
-    navigate("/game");
+    navigate("/pg2");
   };
 
   // Use useMemo to generate the background elements only once

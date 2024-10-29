@@ -31,16 +31,16 @@ const connectSocket = (app: Express) => {
       }
     });
 
-    socket.on(SOCKET_EVENTS.CREATE_ROOM, ({ room, user }: HostRoomData) => {
+    socket.on(SOCKET_EVENTS.HOST_ROOM, ({ room, user }: HostRoomData) => {
       if (room.roomId && room.roomPassword && user) {
         const response = roomHandlerInstance.hostRoom(room.roomId, room.roomPassword, user, socket);
 
         if (response.statusCode === 200) {
           socket.join(room.roomId);
-          socket.emit(SOCKET_EVENTS.CREATE_ROOM_RESPONSE, "Room created successfully");
+          socket.emit(SOCKET_EVENTS.HOSTING_RESPONSE, "Room created successfully");
           console.log(`Room ${room.roomId} created and user ${user.userId} joined.`);
         } else {
-          socket.emit(SOCKET_EVENTS.CREATE_ROOM_RESPONSE, response.message);
+          socket.emit(SOCKET_EVENTS.HOSTING_RESPONSE, response.message);
         }
       }
     });

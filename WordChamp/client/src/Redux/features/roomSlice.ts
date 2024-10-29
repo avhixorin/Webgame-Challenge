@@ -1,10 +1,7 @@
+import { RoomStatus } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export enum RoomStatus {
-  HOSTING = "hosting",
-  JOINING = "joining",
-  NONE = "none",
-}
+
 
 interface RoomState {
   roomId: string;
