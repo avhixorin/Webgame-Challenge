@@ -74,3 +74,11 @@ export type Words = {
   words: string[];
   wordsFetched: boolean;
 };
+
+export type hostingResponse = {
+  response:string
+}
+
+export type joiningResponse = {
+  response:string
+}

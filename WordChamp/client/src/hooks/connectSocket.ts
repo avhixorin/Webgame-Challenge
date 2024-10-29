@@ -1,53 +1,50 @@
-import { User } from '@/Redux/features/userSlice';
 import { useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { SOCKET_EVENTS } from '@/constants/SocketEvents';
+import { hostingResponse, joiningResponse, Room, User } from '@/types/types';
 
 let socket: Socket | null = null;
 
-const useSocket = () => {
+const initializeSocket = (): Socket => {
   if (!socket) {
     socket = io('http://localhost:3000');
   }
+  return socket;
+};
 
-  const hostRoom = (roomId: string, roomPassword: string, user: User) => {
-    const newRoom = {
-      roomId,
-      roomPassword
-    };
-    socket?.emit("hostRoom", { newRoom, user });
+const useSocket = () => {
+  const socket = initializeSocket();
+
+  const handleHostingResponse = (response: hostingResponse) => {
+    console.log("Hosting response received:", response);
   };
 
-  const joinRoom = (roomId: string, roomPassword: string, user: User) => {
-    const newRoom = {
-      roomId,
-      roomPassword
-    };
-    socket?.emit("joinRoom", { newRoom, user });
+  const handleJoiningResponse = (response: joiningResponse) => {
+    console.log("Joining response received:", response);
+  };
+
+  const hostRoom = (room: Room, user: User) => {
+    socket.emit(SOCKET_EVENTS.HOST_ROOM, { room, user });
+    socket.once(SOCKET_EVENTS.HOSTING_RESPONSE, handleHostingResponse);
+  };
+
+  const joinRoom = (room: Room, user: User) => {
+    socket.emit(SOCKET_EVENTS.JOIN_ROOM, { room, user });
+    socket.once(SOCKET_EVENTS.JOINING_RESPONSE, handleJoiningResponse);
   };
 
   useEffect(() => {
-    // Log connection
-    socket?.on('connect', () => {
-      console.log('Connected to server');
-    });
+    const handleConnect = () => console.log('Connected to server');
+    const handleDisconnect = () => console.log('Disconnected from server');
 
-    // Listen for responses
-    socket?.on("hostingResponse", (data) => {
-      console.log(data);
-    });
+    socket.on(SOCKET_EVENTS.CONNECT, handleConnect);
+    socket.on(SOCKET_EVENTS.DISCONNECT, handleDisconnect);
 
-    // Log disconnection
-    socket?.on('disconnect', () => {
-      console.log('Disconnected from server');
-    });
-
-    // Clean up listeners on unmount
     return () => {
-      socket?.off('connect');
-      socket?.off('hostingResponse');
-      socket?.off('disconnect');
+      socket.off(SOCKET_EVENTS.CONNECT, handleConnect);
+      socket.off(SOCKET_EVENTS.DISCONNECT, handleDisconnect);
     };
-  }, []);
+  }, [socket]);
 
   return { hostRoom, joinRoom };
 };

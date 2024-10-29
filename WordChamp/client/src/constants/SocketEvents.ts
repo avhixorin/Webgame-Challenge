@@ -5,7 +5,7 @@ export const SOCKET_EVENTS = {
 
     // User actions
     REGISTER: "register",
-    CREATE_ROOM: "createRoom",
+    HOST_ROOM: "hostRoom",
     JOIN_ROOM: "joinRoom",
     LEAVE_ROOM: "leaveRoom",
     SEND_MESSAGE: "sendMessage",

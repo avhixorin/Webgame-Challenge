@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import useRoomID from '@/hooks/getRoomId';
-import { RoomStatus, setRoomId, setRoomPassword, setRoomStatus } from '@/Redux/features/roomSlice';
+import { setRoomId, setRoomPassword, setRoomStatus } from '@/Redux/features/roomSlice';
 import useSocket from '@/hooks/connectSocket';
 import { RootState } from '@/Redux/store/store';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { Room, RoomStatus } from '@/types/types';
+import { useNavigate } from 'react-router-dom';
 
 const Page2: React.FC = () => {
   const dispatch = useDispatch();
@@ -34,7 +36,7 @@ const Page2: React.FC = () => {
   });
 
   const user = useSelector((state:RootState) => state.user.user);
-
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 p-8">
       <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-lg flex flex-col items-center gap-6">
@@ -67,7 +69,12 @@ const Page2: React.FC = () => {
               validationSchema={validationSchema}
               onSubmit={(values) => {
                 if (user) {
-                  hostRoom(roomId, values.roomPassword, user);
+                  const room:Room = {
+                    roomId: roomId,
+                    roomPassword: values.roomPassword
+                  }
+                  
+                  hostRoom(room, user);
                   dispatch(setRoomId(roomId));
                   dispatch(setRoomStatus(RoomStatus.HOSTING));
                   dispatch(setRoomPassword(values.roomPassword));
@@ -112,7 +119,11 @@ const Page2: React.FC = () => {
               validationSchema={validationSchema}
               onSubmit={(values) => {
                 if (user) {
-                  joinRoom(values.roomId, values.roomPassword, user);
+                  const room:Room = {
+                    roomId: values.roomId,
+                    roomPassword: values.roomPassword
+                  }
+                  joinRoom(room, user);
                   dispatch(setRoomStatus(RoomStatus.JOINING));
                   dispatch(setRoomId(values.roomId));
                   dispatch(setRoomPassword(values.roomPassword));
