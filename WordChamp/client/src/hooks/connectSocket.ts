@@ -31,6 +31,10 @@ const useSocket = () => {
       name:"laila"
     })
 
+    socket.on("hostingResponse",(data) => {
+      console.log(data)
+    })
+
     socket.on('disconnect', () => {
       console.log('Disconnected from server');
     });

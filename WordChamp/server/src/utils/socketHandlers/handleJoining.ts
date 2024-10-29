@@ -4,9 +4,8 @@ import roomHandlerInstance from "./handleAllRooms";
 import ApiResponse from "../ApiResponse/ApiResponse";
 
 const handleJoining = (data: Room, user: User): ApiResponse => {
-    console.log(`The user ${user.username} is requesting to join room with ID ${data.roomId} and provided password.`);
+    console.log(`The data is ${data?.roomId} requesting to join room with ID ${user?.username} and provided password.`);
 
-    // Use the singleton instance of RoomHandler to get the room
     const room = roomHandlerInstance.getRoomById(data.roomId);
 
     if (!room) {
