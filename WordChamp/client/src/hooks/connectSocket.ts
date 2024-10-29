@@ -31,9 +31,6 @@ const useSocket = () => {
       console.log('Connected to server');
     });
 
-    // Emit an initial event
-    socket?.emit("announce", { name: "laila" });
-
     // Listen for responses
     socket?.on("hostingResponse", (data) => {
       console.log(data);

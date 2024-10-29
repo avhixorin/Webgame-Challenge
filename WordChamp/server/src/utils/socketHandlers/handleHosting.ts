@@ -1,5 +1,5 @@
 import Room from "../../rooms/room";
-import { User } from "../../types/user";
+import { User } from "../../types/Types";
 import ApiResponse from "../ApiResponse/ApiResponse";
 import roomHandlerInstance from "./handleAllRooms";
 

@@ -1,5 +1,5 @@
 import RoomsHandler from "../socketHandlers/handleAllRooms";
-import { User } from "../../types/user";
+import { User } from "../../types/Types";
 import ApiResponse from "../ApiResponse/ApiResponse";
 
 class Message {
@@ -8,7 +8,8 @@ class Message {
   constructor(
     public sender: User,
     public messageContent: string,
-    public roomId: string
+    public roomId: string,
+    
   ) {}
 
   sendMessage(): ApiResponse {

@@ -1,69 +1,76 @@
 import { Server } from 'socket.io';
 import http from 'http';
 import dotenv from 'dotenv';
-import handleHosting from '../socketHandlers/handleHosting';
-import handleJoining from '../socketHandlers/handleJoining';
-import ApiResponse from '../ApiResponse/ApiResponse';
+import { Express } from 'express';
+import roomHandlerInstance from "../socketHandlers/handleAllRooms";
+import { HostRoomData, JoinRoomData, MessageData, OnlineUser, RegisterData } from '../../types/Types';
 
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
-type onlineUser = {
-  userId:string,
-  socketId:string
-}
-let users:onlineUser[] = [];
 
-const connectSocket = (app:any) => {
+
+
+let users: OnlineUser[] = [];
+
+const connectSocket = (app: Express) => {
   const server = http.createServer(app);
   const io = new Server(server, {
     cors: {
-      origin: process.env.ORIGIN || '*', 
+      origin: process.env.ORIGIN || '*',
     },
   });
 
   io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
-    socket.on("register", (data) => {
-      const newUser = {
-        userId: data?.user?.id,
-        socketId: socket.id,
-      };
-      users.push(newUser);
-      console.log(`User registered: ${data?.user?.id} with socket ID ${socket.id}`);
-      socket.emit("registerResponse", { data: "Registered Successfully" });
-    });
-
-    socket.on("hostRoom", (data) => {
-      console.log("The room data is:", data?.newRoom);
-      console.log("The user is:", data?.user);
-
-      if (data?.newRoom && data?.newRoom.roomId && data?.user) {
-        const hostingData = handleHosting(data.newRoom, data.user);
-        if (hostingData) {
-          socket.emit("hostingResponse", { hostingData });
-        } else {
-          socket.emit("hostingResponse", new ApiResponse(500, "Cannot host the room"));
-        }
-      } else {
-        socket.emit("hostingResponse", new ApiResponse(400, "Invalid room or user data"));
+    socket.on("register", (data: RegisterData) => {
+      if (data.user) {
+        users.push({ userId: data.user.userId, socketId: socket.id });
+        console.log(`User registered: ${data.user.userId} with socket ID ${socket.id}`);
+        socket.emit("registerResponse", { data: "Registered Successfully" });
       }
     });
 
-    socket.on("joinRoom", (data) => {
-      console.log("Join room data:", data);
+    socket.on("createRoom", ({ room, user }: HostRoomData) => {
+      if (room.roomId && room.roomPassword && user) {
+        const response = roomHandlerInstance.hostRoom(room.roomId, room.roomPassword, user, socket);
 
-      if (data?.room && data?.user) {
-        const joiningData = handleJoining(data.room, data.user);
-        if (joiningData) {
-          socket.emit("joiningResponse", joiningData);
+        if (response.statusCode === 200) {
+          socket.join(room.roomId);
+          socket.emit("createRoomResponse", "Room created successfully");
+          console.log(`Room ${room.roomId} created and user ${user.userId} joined.`);
         } else {
-          socket.emit("joiningResponse", new ApiResponse(500, "Cannot join the room"));
+          socket.emit("createRoomResponse", response.message);
         }
-      } else {
-        socket.emit("joiningResponse", new ApiResponse(400, "Invalid room or user data"));
       }
+    });
+
+    socket.on("joinRoom", ({ room, user }: JoinRoomData) => {
+      if (room.roomId && room.roomPassword && user) {
+        const response = roomHandlerInstance.joinRoom(room.roomId, room.roomPassword, user, socket);
+
+        if (response.statusCode === 200) {
+          socket.join(room.roomId);
+          socket.emit("joinRoomResponse", "Joined room successfully");
+          console.log(`User ${user.userId} joined room ${room.roomId}.`);
+        } else {
+          socket.emit("joinRoomResponse", response.message);
+        }
+      }
+    });
+
+    socket.on("message", (data: MessageData) => {
+      if (data.message) {
+        console.log("The message received is:", data.message);
+        io.to(data.message.roomId).emit("messageResponse", data.message.content);
+      }
+    });
+
+    socket.on("enquiry", ({ roomId }) => {
+      const roomExists = roomHandlerInstance.getRoomById(roomId);
+      const responseMessage = roomExists ? "The room exists" : "The room does not exist";
+      socket.emit("enquiryResponse", responseMessage);
     });
 
     socket.on('disconnect', () => {
