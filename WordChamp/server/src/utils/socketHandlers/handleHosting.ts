@@ -6,7 +6,7 @@ import roomHandlerInstance from "./handleAllRooms";
 const handleHosting = (data: Room, user: User): ApiResponse => {
     const newRoom = new Room(data.roomId, data.roomPassword);
     newRoom.addUser(user);
-    console.log(`${user.username} is hosting a room with password as ${newRoom.getPassword()}`);
+    console.log(`${user.username} is hosting a room with password as ${newRoom.roomPassword}`);
     
     const response = roomHandlerInstance.handleRequest("hostRoom", { roomId: data.roomId, roomPassword: data.roomPassword }, user);
 

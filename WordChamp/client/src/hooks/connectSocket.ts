@@ -1,48 +1,57 @@
 import { User } from '@/Redux/features/userSlice';
 import { useEffect } from 'react';
-import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
+
+let socket: Socket | null = null;
 
 const useSocket = () => {
-  const socket = io('http://localhost:3000');
+  if (!socket) {
+    socket = io('http://localhost:3000');
+  }
 
-  const hostRoom = (roomId: string, roomPassword: string,user:User) => {
+  const hostRoom = (roomId: string, roomPassword: string, user: User) => {
     const newRoom = {
       roomId,
       roomPassword
-    }
-    socket.emit("hostRoom", { newRoom, user });
+    };
+    socket?.emit("hostRoom", { newRoom, user });
   };
-  console.log("The is rendering in the useSecket hook")
 
-  const joinRoom = (roomId: string, roomPassword: string,user:User) => {
+  const joinRoom = (roomId: string, roomPassword: string, user: User) => {
     const newRoom = {
       roomId,
       roomPassword
-    }
-    socket.emit("joinRoom", { newRoom, user });
+    };
+    socket?.emit("joinRoom", { newRoom, user });
   };
 
   useEffect(() => {
-    socket.on('connect', () => {
+    // Log connection
+    socket?.on('connect', () => {
       console.log('Connected to server');
     });
 
-    socket.emit("announce",{
-      name:"laila"
-    })
+    // Emit an initial event
+    socket?.emit("announce", { name: "laila" });
 
-    socket.on("hostingResponse",(data) => {
-      console.log(data)
-    })
+    // Listen for responses
+    socket?.on("hostingResponse", (data) => {
+      console.log(data);
+    });
 
-    socket.on('disconnect', () => {
+    // Log disconnection
+    socket?.on('disconnect', () => {
       console.log('Disconnected from server');
     });
+
+    // Clean up listeners on unmount
     return () => {
-      socket.disconnect();
+      socket?.off('connect');
+      socket?.off('hostingResponse');
+      socket?.off('disconnect');
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return { hostRoom, joinRoom };
 };
 
