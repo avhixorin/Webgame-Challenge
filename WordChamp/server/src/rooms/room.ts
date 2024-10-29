@@ -1,5 +1,6 @@
 import { Socket } from "socket.io";
-import { OnlineUser } from "../utils/socketConnection/socketConnect";
+import { OnlineUser } from "../types/Types";
+
 
 class Room {
   public users: { user: OnlineUser; socketId: string }[] = [];

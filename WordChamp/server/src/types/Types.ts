@@ -1,13 +1,13 @@
-type OnlineUser = {
+export type OnlineUser = {
   userId: string;
   socketId: string;
 };
 
-type RegisterData = {
+export type RegisterData = {
   user: OnlineUser;
 };
 
-type HostRoomData = {
+export type HostRoomData = {
   room: {
     roomId: string;
     roomPassword: string;
@@ -15,7 +15,7 @@ type HostRoomData = {
   user: OnlineUser;
 };
 
-type JoinRoomData = {
+export type JoinRoomData = {
   room: {
     roomId: string;
     roomPassword: string;
@@ -23,11 +23,9 @@ type JoinRoomData = {
   user: OnlineUser;
 };
 
-type MessageData = {
+export type MessageData = {
   message: {
     roomId: string;
     content: string;
   };
 };
-
-export type {OnlineUser,RegisterData,HostRoomData,JoinRoomData,MessageData}

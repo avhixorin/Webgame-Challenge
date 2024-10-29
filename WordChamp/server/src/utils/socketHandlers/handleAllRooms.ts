@@ -1,7 +1,7 @@
 import Room from "../../rooms/room";
+import { OnlineUser } from "../../types/Types";
 import ApiResponse from "../ApiResponse/ApiResponse";
 import { Socket } from "socket.io";
-import { OnlineUser } from "../socketConnection/socketConnect";
 
 class RoomHandler {
   private static instance: RoomHandler;

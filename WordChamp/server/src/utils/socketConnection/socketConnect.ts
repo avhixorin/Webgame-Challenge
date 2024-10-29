@@ -3,7 +3,9 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { Express } from 'express';
 import roomHandlerInstance from "../socketHandlers/handleAllRooms";
-import { HostRoomData, JoinRoomData, MessageData, OnlineUser, RegisterData } from '../../types/Types';
+import { HostRoomData, JoinRoomData, MessageData, OnlineUser, RegisterData }  from '../../types/Types';
+
+
 
 dotenv.config();
 
