@@ -38,7 +38,7 @@ const Page2: React.FC = () => {
   const user = useSelector((state:RootState) => state.user.user);
   const navigate = useNavigate(); // need to use the based on the response from the server on whether the room is hosted or joined successfully or not
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br bg-center from-fuchsia-500 via-purple-500 to-indigo-500  opacity-15 p-8">
       <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-lg flex flex-col items-center gap-6">
 
         {/* Header Buttons */}
