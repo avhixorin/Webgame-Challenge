@@ -22,8 +22,8 @@ class RoomHandler {
   }
 
   // Method to handle hosting a new room and joining the socket to the room
-  public hostRoom(roomId: string, roomPassword: string, user: OnlineUser, socket: Socket): ApiResponse {
-    const newRoom = new Room(roomId, roomPassword);
+  public hostRoom(room:Room, user: OnlineUser, socket: Socket): ApiResponse {
+    const newRoom = new Room(room.roomId, room.roomPassword);
     
     // Add user to the room and make socket join the room
     newRoom.addUser(user, socket);

@@ -1,3 +1,5 @@
+import Room from "../rooms/room";
+
 export type OnlineUser = {
   userId: string;
   socketId: string;
@@ -8,10 +10,7 @@ export type RegisterData = {
 };
 
 export type HostRoomData = {
-  room: {
-    roomId: string;
-    roomPassword: string;
-  };
+  room: Room;
   user: OnlineUser;
 };
 

@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Skull, Zap, Star, Target, Shield, Flame } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUser, THEME, User } from "@/Redux/features/userSlice";
+import { setUser } from "@/Redux/features/userSlice";
 import { v4 as uuid } from "uuid";
+import { Theme, User } from "@/types/types";
 const avatars = [
   { icon: Skull, name: "Skull" },
   { icon: Zap, name: "Zap" },
@@ -26,7 +27,7 @@ export default function Page1() {
       id: uuid(),
       username: username,
       avatar: selectedAvatar,
-      theme: THEME.LIGHT,
+      theme: Theme.LIGHT,
     };
     dispatch(setUser(newUser));
     navigate("/pg2");

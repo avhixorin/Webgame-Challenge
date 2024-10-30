@@ -8,8 +8,10 @@ import PowerUpSection from "./PowerUpSection/PowerUp";
 import ChatSection from "./ChatSection/Chats";
 import { Card } from "../ui/card";
 import FriendsScore from "./FriendsScoreSection/FriendsScore";
+import useSocket from "@/hooks/connectSocket";
 
 const Game: React.FC = () => {
+  const {joinRoom } = useSocket();
   useEffect(() => {
     const enterFullScreen = () => {
       document.documentElement.requestFullscreen();

@@ -5,6 +5,7 @@ import { Express } from 'express';
 import roomHandlerInstance from "../socketHandlers/handleAllRooms";
 import { HostRoomData, JoinRoomData, MessageData, OnlineUser, RegisterData }  from '../../types/Types';
 import { SOCKET_EVENTS } from '../../constants/SocketEvents';
+import ApiError from '../ApiError/ApiError';
 
 dotenv.config();
 
@@ -33,14 +34,14 @@ const connectSocket = (app: Express) => {
 
     socket.on(SOCKET_EVENTS.HOST_ROOM, ({ room, user }: HostRoomData) => {
       if (room.roomId && room.roomPassword && user) {
-        const response = roomHandlerInstance.hostRoom(room.roomId, room.roomPassword, user, socket);
+        const response = roomHandlerInstance.hostRoom(room, user, socket);
 
         if (response.statusCode === 200) {
           socket.join(room.roomId);
-          socket.emit(SOCKET_EVENTS.HOSTING_RESPONSE, "Room created successfully");
+          socket.emit(SOCKET_EVENTS.HOSTING_RESPONSE, response);
           console.log(`Room ${room.roomId} created and user ${user.userId} joined.`);
         } else {
-          socket.emit(SOCKET_EVENTS.HOSTING_RESPONSE, response.message);
+          socket.emit(SOCKET_EVENTS.HOSTING_RESPONSE, new ApiError(500, "Error while hosting the room"));
         }
       }
     });
@@ -51,10 +52,10 @@ const connectSocket = (app: Express) => {
 
         if (response.statusCode === 200) {
           socket.join(room.roomId);
-          socket.emit(SOCKET_EVENTS.JOINING_RESPONSE, "Joined room successfully");
+          socket.emit(SOCKET_EVENTS.JOINING_RESPONSE, response);
           console.log(`User ${user.userId} joined room ${room.roomId}.`);
         } else {
-          socket.emit(SOCKET_EVENTS.JOINING_RESPONSE, response.message);
+          socket.emit(SOCKET_EVENTS.JOINING_RESPONSE, new ApiError(500,"Error while joining the room"));
         }
       }
     });

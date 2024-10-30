@@ -76,9 +76,13 @@ export type Words = {
 };
 
 export type hostingResponse = {
-  response:string
+  statusCode: number,
+  message:string,
+  data: object | null
 }
 
 export type joiningResponse = {
-  response:string
+  statusCode: number,
+  message:string,
+  data: object | null
 }
