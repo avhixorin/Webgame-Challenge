@@ -53,7 +53,7 @@ export default function Page1() {
 
   return (
     <div className="relative w-full h-full flex items-center justify-center p-4 overflow-hidden bg-center bg-cover bg-white">
-      {/* Gradient overlay for a soft anime-inspired effect */}
+      
       <div className="absolute inset-0 opacity-70 bg-gradient-to-br from-purple-200 via-pink-100 to-yellow-200"></div>
       
       {/* Background floating elements */}
@@ -62,12 +62,12 @@ export default function Page1() {
       </div>
 
       <div className="relative bg-gray-900 bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 max-w-md w-full space-y-8 z-10 shadow-xl">
-        <h1
+        <div
           className="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-600 animate-bounce"
           style={{ fontFamily: "'Orbitron', sans-serif" }}
         >
           Welcome to WORD CHAMP!
-        </h1>
+        </div>
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold text-purple-300 text-center">
             Choose Your Avatar

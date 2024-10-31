@@ -1,16 +1,15 @@
 type Props = {
-    alphabet: string;
-  };
-  
-  const Alphabets = ({ alphabet }: Props) => {
-    return (
-      <div className="w-14 h-14 bg-gradient-to-br from-orange-200 via-yellow-300 to-pink-200 border-4 border-white rounded-lg shadow-lg flex items-center justify-center transform transition-transform hover:scale-110">
-        <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-lg w-full h-full flex items-center justify-center border border-white border-opacity-30">
-          <p className="text-2xl text-white font-extrabold drop-shadow-md">{alphabet}</p>
-        </div>
+  alphabet: string;
+};
+
+const Alphabets = ({ alphabet }: Props) => {
+  return (
+    <div className="w-16 h-16 bg-gradient-to-br from-red-400 via-orange-500 to-yellow-500 border-4 border-gray-100 rounded-xl shadow-lg flex items-center justify-center transform transition-transform hover:scale-110">
+      <div className="bg-transparent rounded-md w-11/12 h-11/12 flex items-center justify-center ">
+        <p className="text-3xl text-white font-extrabold drop-shadow-lg">{alphabet}</p>
       </div>
-    );
-  };
-  
-  export default Alphabets;
-  
+    </div>
+  );
+};
+
+export default Alphabets;
