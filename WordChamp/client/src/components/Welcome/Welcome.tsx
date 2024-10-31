@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skull, Zap, Star, Target, Shield, Flame } from "lucide-react";
@@ -27,25 +27,16 @@ export default function Welcome() {
 
   useEffect(() => {
     playBackgroundMusic('./sounds/background1.mp3');
-
-    return () => {
-      stopBackgroundMusic();
-    };
+    return () => stopBackgroundMusic();
   }, [playBackgroundMusic, stopBackgroundMusic]);
-  const handleEnter = () => {
+
+  const handleEnter = useCallback(() => {
     stopBackgroundMusic();
     playEnterSound();
-    const newUser: User = {
-      id: uuid(),
-      username: username,
-      avatar: selectedAvatar,
-      theme: Theme.LIGHT,
-    };
-    dispatch(setUser(newUser));
+    dispatch(setUser({ id: uuid(), username, avatar: selectedAvatar, theme: Theme.LIGHT }));
     navigate("/pg2");
-  };
+  }, [stopBackgroundMusic, playEnterSound, dispatch, username, selectedAvatar, navigate]);
 
-  // Generate bouncy anime-style floating background elements
   const backgroundElements = useMemo(() => {
     return [...Array(20)].map((_, i) => (
       <div
