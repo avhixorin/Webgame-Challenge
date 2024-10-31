@@ -58,7 +58,7 @@ export default function Home() {
     playEnterSound();
 
     setTimeout(() => {
-      navigate("/pg1");
+      navigate("/welcome");
     }, 1500);
   };
 

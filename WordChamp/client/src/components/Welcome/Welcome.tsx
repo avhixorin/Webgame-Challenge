@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skull, Zap, Star, Target, Shield, Flame } from "lucide-react";
@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/Redux/features/userSlice";
 import { v4 as uuid } from "uuid";
 import { Theme, User } from "@/types/types";
+import useSound from "@/hooks/useSound";
 
 const avatars = [
   { icon: Skull, name: "Skull" },
@@ -17,13 +18,23 @@ const avatars = [
   { icon: Flame, name: "Flame" },
 ];
 
-export default function Page1() {
+export default function Welcome() {
   const dispatch = useDispatch();
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
+  const { playEnterSound, playBackgroundMusic, stopBackgroundMusic } = useSound();
 
+  useEffect(() => {
+    playBackgroundMusic('./sounds/background1.mp3');
+
+    return () => {
+      stopBackgroundMusic();
+    };
+  }, [playBackgroundMusic, stopBackgroundMusic]);
   const handleEnter = () => {
+    stopBackgroundMusic();
+    playEnterSound();
     const newUser: User = {
       id: uuid(),
       username: username,
