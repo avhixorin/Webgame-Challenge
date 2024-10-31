@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Alphabets from "./floatingAlphabets/Alphabets";
+import useSound from "@/hooks/useSound";
 
 interface AlphabetShape {
   id: number;
@@ -40,27 +41,22 @@ const useBackgroundAnimation = () => {
 export default function Home() {
   const shapes = useBackgroundAnimation();
   const navigate = useNavigate();
-  const [isEntering, setIsEntering] = useState(false)
-  const playSound = () => {
-    const audioContext = new (window.AudioContext || window.AudioContext)()
-    const oscillator = audioContext.createOscillator()
-    oscillator.type = 'sine'
-    oscillator.frequency.setValueAtTime(440, audioContext.currentTime)
-    oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.5)
-    
-    const gainNode = audioContext.createGain()
-    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5)
-    
-    oscillator.connect(gainNode)
-    gainNode.connect(audioContext.destination)
-    
-    oscillator.start()
-    oscillator.stop(audioContext.currentTime + 0.5)
-  }
+  const [isEntering, setIsEntering] = useState(false);
+  const { playEnterSound, playBackgroundMusic, stopBackgroundMusic } = useSound();
+
+  useEffect(() => {
+    playBackgroundMusic('./sounds/background1.mp3');
+
+    return () => {
+      stopBackgroundMusic();
+    };
+  }, [playBackgroundMusic, stopBackgroundMusic]);
+
   const handleEnterGame = () => {
-    setIsEntering(true)
-    playSound()
+    stopBackgroundMusic();
+    setIsEntering(true);
+    playEnterSound();
+
     setTimeout(() => {
       navigate("/pg1");
     }, 1500);
@@ -110,12 +106,12 @@ export default function Home() {
 
         <motion.button
           className="relative px-10 py-4 text-lg font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full shadow-lg 
-    transition-transform duration-300 ease-out overflow-hidden"
+            transition-transform duration-300 ease-out overflow-hidden"
           whileHover={{
-            scale: 1.08, 
+            scale: 1.08,
           }}
           whileTap={{
-            scale: 0.95, 
+            scale: 0.95,
           }}
           onClick={handleEnterGame}
           initial={{ y: 0 }}
