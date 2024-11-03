@@ -87,7 +87,7 @@ module.exports = {
         "power1": "url('./gifs/power1.webp')",
         "power2": "url('./gifs/power2.gif')",
         "power3": "url('./gifs/power3.gif')",
-        "game-bg": "url('./images/game-bg.jpeg')",
+        "game-bg": "url('./images/game-bg1.jpeg')",
         "title": "url('./images/title.png')",
       }
     },

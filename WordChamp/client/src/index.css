@@ -18,6 +18,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Super";
+  src: url("/fonts/Super.ttf") format("ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+
 body {
   font-family: "Quicksand", cursive;
 }

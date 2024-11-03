@@ -64,7 +64,7 @@ export default function Home() {
 
   return (
     <div className="relative w-full h-full flex justify-center items-center overflow-hidden bg-game-bg bg-center bg-cover">
-      {shapes.map((shape) => (
+      {/* {shapes.map((shape) => (
         <motion.div
           key={shape.id}
           className="absolute"
@@ -84,7 +84,7 @@ export default function Home() {
         >
           <Alphabets alphabet={shape.alphabet} />
         </motion.div>
-      ))}
+      ))} */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-full px-4">
         <motion.img
           src="./images/title.png"
