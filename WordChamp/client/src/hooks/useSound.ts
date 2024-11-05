@@ -20,6 +20,18 @@ const useSound = () => {
     }
   }, []);
 
+  const muteBackgroundMusic = useCallback(() => {
+    if(audioRef.current){
+      audioRef.current.muted = true
+    }
+  },[])
+
+  const unMuteBackgroundMusic = useCallback(() => {
+    if(audioRef.current){
+      audioRef.current.muted = false
+    }
+  },[])
+
   const playEnterSound = useCallback(() => {
     const audioContext = new (window.AudioContext || window.AudioContext)();
     const oscillator = audioContext.createOscillator();
@@ -37,7 +49,7 @@ const useSound = () => {
     oscillator.stop(audioContext.currentTime + 0.5);
   }, []);
 
-  return { playBackgroundMusic, stopBackgroundMusic, playEnterSound };
+  return { playBackgroundMusic, stopBackgroundMusic, playEnterSound, muteBackgroundMusic, unMuteBackgroundMusic };
 };
 
 export default useSound;

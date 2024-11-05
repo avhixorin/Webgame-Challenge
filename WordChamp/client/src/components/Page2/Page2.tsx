@@ -9,6 +9,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Room, RoomStatus } from '@/types/types';
 import { useNavigate } from 'react-router-dom';
+import { Volume, VolumeX } from 'lucide-react';
+import useSound from '@/hooks/useSound';
 
 const Page2: React.FC = () => {
   const dispatch = useDispatch();
@@ -37,10 +39,36 @@ const Page2: React.FC = () => {
 
   const user = useSelector((state:RootState) => state.user.user);
   const navigate = useNavigate(); // need to use the based on the response from the server on whether the room is hosted or joined successfully or not
+  const {playBackgroundMusic,stopBackgroundMusic} = useSound();
+  const [muted, setMuted] = useState(false);
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br bg-center from-fuchsia-500 via-purple-500 to-indigo-500  opacity-15 p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br bg-center from-fuchsia-500 via-purple-500 to-indigo-500 p-8">
       <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-lg flex flex-col items-center gap-6">
 
+      <div>
+        {
+          muted ? (
+            <button
+              onClick={() => {
+                setMuted(false);
+                playBackgroundMusic('./sounds/background1.mp3');
+              }}
+            >
+              <VolumeX size={32} className="absolute top-10 left-10 z-10" stroke="#fdfdfd" />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setMuted(true);
+                stopBackgroundMusic();
+              }}
+            >
+              <Volume size={32} className="absolute top-10 left-10 z-10" stroke="#fdfdfd" />
+            </button>
+          )
+        }
+        
+      </div>
         {/* Header Buttons */}
         <div className="flex gap-4">
           {!isJoiningRoom && (

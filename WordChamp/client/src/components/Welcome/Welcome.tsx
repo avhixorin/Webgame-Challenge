@@ -7,6 +7,8 @@ import { setUser } from "@/Redux/features/userSlice";
 import { v4 as uuid } from "uuid";
 import { Theme } from "@/types/types";
 import useSound from "@/hooks/useSound";
+import { Volume, VolumeX } from "lucide-react";
+import Dialogue from "@/utils/Dialogue/Dialogue";
 
 const avatars = [
   { name: "HikariBlade", src: "./images/avatar4.png" },
@@ -35,10 +37,34 @@ export default function Welcome() {
   }, [stopBackgroundMusic, playEnterSound, dispatch, username, selectedAvatar, navigate]);
 
   const avatarList = useMemo(() => avatars, []);
-
+  const [muted, setMuted] = useState(false);
   return (
-    <div className="relative w-full h-full flex items-center justify-center p-4 overflow-hidden bg-game-bg bg-center bg-cover bg-white">
-      
+    <div className="relative w-full h-full flex items-center justify-center p-4 overflow-hidden bg-game-bg bg-center bg-cover bg-white ">
+      <Dialogue />
+      <div className="absolute top-10 left-10 z-10">
+        {
+          muted ? (
+            <button
+              onClick={() => {
+                setMuted(false);
+                playBackgroundMusic('./sounds/background1.mp3');
+              }}
+            >
+              <VolumeX size={32} stroke="#fdfdfd" />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setMuted(true);
+                stopBackgroundMusic();
+              }}
+            >
+              <Volume size={32} stroke="#fdfdfd" />
+            </button>
+          )
+        }
+        
+      </div>
       <div className="absolute inset-0 opacity-70 "></div>
       
       {/* Background floating elements */}

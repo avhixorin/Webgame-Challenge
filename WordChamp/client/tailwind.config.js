@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 
+const plugin = require("tailwindcss/plugin");
+
 module.exports = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -9,7 +11,6 @@ module.exports = {
     './src/**/*.{ts,tsx}',
   ],
   prefix: "",
-  darkMode: "class",
   theme: {
     container: {
       center: true,
@@ -89,10 +90,35 @@ module.exports = {
         "power3": "url('./gifs/power3.gif')",
         "game-bg": "url('./images/game-bg1.jpeg')",
         "title": "url('./images/title.png')",
+        "dialogue": "url('./images/dialogue.png')",
       }
     },
   },
-  plugins: [require("tailwindcss-animate"),
-
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(function({ addComponents, theme }) {
+      addComponents({
+        '.custom-scrollbar': {
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: theme("colors.scrollbar.track"),
+            borderRadius: '100px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: theme("colors.scrollbar.DEFAULT"),
+            borderRadius: '5px',
+            border: `2px solid ${theme("colors.scrollbar.track")}`,
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: theme("colors.scrollbar.hover"),
+          },
+          'scrollbar-width': 'thin',
+          'scrollbar-color': `${theme("colors.scrollbar.DEFAULT")} ${theme("colors.scrollbar.track")}`,
+        },
+      });
+    }),
   ],
 };

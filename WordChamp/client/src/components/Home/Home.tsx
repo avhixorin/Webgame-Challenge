@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Alphabets from "./floatingAlphabets/Alphabets";
 import useSound from "@/hooks/useSound";
+import { Volume, VolumeX } from "lucide-react";
+import Rules from "../Game/Rules/Rules";
 
 interface AlphabetShape {
   id: number;
@@ -62,8 +63,10 @@ export default function Home() {
     }, 1500);
   };
 
+  const [muted, setMuted] = useState(false);
   return (
     <div className="relative w-full h-full flex justify-center items-center overflow-hidden bg-game-bg bg-center bg-cover">
+      
       {/* {shapes.map((shape) => (
         <motion.div
           key={shape.id}
@@ -85,6 +88,30 @@ export default function Home() {
           <Alphabets alphabet={shape.alphabet} />
         </motion.div>
       ))} */}
+      <div className="absolute top-10 left-10 z-10">
+        {
+          muted ? (
+            <button
+              onClick={() => {
+                setMuted(false);
+                playBackgroundMusic('./sounds/background1.mp3');
+              }}
+            >
+              <VolumeX size={32} stroke="#fdfdfd" />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setMuted(true);
+                stopBackgroundMusic();
+              }}
+            >
+              <Volume size={32} stroke="#fdfdfd" />
+            </button>
+          )
+        }
+        
+      </div>
       <div className="relative z-10 flex flex-col items-center justify-center min-h-full px-4">
         <motion.img
           src="./images/title.png"
@@ -125,7 +152,9 @@ export default function Home() {
           <span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-yellow-500 opacity-25 rounded-full blur-md -z-10 hover:backdrop-blur-lg hover:bg-transparent hover:text-white"></span>
           Enter Game
         </motion.button>
+        
       </div>
+      <Rules/>
       <AnimatePresence>
         {isEntering && (
           <motion.div
