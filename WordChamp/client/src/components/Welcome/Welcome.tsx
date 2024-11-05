@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/Redux/features/userSlice";
@@ -23,7 +22,8 @@ export default function Welcome() {
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
   const [username, setUsername] = useState("@");
   const navigate = useNavigate();
-  const { playEnterSound, playBackgroundMusic, stopBackgroundMusic } = useSound();
+  const { playEnterSound, playBackgroundMusic, stopBackgroundMusic } =
+    useSound();
 
   useEffect(() => {
     playBackgroundMusic("./sounds/background1.mp3");
@@ -84,7 +84,7 @@ export default function Welcome() {
       <div className="absolute inset-0 overflow-hidden"></div>
 
       <div className="relative bg-transparent font-super rounded-3xl p-8 max-w-md w-full space-y-8 z-10 shadow-2xl shadow-neonAccent/40">
-        <div className="text-4xl md:text-5xl font-bold text-center animate-bounce text-slate-300 dark:text-neonBlue">
+        <div className="text-4xl md:text-5xl font-bold text-center animate-bounce text-slate-100 dark:text-neonBlue">
           Welcome to WORD CHAMP!
         </div>
 
@@ -110,9 +110,11 @@ export default function Welcome() {
                     selectedAvatar === index ? "opacity-100" : "opacity-70"
                   }`}
                 />
-                <p className={`mt-2 text-center font-bold text-sm ${
-                  selectedAvatar === index ? "text-red-700" : "text-slate-700"
-                }`}>
+                <p
+                  className={`mt-2 text-center font-bold text-sm ${
+                    selectedAvatar === index ? "text-red-700" : "text-slate-700"
+                  }`}
+                >
                   {avatar.name}
                 </p>
               </button>
@@ -126,15 +128,18 @@ export default function Welcome() {
             placeholder="Enter your username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full bg-[#1A2136] border-none placeholder-gray-400 text-white rounded-lg focus:ring-2 focus:ring-neonBlue"
+            className="w-full bg-transparent border-2 border-gray-600 placeholder-gray-400 text-xl font-extrabold text-slate-600 rounded-lg focus:ring-2 focus:ring-neonBlue focus:ring-opacity-50 focus:outline-none transition-all duration-300 shadow-md hover:shadow-lg"
+            style={{
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+            }}
           />
-          {/* <Button
-            className="w-full py-3 px-6 bg-gradient-to-r from-neonBlue to-neonAccent text-black font-semibold rounded-lg shadow-md hover:from-[#00CFFF] hover:to-[#1E90FF] focus:outline-none focus:ring-2 focus:ring-neonAccent focus:ring-opacity-75 transition-all duration-300"
+
+          <CTAButton
+            label="Enter Game"
+            colour="#ece5a1"
             onClick={handleEnter}
-          >
-            Enter Game
-          </Button> */}
-          <CTAButton label="Enter Game" onClick={handleEnter} />
+          />
         </div>
       </div>
 
