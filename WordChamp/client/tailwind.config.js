@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
+const { color } = require('framer-motion');
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
@@ -71,6 +72,11 @@ module.exports = {
           },
         },
       },
+      colors: {
+        neonBlue: '#00FFFF', 
+        darkBg: '#0A0E1A',  
+        neonAccent: '#1E90FF'
+      },
       animation: {
         'pulse-neon': 'pulse-neon 1.5s ease-in-out infinite alternate',
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -83,6 +89,8 @@ module.exports = {
       },
       fontFamily: {
         frick: ['Frick', 'sans-serif'],
+        frisky: ['Frisky', 'cursive'],
+        super: ['Super', 'cursive'],
       },
       backgroundImage: {
         "power1": "url('./gifs/power1.webp')",
@@ -91,6 +99,7 @@ module.exports = {
         "game-bg": "url('./images/game-bg1.jpeg')",
         "title": "url('./images/title.png')",
         "dialogue": "url('./images/dialogue.png')",
+        "scroll": "url('./images/scroll.png')",
       }
     },
   },
