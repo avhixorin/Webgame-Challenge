@@ -49,9 +49,9 @@ const Game: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full p-4 h-full">
-      <GameBg  />
-      <motion.main
+    <div className="relative bg-game-bg1 bg-center bg-cover w-full p-4 h-full">
+      {/* <GameBg  /> */}
+      {/* <motion.main
         className="w-full h-full  grid grid-cols-4 grid-rows-3 gap-4"
         style={{
           backdropFilter: "blur(10px)",
@@ -62,7 +62,6 @@ const Game: React.FC = () => {
         animate="visible"
       >
         <Card className="col-span-2 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
-         {/* <AlphabetSection /> */}
          Section 1
          </Card>
         <Card className="col-span-2 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
@@ -86,8 +85,8 @@ const Game: React.FC = () => {
           
           <ChatSection />
         </Card>
-      </motion.main>
-
+      </motion.main> */}
+      
     </div>
     // <Bento />
     

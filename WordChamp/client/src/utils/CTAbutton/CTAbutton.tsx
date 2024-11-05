@@ -4,14 +4,18 @@ import { useState } from 'react';
 interface ButtonProps {
   label: string;
   colour: string; 
+  type: "button" | "submit" | "reset";
+  disabled: boolean;
   onClick: () => void;
 }
 
-export default function CTAButton({ label, onClick, colour }: ButtonProps) {
+export default function CTAButton({ label, onClick, colour,type,disabled }: ButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.button
+      type={type}
+      disabled={disabled}
       className="relative overflow-hidden rounded-full px-6 py-2 font-semibold text-white shadow-lg transition-all duration-300 ease-out"
       style={{
         background: `linear-gradient(45deg, ${colour} 0%, ${colour}80 50%, ${colour}40 100%)`, 

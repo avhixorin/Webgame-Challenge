@@ -21,6 +21,11 @@ export enum Difficulty {
   GOD = "god"
 }
 
+export enum gameMode {
+  SOLO = "solo",
+  MULTIPLAYER = "multiplayer"
+}
+
 // Types related to user
 export type User = {
   id: string;
@@ -64,6 +69,7 @@ export type GameData = {
   powerUps: string[];
   participants: number;
   currentGameString: string;
+  gameMode: gameMode | null;
   difficulty: Difficulty;
   isHosting: boolean;
   isJoiningRoom: boolean;

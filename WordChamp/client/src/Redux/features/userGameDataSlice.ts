@@ -1,4 +1,4 @@
-import { Difficulty, GameData } from "@/types/types";
+import { Difficulty, GameData, gameMode } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -17,6 +17,7 @@ const initialState: GameData = {
   powerUps: [],
   participants: 1,
   currentGameString: '',
+  gameMode: null,
   difficulty: Difficulty.EASY,
   isHosting:true,
   isJoiningRoom:false
@@ -48,6 +49,9 @@ const gameDataSlice = createSlice({
     setParticipants: (state, action: PayloadAction<number>) => {
       state.participants = action.payload;
     },
+    setGameMode: (state,action:PayloadAction<gameMode>) => {
+      state.gameMode = action.payload
+    },
     resetGameData: () => initialState,
   }
 });
@@ -58,6 +62,7 @@ export const {
   setCurrentGameString,
   setDifficulty,
   setParticipants,
+  setGameMode,
   addScore,
   setScore,
   resetGameData

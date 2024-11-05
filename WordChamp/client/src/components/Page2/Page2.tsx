@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import useRoomID from '@/hooks/getRoomId';
 import { setRoomId, setRoomPassword, setRoomStatus } from '@/Redux/features/roomSlice';
@@ -7,89 +6,92 @@ import useSocket from '@/hooks/connectSocket';
 import { RootState } from '@/Redux/store/store';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Room, RoomStatus } from '@/types/types';
+import { gameMode as GameModes, Room, RoomStatus } from '@/types/types';
 import { useNavigate } from 'react-router-dom';
 import { Volume, VolumeX } from 'lucide-react';
 import useSound from '@/hooks/useSound';
+import Rules from '../Game/Rules/Rules';
+import { setGameMode } from '@/Redux/features/userGameDataSlice';
+import CTAButton from '@/utils/CTAbutton/CTAbutton';
 
 const Page2: React.FC = () => {
   const dispatch = useDispatch();
   const { createRoomId } = useRoomID();
+
   const { hostRoom, joinRoom } = useSocket();
-  
   const [isHosting, setIsHosting] = useState(false);
   const [isJoiningRoom, setIsJoiningRoom] = useState(false);
-  
-  useEffect(() => {
-    if (isHosting) {
-      dispatch(setRoomId(createRoomId()));
-    }
-  }, [isHosting, createRoomId, dispatch]);
-  
+  const [localMode, setLocalMode] = useState<GameModes | null>(null);
+  const [muted, setMuted] = useState(false);
+
+  const {playBackgroundMusic,stopBackgroundMusic} = useSound()
+
+
   const roomId = useSelector((state: RootState) => state.room.roomId);
+  const user = useSelector((state: RootState) => state.user.user);
+  const navigate = useNavigate();
+  const gameMode = useSelector((state: RootState) => state.userGameData.gameMode);
+  const [isModeSelected, setIsModeSelected] = useState(false);
+  useEffect(() => {
+    if (muted) stopBackgroundMusic();
+    else playBackgroundMusic("./sounds/background1.mp3");
+  }, [muted, playBackgroundMusic, stopBackgroundMusic]);
+
+  useEffect(() => {
+    if (isHosting) dispatch(setRoomId(createRoomId()));
+  }, [isHosting, createRoomId, dispatch]);
 
   const validationSchema = Yup.object({
-    roomPassword: Yup.string()
-      .required('Room password is required'),
+    roomPassword: Yup.string().required('Room password is required'),
     roomId: Yup.string().when('$isJoining', {
       is: true,
       then: Yup.string().required('Room ID is required'),
     }),
   });
 
-  const user = useSelector((state:RootState) => state.user.user);
-  const navigate = useNavigate(); // need to use the based on the response from the server on whether the room is hosted or joined successfully or not
-  const {playBackgroundMusic,stopBackgroundMusic} = useSound();
-  const [muted, setMuted] = useState(false);
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br bg-center from-fuchsia-500 via-purple-500 to-indigo-500 p-8">
-      <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-lg flex flex-col items-center gap-6">
+  const handleGameModeChange = (mode: GameModes) => {
+    setLocalMode(mode);
+    setIsModeSelected(true);
+    dispatch(setGameMode(mode));
+    if(mode === GameModes.SOLO){
+      navigate('/game')
+    }
+  };
 
-      <div>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-game-bg bg-center p-4">
+      <button onClick={() => setMuted(!muted)} className="absolute top-10 left-10 z-10">
+        {muted ? <VolumeX size={32} stroke="#fdfdfd" /> : <Volume size={32} stroke="#fdfdfd" />}
+      </button>
+
+      <Rules />
+
+      <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-lg flex flex-col items-center gap-6">
+        <h1 className="text-3xl font-bold text-white">Mode Selection</h1>
         {
-          muted ? (
-            <button
-              onClick={() => {
-                setMuted(false);
-                playBackgroundMusic('./sounds/background1.mp3');
-              }}
-            >
-              <VolumeX size={32} className="absolute top-10 left-10 z-10" stroke="#fdfdfd" />
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                setMuted(true);
-                stopBackgroundMusic();
-              }}
-            >
-              <Volume size={32} className="absolute top-10 left-10 z-10" stroke="#fdfdfd" />
-            </button>
+          !localMode && (
+            <div className="flex gap-4">
+              <CTAButton type='button' disabled={false} label="Solo" colour="#2563eb" onClick={() => handleGameModeChange(GameModes.SOLO)} />
+              <CTAButton type='button' disabled={false} label="Multiplayer" colour="#16a34a" onClick={() => handleGameModeChange(GameModes.MULTIPLAYER)} />
+            </div>
           )
         }
-        
-      </div>
-        {/* Header Buttons */}
-        <div className="flex gap-4">
-          {!isJoiningRoom && (
-            <Button
-              onClick={() => setIsHosting(prev => !prev)}
-              className="text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 rounded-lg shadow-md transition"
-            >
-              {isHosting ? 'Cancel Host' : 'Host'}
-            </Button>
-          )}
-          {!isHosting && (
-            <Button
-              onClick={() => setIsJoiningRoom(prev => !prev)}
-              className="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 rounded-lg shadow-md transition"
-            >
-              {isJoiningRoom ? 'Cancel Join' : 'Join Room'}
-            </Button>
-          )}
-        </div>
 
-        {/* Host Room Section */}
+        {localMode && (
+          gameMode === GameModes.MULTIPLAYER && (
+            <div className="flex gap-4">
+              {!isJoiningRoom && (
+                <CTAButton type='button' disabled={false} label={isHosting ? 'Cancel Host' : 'Host'} colour="#2563eb" onClick={() => setIsHosting((prev) => !prev)} />
+                
+              )}
+              {!isHosting && (
+                <CTAButton type='button' disabled={false} label={isJoiningRoom ? 'Cancel Join' : 'Join Room'} colour="#16a34a" onClick={() => setIsJoiningRoom((prev) => !prev)} />
+                
+              )}
+            </div>
+          )
+        )}
+
         {isHosting && (
           <div className="w-full px-4 py-4 bg-white/20 backdrop-blur-md rounded-lg shadow-lg flex flex-col gap-4">
             <Formik
@@ -97,12 +99,8 @@ const Page2: React.FC = () => {
               validationSchema={validationSchema}
               onSubmit={(values) => {
                 if (user) {
-                  const room:Room = {
-                    roomId: roomId,
-                    roomPassword: values.roomPassword
-                  }
+                  const room: Room = { roomId, roomPassword: values.roomPassword };
                   hostRoom(room, user);
-                  dispatch(setRoomId(roomId));
                   dispatch(setRoomStatus(RoomStatus.HOSTING));
                   dispatch(setRoomPassword(values.roomPassword));
                 } else {
@@ -112,33 +110,17 @@ const Page2: React.FC = () => {
             >
               {({ isSubmitting }) => (
                 <Form>
-                  <input
-                    type="text"
-                    value={roomId}
-                    readOnly
-                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
-                  />
-                  <Field
-                    type="password"
-                    name="roomPassword"
-                    placeholder="Room Password"
-                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
-                  />
+                  <input type="text" value={roomId} readOnly className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none" />
+                  <Field type="password" name="roomPassword" placeholder="Room Password" className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none" />
                   <ErrorMessage name="roomPassword" component="div" className="text-red-600" />
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full text-white bg-purple-700 hover:bg-purple-600 focus:ring-4 focus:ring-purple-300 rounded-lg shadow-md transition disabled:bg-purple-400"
-                  >
-                    Host Game
-                  </Button>
+                  <CTAButton type={"submit"} disabled={isSubmitting} label="Host Game" colour="#7e22ce" onClick={() => {}} />
+                  
                 </Form>
               )}
             </Formik>
           </div>
         )}
 
-        {/* Join Room Section */}
         {isJoiningRoom && !isHosting && (
           <div className="w-full px-4 py-4 bg-white/20 backdrop-blur-md rounded-lg shadow-lg flex flex-col gap-4">
             <Formik
@@ -146,46 +128,23 @@ const Page2: React.FC = () => {
               validationSchema={validationSchema}
               onSubmit={(values) => {
                 if (user) {
-                  const room:Room = {
-                    roomId: values.roomId,
-                    roomPassword: values.roomPassword
-                  }
+                  const room: Room = { roomId: values.roomId, roomPassword: values.roomPassword };
                   joinRoom(room, user);
                   dispatch(setRoomStatus(RoomStatus.JOINING));
-                  dispatch(setRoomId(values.roomId));
                   dispatch(setRoomPassword(values.roomPassword));
                 } else {
                   console.error('User is not logged in');
                 }
               }}
-              validateOnChange={false}
-              validateOnBlur={false}
-              enableReinitialize
-              validateOnMount
             >
               {({ isSubmitting }) => (
                 <Form>
-                  <Field
-                    type="text"
-                    name="roomId"
-                    placeholder="Room ID"
-                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
-                  />
+                  <Field type="text" name="roomId" placeholder="Room ID" className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none" />
                   <ErrorMessage name="roomId" component="div" className="text-red-600" />
-                  <Field
-                    type="password"
-                    name="roomPassword"
-                    placeholder="Room Password"
-                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
-                  />
+                  <Field type="password" name="roomPassword" placeholder="Room Password" className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none" />
                   <ErrorMessage name="roomPassword" component="div" className="text-red-600" />
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 rounded-lg shadow-md transition"
-                  >
-                    Join Room
-                  </Button>
+                  <CTAButton type={"submit"} disabled={isSubmitting} label="Join Room" colour="#16a34a" onClick={() => {}} />
+                  
                 </Form>
               )}
             </Formik>
