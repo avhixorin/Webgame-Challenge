@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/Redux/store/store";
+import {  RootState } from "@/Redux/store/store";
 import { useToast } from "@/hooks/use-toast";
 import { Filter } from "bad-words";
 import { addScore } from "@/Redux/features/userGameDataSlice";
@@ -11,6 +11,9 @@ import useComplexity from "@/hooks/checkComplexity";
 import useMistake from "@/hooks/checkNegatives";
 import { motion } from "framer-motion";
 import CTAButton from "@/utils/CTAbutton/CTAbutton";
+import { addGuessedWord } from "@/Redux/features/wordsData";
+import { Verdict } from "@/types/types";
+import { addAnswer } from "@/Redux/features/answersSlice";
 
 const InputSection: React.FC = () => {
   
@@ -36,7 +39,9 @@ const InputSection: React.FC = () => {
         className: "bg-red-500 rounded-md text-white",
         color: "white",
       });
+
       dispatch(addScore(-3));
+      dispatch(addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.PROFANE }));
       return;
     }
 
@@ -50,16 +55,20 @@ const InputSection: React.FC = () => {
           "bg-white/25 rounded-md border border-white/20 backdrop-blur-lg text-white",
         color: "white",
       });
-
+      
+      dispatch(addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.RIGHT }));
       setInputWord("");
+      dispatch(addGuessedWord(inputWord.toUpperCase()));
+      console.log("The guessed word is: ", inputWord);
     } else {
       getNegativeScore(gameString.join(""), inputWord);
+      dispatch(addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.WRONG }));
     }
   };
 
   return (
     <Card className="w-full flex flex-col md:flex-row bg-transparent gap-4 justify-between items-center border-none shadow-none">
-      <Card className="w-full glass-effect p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-out">
+      <div className="w-full p-6 rounded-lg transform hover:scale-105 transition-transform duration-300 ease-out">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
           <CardContent className="flex items-center gap-4">
             <motion.div
@@ -90,11 +99,11 @@ const InputSection: React.FC = () => {
               }}
             >
               <CTAButton type="submit" disabled={false} label="Enter" onClick={() => {}} colour="#3b82f6" />
-              
+              {/* <CTAButton type="submit" disabled={false} label="Reset" onClick={() => { dispatch(resetStore() as any); }} colour="#3b82f6" /> */}
             </motion.div>
           </CardContent>
         </form>
-      </Card>
+      </div>
       <style>{`
 
         .font-orbitron {

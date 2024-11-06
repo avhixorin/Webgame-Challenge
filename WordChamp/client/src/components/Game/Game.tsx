@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "../../index.css";
 import AlphabetSection from "./AlphabetSection/Alphabets";
 import InputSection from "./InputSection/Input";
+import GuessedWords from "./GuessedWords/GuessedWords";
 
 const Game: React.FC = () => {
   useEffect(() => {
@@ -44,6 +45,9 @@ const Game: React.FC = () => {
     <div className="relative flex flex-col justify-around items-center bg-game-bg1 bg-center bg-cover w-full p-4 h-full">
       <div className="mt-10">
         <AlphabetSection />
+      </div>
+      <div>
+        <GuessedWords />
       </div>
       <div>
         <InputSection />

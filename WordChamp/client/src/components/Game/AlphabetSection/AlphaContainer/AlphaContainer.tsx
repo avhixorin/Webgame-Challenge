@@ -38,7 +38,7 @@ const AlphaContainer: React.FC<Props> = ({ alphabet }) => {
             }
     
             @keyframes bounce {
-              0%, 100% { transform: translateY(-10px); }
+              0%, 100% { transform: translateY(-5px); }
               50% { transform: translateY(0); }
             }
         `}</style>

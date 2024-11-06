@@ -6,6 +6,7 @@ export enum Theme {
 export enum Verdict {
   RIGHT = "right",
   WRONG = "wrong",
+  PROFANE = "profane"
 }
 
 export enum RoomStatus {
@@ -78,6 +79,7 @@ export type GameData = {
 export type Words = {
   wordCount: number;
   words: string[];
+  guessedWords: string[];
   wordsFetched: boolean;
 };
 
