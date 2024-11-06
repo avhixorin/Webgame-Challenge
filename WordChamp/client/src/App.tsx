@@ -1,14 +1,15 @@
 import React from 'react'
-
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from 'react-hot-toast';
 import { Outlet } from 'react-router-dom'
 
 const App:React.FC = () => {
   return (
     <div className='w-full h-full'>
       <Outlet />
-      <Toaster />
-      {/* <Bento /> */}
+      <Toaster
+  position="top-center"
+  reverseOrder={true}
+/>
     </div>
   )
 }

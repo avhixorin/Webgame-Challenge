@@ -1,10 +1,10 @@
 import { addScore } from "@/Redux/features/userGameDataSlice";
 import { useDispatch } from "react-redux";
-import { useToast } from "@/hooks/use-toast"
+import showToastMessage from "./useToast";
 
 const useMistake = () => {
-  const {toast} = useToast();
   const dispatch = useDispatch();
+
   const buildCharCount = (word: string) => {
     const charCount: { [key: string]: number } = {};
     for (const char of word) {
@@ -20,7 +20,6 @@ const useMistake = () => {
     }
 
     const primaryCount = buildCharCount(primary);
-
     for (const char of secondary) {
       if (!primaryCount[char] || primaryCount[char] < 1) {
         return false;
@@ -33,16 +32,13 @@ const useMistake = () => {
   const isGraveMistake = (primary: string, secondary: string) => {
     if (!primary || !secondary) {
       console.warn("Words are missing");
-      
       return false;
     }
 
     const primaryCount = buildCharCount(primary);
-
-    
     for (const char of secondary) {
       if (!primaryCount[char] || primaryCount[char] < 1) {
-        return true; 
+        return true;
       }
       primaryCount[char]--;
     }
@@ -53,21 +49,18 @@ const useMistake = () => {
     let score = 0;
     if (isGraveMistake(primary, secondary)) {
       score -= 2;
-      toast({
-        variant: "destructive",
-        title: "Oopsie Daisy! 😬",
-        description: `Looks like you stumbled! You scored ${score} this time. Better luck next round!`,
-        className: "bg-red-700 rounded-md border border-white/20 backdrop-blur-md text-white shadow-lg",
-    });
+      showToastMessage(
+        "Almost there! You scored -2 this round. Keep pushing—you’ve got this!",
+        "😬",
+        "bg-yellow-600"
+      );
     } else if (isMinorMistake(primary, secondary)) {
       score -= 1;
-      toast({
-        variant: "destructive",
-        title: "Whoopsie! 😅",
-        description: `Looks like you hit a little bump! You snagged ${score} this round. Keep going!`,
-        className: "bg-red-700 rounded-md border border-white/20 backdrop-blur-md text-white shadow-lg",
-    });
-    
+      showToastMessage(
+        "Just a small setback! You scored -1 this round. Keep pushing forward!",
+        "😅",
+        "bg-orange-500"
+      );
     }
     dispatch(addScore(score));
   };
