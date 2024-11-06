@@ -13,7 +13,7 @@ import CTAButton from "@/utils/CTAbutton/CTAbutton";
 import { addGuessedWord } from "@/Redux/features/wordsData";
 import { Verdict } from "@/types/types";
 import { addAnswer } from "@/Redux/features/answersSlice";
-import showToastMessage from "@/hooks/useToast";
+import showToastMessage from "@/utils/Toast/useToast";
 
 const InputSection: React.FC = () => {
   const dispatch = useDispatch();
@@ -53,7 +53,7 @@ const InputSection: React.FC = () => {
       const finalScore = getScore(inputWord.toLowerCase());
 
       showToastMessage(
-        `Congratulations! You’ve earned +${finalScore} points! Keep up the great work!`,
+        `Congratulations! You’ve earned + ${finalScore} points! Keep up the great work!`,
         "🎉",
         "bg-green-600"
       );

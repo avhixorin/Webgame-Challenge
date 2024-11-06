@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { SOCKET_EVENTS } from '@/constants/SocketEvents';
 import { hostingResponse, joiningResponse, Room, User } from '@/types/types';
-import { toast } from './use-toast';
 import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
 
 let socket: Socket | null = null;
 
@@ -16,40 +16,23 @@ const initializeSocket = (): Socket => {
 
 const useSocket = () => {
   const socket = initializeSocket();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const handleHostingResponse = (response: hostingResponse) => {
     if (response?.statusCode === 200) {
-      toast({
-        title: response.message,
-        description: '',
-        className: 'bg-white/25 rounded-md border border-white/20 backdrop-blur-lg text-white',
-      });
-      navigate("/game")
+      toast.success(response.message || "Room hosted successfully! Redirecting...");
+      navigate("/game");
     } else {
-      toast({
-        variant: "destructive",
-        title: 'Error',
-        description: 'Unable to host room.',
-        className: 'bg-red-500 rounded-md border border-red-400 backdrop-blur-lg text-white',
-      });
+      toast.error("We're sorry, but hosting the room was unsuccessful.");
     }
   };
 
   const handleJoiningResponse = (response: joiningResponse) => {
     if (response?.statusCode === 200) {
-      toast({
-        title: response.message,
-        description: '',
-        className: 'bg-white/25 rounded-md border border-white/20 backdrop-blur-lg text-white',
-      });
-      navigate("/game")
+      toast.success(response.message || "Joined room successfully! Redirecting...");
+      navigate("/game");
     } else {
-      toast({
-        variant: "destructive",
-        title: 'Error',
-        description: 'Unable to join room.',
-        className: 'bg-red-500 rounded-md border border-red-400 backdrop-blur-lg text-white',
-      });
+      toast.error("Unable to join room. Please try again later.");
     }
   };
 

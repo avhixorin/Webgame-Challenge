@@ -1,6 +1,6 @@
 import { addScore } from "@/Redux/features/userGameDataSlice";
 import { useDispatch } from "react-redux";
-import showToastMessage from "./useToast";
+import showToastMessage from "../utils/Toast/useToast";
 
 const useMistake = () => {
   const dispatch = useDispatch();
