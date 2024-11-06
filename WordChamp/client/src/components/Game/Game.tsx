@@ -1,17 +1,9 @@
 import React, { useEffect } from "react";
-import "../../index.css"
-import { motion } from "framer-motion";
-import { GameBg } from "../GameBg/GameBg";
-import GuessedWords from "./GuessedWords/GuessedWords";
+import "../../index.css";
+import AlphabetSection from "./AlphabetSection/Alphabets";
 import InputSection from "./InputSection/Input";
-import PowerUpSection from "./PowerUpSection/PowerUp";
-import ChatSection from "./ChatSection/Chats";
-import { Card } from "../ui/card";
-import FriendsScore from "./FriendsScoreSection/FriendsScore";
-import useSocket from "@/hooks/connectSocket";
 
 const Game: React.FC = () => {
-  const {joinRoom } = useSocket();
   useEffect(() => {
     const enterFullScreen = () => {
       document.documentElement.requestFullscreen();
@@ -49,47 +41,14 @@ const Game: React.FC = () => {
   };
 
   return (
-    <div className="relative bg-game-bg1 bg-center bg-cover w-full p-4 h-full">
-      {/* <GameBg  /> */}
-      {/* <motion.main
-        className="w-full h-full  grid grid-cols-4 grid-rows-3 gap-4"
-        style={{
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-        }}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <Card className="col-span-2 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
-         Section 1
-         </Card>
-        <Card className="col-span-2 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
-          
+    <div className="relative flex flex-col justify-around items-center bg-game-bg1 bg-center bg-cover w-full p-4 h-full">
+      <div className="mt-10">
+        <AlphabetSection />
+      </div>
+      <div>
         <InputSection />
-      </Card>
-      <Card className="col-span-2 row-span-1 p-4 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
-          <GuessedWords />
-        </Card>
-      <Card className="p-4 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
-      <FriendsScore />
-    </Card>
-    <Card className="p-4 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
-          <GuessedWords />
-        </Card>
-    <Card className="col-span-1 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
-          
-          <PowerUpSection />
-        </Card>
-    <Card className="col-span-1 row-span-1 p-6 shadow-lg rounded-xl bg-white/10  backdrop-blur-lg border-none">
-          
-          <ChatSection />
-        </Card>
-      </motion.main> */}
-      
+      </div>
     </div>
-    // <Bento />
-    
   );
 };
 
