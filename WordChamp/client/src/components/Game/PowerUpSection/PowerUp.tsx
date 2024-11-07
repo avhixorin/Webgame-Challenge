@@ -22,39 +22,7 @@ const PowerUpSection:React.FC = () => {
     <div className="w-full flex flex-col md:flex-row justify-between items-end">
           
           <img src="./images/thunder.svg" className='cursor-pointer' alt="" />
-          {/* <CardContent className="p-4">
-          <Card className={`
-          ${backGround}
           
-           rounded-md shadow-md
-          transition-all
-          `} style={{"transitionDuration": "0.2s",backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",}} >
-            <CardHeader>
-              <CardTitle className="
-              text-white text-lg sm:text-xl md:text-2xl">
-                PowerUps Section
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-wrap justify-center gap-4 p-4">
-              <Button className="bg-white text-green-700 hover:bg-gray-100"
-              onClick={() => handlePowerUpClick(1)}
-              >
-                Power Up 1
-              </Button>
-              <Button className="bg-white text-green-700 hover:bg-gray-100"
-              onClick={() => handlePowerUpClick(2)}
-              >
-                Power Up 2
-              </Button>
-              <Button className="bg-white text-green-700 hover:bg-gray-100"
-              onClick={() => handlePowerUpClick(3)}
-              >
-                Power Up 3
-              </Button>
-            </CardContent>
-          </Card>
-        </CardContent> */}
         </div>
   )
 }

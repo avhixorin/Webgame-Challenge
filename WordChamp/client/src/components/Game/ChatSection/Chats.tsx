@@ -17,8 +17,8 @@ const dummyMessages: ChatMessage[] = [
   { id: 2, sender: 'Bob', message: 'I’m good! Working on the project.', timestamp: '10:02 AM' },
   { id: 3, sender: 'Alice', message: 'Nice! Need any help?', timestamp: '10:05 AM' },
   { id: 4, sender: 'Bob', message: 'Maybe with the UI adjustments.', timestamp: '10:07 AM' },
-  { id: 4, sender: 'Bob', message: 'Maybe with the UI adjustments.', timestamp: '10:07 AM' },
-  { id: 4, sender: 'Bob', message: 'Maybe with the UI adjustments.', timestamp: '10:07 AM' },
+  { id: 5, sender: 'Bob', message: 'Maybe with the UI adjustments.', timestamp: '10:07 AM' },
+  { id: 6, sender: 'Bob', message: 'Maybe with the UI adjustments.', timestamp: '10:07 AM' },
 ];
 
 const ChatSection: React.FC = () => {
