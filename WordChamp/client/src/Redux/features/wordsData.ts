@@ -22,9 +22,10 @@ const wordsDataSlice = createSlice({
       state.wordsFetched = action.payload;
     },
     addGuessedWord: (state, action: PayloadAction<string>) => {
+      if (state.guessedWords.length >= 15) {
+        state.guessedWords.shift(); 
+      }
       state.guessedWords.push(action.payload);
-      console.log("Guessed word added:", action.payload); 
-      console.log("Current guessed words:", state.guessedWords); 
     },
     resetWords: () => initialState,
   },

@@ -1,6 +1,7 @@
 import { setCurrentGameString } from "@/Redux/features/userGameDataSlice";
 import { setWords, setWordsFetched } from "@/Redux/features/wordsData";
 import { RootState } from "@/Redux/store/store";
+import { Difficulty } from "@/types/types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -51,16 +52,19 @@ const useWords = () => {
       if (wordCount === 1) {
         tempString += words[0];
       } else {
-        for (let i = 0; i < 2; i++) {
-          tempString += words[randomIndex];
+        if(difficulty === Difficulty.EASY){
+          for (let i = 0; i < 4; i++) {
+            tempString += words[i];
+          }
         }
+        
         tempString = tempString.slice(0, 10);
       }
 
       const shuffledString = shuffleString(tempString);
       dispatch(setCurrentGameString(shuffledString));
     }
-  }, [words, wordCount, dispatch]);
+  }, [words, wordCount, dispatch,difficulty]);
 
   return { wordCount, difficulty, words };
 };

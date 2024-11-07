@@ -1,7 +1,7 @@
 import { RootState } from "@/Redux/store/store";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
-import showToastMessage from "../utils/Toast/useToast";
+import toast from "react-hot-toast";
 
 const useValidate = (word: string) => {
   const currentGameString = useSelector(
@@ -33,33 +33,43 @@ const useValidate = (word: string) => {
   };
 
   const validate = useCallback(async (): Promise<boolean> => {
-    if (doesIncludes(currentGameString, word)) { 
-      if (word.length > 0) {
-        try {
-          const response = await fetch(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
-          );
+    if (word.length > 0 && doesIncludes(currentGameString, word)) { 
+      try {
+        const response = await fetch(
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+        );
 
-          if (response.ok) {
-            return true;
-          } else {
-            return false; 
-          }
-        } catch (error) {
-          console.error("Error validating word:", error);
-          return false;
+        if (response.ok) {
+          return true; 
+        } else {
+          toast("That's not a valid word in the dictionary!", {
+            icon: "📖",
+            style: {
+              background: "rgba(255, 165, 0, 0.4)",
+              border: "1px solid rgba(255, 255, 255, 0.3)",
+              opacity: 0.9,
+              color: "#fff",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              backdropFilter: "blur(50px)",
+            }
+          });
+          return false; 
         }
+      } catch (error) {
+        console.error("Error validating word:", error);
+        toast("Unable to validate the word at the moment.", {
+          icon: "⚠️",
+          style: {
+            background: "rgba(255, 69, 0, 0.5)",
+            color: "#fff",
+          }
+        });
+        return false;
       }
     } else {
-      showToastMessage(
-        "It seems you've ventured into forbidden territory! Make sure your word sticks to the rules!",
-        "😬",
-        "bg-red-700"
-      );
      
       return false;
     }
-    return false;
   }, [word, currentGameString]);
 
   return validate;

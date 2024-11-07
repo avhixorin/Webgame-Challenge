@@ -9,11 +9,13 @@ type WordProps = {
 
 const WordsCover: React.FC<WordProps> = ({ word }) => {
   return (
-    <Card className="px-4 py-2 m-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold rounded-full shadow-md transform hover:scale-105 transition-transform duration-200">
+    <Card className="px-4 py-2 m-2 bg-[rgba(189,182,182,0.34)] text-zinc-800 text-md font-semibold rounded-full shadow-md transform hover:scale-105 hover:bg-[rgba(101,208,243,0.55)] transition-transform duration-200"
+    >
       {word}
     </Card>
   );
 };
+
 
 const GuessedWords: React.FC = () => {
   const guessedWords = useSelector((state: RootState) => state.wordsData.guessedWords);

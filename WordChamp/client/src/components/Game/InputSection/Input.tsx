@@ -13,7 +13,7 @@ import CTAButton from "@/utils/CTAbutton/CTAbutton";
 import { addGuessedWord } from "@/Redux/features/wordsData";
 import { Verdict } from "@/types/types";
 import { addAnswer } from "@/Redux/features/answersSlice";
-import showToastMessage from "@/utils/Toast/useToast";
+import toast from "react-hot-toast";
 
 const InputSection: React.FC = () => {
   const dispatch = useDispatch();
@@ -35,11 +35,17 @@ const InputSection: React.FC = () => {
     e.preventDefault();
 
     if (filter.isProfane(inputWord)) {
-      showToastMessage(
-        "Oh no! That's a profane word!",
-        "🤬",
-        "bg-red-600"
-      );
+      toast(`Oh no! That's a profane word!`, {
+        icon: "🤬",
+        style: {
+          background: "rgba(255, 0, 0, 0.8)",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+          opacity: 0.9,
+          color: "#fff",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          backdropFilter: "blur(50px)",
+        },
+      })
 
       dispatch(addScore(-3));
       dispatch(
@@ -51,13 +57,18 @@ const InputSection: React.FC = () => {
     const isValid = await validate();
     if (isValid) {
       const finalScore = getScore(inputWord.toLowerCase());
-
-      showToastMessage(
-        `Congratulations! You’ve earned + ${finalScore} points! Keep up the great work!`,
-        "🎉",
-        "bg-green-600"
-      );
-
+      toast(`That's correct! You’ve earned + ${finalScore} points!`, {
+        icon: "🎉",
+        style: {
+          background: "rgba(255, 255, 255, 0.1)",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+          opacity: 0.9,
+          color: "#fff",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          backdropFilter: "blur(50px)",
+        },
+      })
+      
       dispatch(addScore(finalScore));
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.RIGHT })
@@ -66,6 +77,17 @@ const InputSection: React.FC = () => {
       dispatch(addGuessedWord(inputWord.toUpperCase()));
       console.log("The guessed word is: ", inputWord);
     } else {
+      // toast("That's not a valid word!", {
+      //   icon: "😬",
+      //   style: {
+      //     background: "rgba(255, 165, 0, 0.4)",
+      //     border: "1px solid rgba(255, 255, 255, 0.3)",
+      //     opacity: 0.9,
+      //     color: "#fff",
+      //     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+      //     backdropFilter: "blur(50px)",
+      //   }
+      // });
       getNegativeScore(gameString.join(""), inputWord);
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.WRONG })
