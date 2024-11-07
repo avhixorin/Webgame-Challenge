@@ -1,61 +1,42 @@
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { DIFFICULTY, setDifficulty, setParticipants, setScore } from '@/Redux/features/userGameDataSlice';
-import { setWordCount, setWordsFetched } from '@/Redux/features/wordsData';
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { RootState } from '@/Redux/store/store';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-const Profile:React.FC = () => {
-    const dispatch = useDispatch();
+const Profile: React.FC = () => {
+  const { difficulty, participants: numPlayers } = useSelector((state: RootState) => state.userGameData);
+  const { roomId, password } = useSelector((state: RootState) => state.room);
 
-  const [numPlayers, setNumPlayers] = useState<number>(1);
-  const [difficulty, setLocalDifficulty] = useState<DIFFICULTY>(
-    DIFFICULTY.EASY
-  );
-
-
-  const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.max(1, parseInt(e.target.value));
-    setNumPlayers(value);
-    dispatch(setParticipants(value));
-  };
-
-  const handleSelectDifficulty = (value: DIFFICULTY) => {
-    setLocalDifficulty(value);
-    dispatch(setDifficulty(value));
-    const wordCount =
-      value === DIFFICULTY.GOD
-        ? 1
-        : value === DIFFICULTY.HARD || value === DIFFICULTY.MEDIUM
-        ? 3
-        : 5;
-    dispatch(setWordCount(wordCount));
-    dispatch(setWordsFetched(false));
-    dispatch(setScore(0));
-  };
   return (
-    <div className="w-full py-4 flex justify-evenly items-center gap-4">
-    <Select onValueChange={handleSelectDifficulty}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder={difficulty} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value={DIFFICULTY.EASY}>Easy</SelectItem>
-        <SelectItem value={DIFFICULTY.MEDIUM}>Medium</SelectItem>
-        <SelectItem value={DIFFICULTY.HARD}>Hard</SelectItem>
-        <SelectItem value={DIFFICULTY.GOD}>God</SelectItem>
-      </SelectContent>
-    </Select>
-    <Input
-      type="number"
-      min="1"
-      placeholder="Enter number of players"
-      className="flex-1 text-gray-900"
-      value={numPlayers}
-      onChange={handlePlayerChange}
-    />
-  </div>
-  )
-}
+    <div className="w-full max-h-60 py-6 px-4 flex flex-col gap-6 items-center bg-white/10 backdrop-blur-md rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold text-teal-600">Game Room Details</h2>
 
-export default Profile
+      <div className="flex flex-col gap-4 w-full max-w-md">
+        {/* Difficulty Level */}
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-semibold text-gray-800">Difficulty Level:</span>
+          <span className="text-lg font-semibold text-teal-700">{difficulty}</span>
+        </div>
+
+        {/* Number of Players */}
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-semibold text-gray-800">Number of Players:</span>
+          <span className="text-lg font-semibold text-teal-700">{numPlayers}</span>
+        </div>
+
+        {/* Room ID */}
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-semibold text-gray-800">Room ID:</span>
+          <span className="text-lg font-semibold text-teal-700">{roomId}</span>
+        </div>
+
+        {/* Room Password */}
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-semibold text-gray-800">Room Password:</span>
+          <span className="text-lg font-semibold text-teal-700">{password}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Profile;

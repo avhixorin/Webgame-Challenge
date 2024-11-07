@@ -11,6 +11,7 @@ import { rulesContent } from "@/constants/Rules";
 import { motion } from "framer-motion";
 import Timer from "./Timer/Timer";
 import { Difficulty } from "@/types/types";
+import Profile from "./Profile/Profile";
 
 const Game: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -54,13 +55,14 @@ const Game: React.FC = () => {
   return (
     <div className="relative flex justify-around items-center bg-game-bg1 bg-center bg-cover w-full p-4 h-full gap-2">
       {/* Left Sidebar */}
-      <aside className="w-full max-w-80 h-full py-6 rounded-lg flex flex-col justify-center items-end">
+      <aside className="w-full max-w-80 h-full py-6 rounded-lg flex flex-col justify-between  items-center">
         <div className="absolute top-10 left-10 z-10">
           <button onClick={handleMuteToggle} aria-label="Toggle Mute">
             {muted ? <VolumeX size={32} stroke="#27272a" /> : <Volume size={32} stroke="#27272a" />}
           </button>
         </div>
         <ScoreCard />
+        <Profile />
       </aside>
 
       {/* Main Game Section */}

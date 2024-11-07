@@ -12,10 +12,10 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
   const [time, setTime] = useState<number>(0);
   const [gameOver, setGameOver] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
+  const [penaltyActive, setPenaltyActive] = useState(false);
   const [timerActive, setTimerActive] = useState(true);
 
   useEffect(() => {
-    // Set initial time based on difficulty level
     switch (difficulty) {
       case Difficulty.EASY:
         setTime(5 * 60);
@@ -42,10 +42,7 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
       return;
     }
 
-    const timerId = timerActive && setInterval(() => {
-      setTime((prevTime) => prevTime - 1);
-    }, 1000);
-
+    const timerId = timerActive && setInterval(() => setTime((prevTime) => prevTime - 1), 1000);
     return () => clearInterval(timerId);
   }, [time, timerActive]);
 
@@ -63,22 +60,37 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
     const seconds = time % 60;
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   };
+
   const navigate = useNavigate();
   const handleNewGame = () => {
-
     setTime(difficulty === Difficulty.EASY ? 5 * 60 : difficulty === Difficulty.MEDIUM ? 3.5 * 60 : difficulty === Difficulty.HARD ? 2 * 60 : 40);
     setShowRanking(false);
     setTimerActive(true);
     navigate("/pg2");
   };
 
+  const applyPenalty = () => {
+    setTime((prev) => Math.max(prev - 15, 0));
+    setPenaltyActive(true);
+    setTimeout(() => setPenaltyActive(false), 500);
+  };
+
+  const applyPowerUp = () => {
+    setTime((prev) => prev + 15);
+  };
+
+  const timerColor = () => {
+    const percentage = (time / (difficulty === Difficulty.EASY ? 300 : difficulty === Difficulty.MEDIUM ? 210 : difficulty === Difficulty.HARD ? 120 : 40)) * 100;
+    if (percentage <= 20) return "bg-red-500";
+    if (percentage <= 50) return "bg-yellow-500";
+    return "bg-green-500";
+  };
+
   return (
-    <div className="relative flex items-center gap-2 bg-transparent text-white p-3 rounded-lg shadow-lg">
-      {/* Timer display */}
+    <div className={`relative flex items-center gap-2 ${penaltyActive ? "bg-red-700 scale-110" : timerColor()} transition-all duration-500 p-3 rounded-lg shadow-lg`}>
       <TimerIcon size={32} stroke="#fff" />
       <span className="text-2xl font-semibold tracking-wide">{formatTime(time)}</span>
 
-      {/* Game Over Popover */}
       <AnimatePresence>
         {gameOver && (
           <motion.div
@@ -96,7 +108,6 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
         )}
       </AnimatePresence>
 
-      {/* Ranking Popover */}
       <AnimatePresence>
         {showRanking && (
           <motion.div
@@ -129,6 +140,11 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* <div className="flex gap-4 mt-2">
+        <button onClick={applyPenalty} className="bg-red-500 px-4 py-2 rounded text-white">Penalty (-15s)</button>
+        <button onClick={applyPowerUp} className="bg-blue-500 px-4 py-2 rounded text-white">Power-Up (+15s)</button>
+      </div> */}
     </div>
   );
 };
