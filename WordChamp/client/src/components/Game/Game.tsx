@@ -7,6 +7,8 @@ import useSound from "@/hooks/useSound";
 import { Volume, VolumeX } from "lucide-react";
 import Rules from "./Rules/Rules";
 import ScoreCard from "../ScoreCard/ScoreCard";
+import ChatSection from "./ChatSection/Chats";
+import PowerUpSection from "./PowerUpSection/PowerUp";
 
 const Game: React.FC = () => {
   useEffect(() => {
@@ -42,7 +44,7 @@ const Game: React.FC = () => {
   return (
     <div className="relative flex justify-around items-center bg-game-bg1 bg-center bg-cover w-full p-4 h-full gap-2">
       {/* Left Sidebar */}
-      <aside className="max-w-96 h-full  py-6 bg-white/20 backdrop-blur-md rounded-lg shadow-lg flex flex-col justify-center items-center">
+      <aside className="max-w-96 h-full py-6 rounded-lg flex flex-col justify-center items-end">
         <div className="absolute top-10 left-10 z-10">
           {muted ? (
             <button
@@ -79,10 +81,11 @@ const Game: React.FC = () => {
           <InputSection />
         </div>
       </div>
-
+      <Rules />
       {/* Right Sidebar */}
-      <aside className="max-w-96 h-full  py-6 bg-white/20 backdrop-blur-md rounded-lg shadow-lg flex flex-col justify-center items-center">
-        <Rules />
+      <aside className="max-w-96 w-full h-full py-6 rounded-lg flex flex-col justify-between items-center">
+          <PowerUpSection />
+        <ChatSection />
       </aside>
     </div>
   );

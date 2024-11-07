@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Power, PowerIcon } from 'lucide-react'
 import React, { useState } from 'react'
 
 const PowerUpSection:React.FC = () => {
@@ -18,10 +19,10 @@ const PowerUpSection:React.FC = () => {
         }, 4000);
       };
   return (
-    <div className="w-full flex flex-col md:flex-row justify-between items-center">
-
+    <div className="w-full flex flex-col md:flex-row justify-between items-end">
           
-          <CardContent className="p-4">
+          <img src="./images/thunder.svg" className='cursor-pointer' alt="" />
+          {/* <CardContent className="p-4">
           <Card className={`
           ${backGround}
           
@@ -53,7 +54,7 @@ const PowerUpSection:React.FC = () => {
               </Button>
             </CardContent>
           </Card>
-        </CardContent>
+        </CardContent> */}
         </div>
   )
 }
