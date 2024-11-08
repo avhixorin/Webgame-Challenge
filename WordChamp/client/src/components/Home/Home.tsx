@@ -1,50 +1,26 @@
-"use client";
-
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import useSound from "@/hooks/useSound";
 import { Volume, VolumeX } from "lucide-react";
 import Rules from "../Game/Rules/Rules";
-
-interface AlphabetShape {
-  id: number;
-  x: number;
-  y: number;
-  angle: number;
-  duration: number;
-  alphabet: string;
-}
-
-const useBackgroundAnimation = () => {
-  const [shapes, setShapes] = useState<AlphabetShape[]>([]);
-  const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-  const createShape = useCallback(() => {
-    return {
-      id: Math.random(),
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      angle: Math.random() * 45 - 22.5,
-      duration: Math.random() * 10 + 5,
-      alphabet: alphabets[Math.floor(Math.random() * alphabets.length)],
-    };
-  }, [alphabets]);
-
-  useEffect(() => {
-    const initialShapes = Array(9).fill(null).map(createShape);
-    setShapes(initialShapes);
-  }, [createShape]);
-
-  return shapes;
-};
+import { useDispatch } from "react-redux";
+import { resetGameData } from "@/Redux/features/userGameDataSlice";
+import { resetAnswers } from "@/Redux/features/answersSlice";
+import { resetWords } from "@/Redux/features/wordsData";
+import { resetRoom } from "@/Redux/features/roomSlice";
 
 export default function Home() {
-  const shapes = useBackgroundAnimation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isEntering, setIsEntering] = useState(false);
   const { playEnterSound, playBackgroundMusic, stopBackgroundMusic } = useSound();
-
+  useEffect(() => {
+    dispatch(resetGameData());
+    dispatch(resetAnswers())
+    dispatch(resetWords());
+    dispatch(resetRoom());
+  },[dispatch]);
   useEffect(() => {
     playBackgroundMusic('./sounds/background1.mp3');
 
@@ -65,29 +41,8 @@ export default function Home() {
 
   const [muted, setMuted] = useState(false);
   return (
-    <div className="relative w-full h-full flex justify-center items-center overflow-hidden bg-game-bg bg-center bg-cover">
-      
-      {/* {shapes.map((shape) => (
-        <motion.div
-          key={shape.id}
-          className="absolute"
-          style={{
-            left: `${shape.x}%`,
-            top: `${shape.y}%`,
-            transform: `rotate(${shape.angle}deg)`,
-          }}
-          animate={{
-            y: ["-10%", "10%", "-10%"],
-          }}
-          transition={{
-            duration: shape.duration,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-        >
-          <Alphabets alphabet={shape.alphabet} />
-        </motion.div>
-      ))} */}
+    <div className="relative w-full h-full flex justify-center items-center overflow-hidden bg-game-bg bg-center bg-cover bg-no-repeat">
+
       <div className="absolute top-10 left-10 z-10">
         {
           muted ? (

@@ -28,11 +28,8 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
-const resetStore = async () => {
-  await persistor.purge(); 
-  store.dispatch({ type: PURGE }); 
-};
+
 
 export type RootState = ReturnType<typeof store.getState>;
 
-export { store, persistor, resetStore };
+export { store, persistor };

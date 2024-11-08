@@ -21,7 +21,7 @@ const useSocket = () => {
   const handleHostingResponse = (response: hostingResponse) => {
     if (response?.statusCode === 200) {
       toast.success(response.message || "Room hosted successfully! Redirecting...");
-      navigate("/game");
+      navigate("/waiting-room");
     } else {
       toast.error("We're sorry, but hosting the room was unsuccessful.");
     }
@@ -35,6 +35,12 @@ const useSocket = () => {
       toast.error("Unable to join room. Please try again later.");
     }
   };
+
+  const handleSomeoneJoined = (response) => {
+    if(response){
+      toast.success(response.message || "Someone joined the room!");
+    }
+  }
 
   const hostRoom = (room: Room, user: User) => {
     if (!socket) return;
@@ -55,7 +61,7 @@ const useSocket = () => {
     socket.connect();
     socket.on(SOCKET_EVENTS.CONNECT, handleConnect);
     socket.on(SOCKET_EVENTS.DISCONNECT, handleDisconnect);
-
+    socket.on(SOCKET_EVENTS.SOMEONE_JOINED,handleSomeoneJoined);
     return () => {
       socket.off(SOCKET_EVENTS.CONNECT, handleConnect);
       socket.off(SOCKET_EVENTS.DISCONNECT, handleDisconnect);

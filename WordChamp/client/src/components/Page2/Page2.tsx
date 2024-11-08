@@ -24,14 +24,14 @@ const Page2: React.FC = () => {
   const [localMode, setLocalMode] = useState<GameModes | null>(null);
   const [muted, setMuted] = useState(false);
 
-  const {playBackgroundMusic,stopBackgroundMusic} = useSound()
-
+  const { playBackgroundMusic, stopBackgroundMusic } = useSound();
 
   const roomId = useSelector((state: RootState) => state.room.roomId);
   const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();
   const gameMode = useSelector((state: RootState) => state.userGameData.gameMode);
   const [isModeSelected, setIsModeSelected] = useState(false);
+
   useEffect(() => {
     if (muted) stopBackgroundMusic();
     else playBackgroundMusic("./sounds/background1.mp3");
@@ -47,14 +47,18 @@ const Page2: React.FC = () => {
       is: true,
       then: Yup.string().required('Room ID is required'),
     }),
+    numOfPlayers: Yup.number()
+      .min(2, 'Minimum of 2 players required')
+      .max(3, 'Maximum of 3 players allowed')
+      .required('Number of players is required'),
   });
 
   const handleGameModeChange = (mode: GameModes) => {
     setLocalMode(mode);
     setIsModeSelected(true);
     dispatch(setGameMode(mode));
-    if(mode === GameModes.SOLO){
-      navigate('/game')
+    if (mode === GameModes.SOLO) {
+      navigate('/game');
     }
   };
 
@@ -68,34 +72,28 @@ const Page2: React.FC = () => {
 
       <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-lg flex flex-col items-center gap-6">
         <h1 className="text-3xl font-bold text-white">Mode Selection</h1>
-        {
-          !localMode && (
-            <div className="flex gap-4">
-              <CTAButton type='button' disabled={false} label="Solo" colour="#2563eb" onClick={() => handleGameModeChange(GameModes.SOLO)} />
-              <CTAButton type='button' disabled={false} label="Multiplayer" colour="#16a34a" onClick={() => handleGameModeChange(GameModes.MULTIPLAYER)} />
-            </div>
-          )
-        }
+        {!localMode && (
+          <div className="flex gap-4">
+            <CTAButton type='button' disabled={false} label="Solo" colour="#2563eb" onClick={() => handleGameModeChange(GameModes.SOLO)} />
+            <CTAButton type='button' disabled={false} label="Multiplayer" colour="#16a34a" onClick={() => handleGameModeChange(GameModes.MULTIPLAYER)} />
+          </div>
+        )}
 
-        {localMode && (
-          gameMode === GameModes.MULTIPLAYER && (
-            <div className="flex gap-4">
-              {!isJoiningRoom && (
-                <CTAButton type='button' disabled={false} label={isHosting ? 'Cancel Host' : 'Host'} colour="#2563eb" onClick={() => setIsHosting((prev) => !prev)} />
-                
-              )}
-              {!isHosting && (
-                <CTAButton type='button' disabled={false} label={isJoiningRoom ? 'Cancel Join' : 'Join Room'} colour="#16a34a" onClick={() => setIsJoiningRoom((prev) => !prev)} />
-                
-              )}
-            </div>
-          )
+        {localMode && gameMode === GameModes.MULTIPLAYER && (
+          <div className="flex gap-4">
+            {!isJoiningRoom && (
+              <CTAButton type='button' disabled={false} label={isHosting ? 'Cancel Host' : 'Host'} colour="#2563eb" onClick={() => setIsHosting((prev) => !prev)} />
+            )}
+            {!isHosting && (
+              <CTAButton type='button' disabled={false} label={isJoiningRoom ? 'Cancel Join' : 'Join Room'} colour="#16a34a" onClick={() => setIsJoiningRoom((prev) => !prev)} />
+            )}
+          </div>
         )}
 
         {isHosting && (
           <div className="w-full px-4 py-4 bg-white/20 backdrop-blur-md rounded-lg shadow-lg flex flex-col gap-4">
             <Formik
-              initialValues={{ roomPassword: '' }}
+              initialValues={{ roomPassword: '', numOfPlayers: '' }}
               validationSchema={validationSchema}
               onSubmit={(values) => {
                 if (user) {
@@ -109,12 +107,32 @@ const Page2: React.FC = () => {
               }}
             >
               {({ isSubmitting }) => (
-                <Form>
-                  <input type="text" value={roomId} readOnly className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none" />
-                  <Field type="password" name="roomPassword" placeholder="Room Password" className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none" />
+                <Form className="flex flex-col gap-3">
+                  <input
+                    type="text"
+                    value={roomId}
+                    readOnly
+                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+                  />
+                  <Field
+                    type="password"
+                    name="roomPassword"
+                    placeholder="Room Password"
+                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+                  />
                   <ErrorMessage name="roomPassword" component="div" className="text-red-600" />
-                  <CTAButton type={"submit"} disabled={isSubmitting} label="Host Game" colour="#7e22ce" onClick={() => {}} />
                   
+                  <Field
+                    type="number"
+                    name="numOfPlayers"
+                    placeholder="Number of Players (2-3)"
+                    min="2"
+                    max="3"
+                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+                  />
+                  <ErrorMessage name="numOfPlayers" component="div" className="text-red-600" />
+
+                  <CTAButton type="submit" disabled={isSubmitting} label="Host Game" colour="#7e22ce" onClick={() => {}}/>
                 </Form>
               )}
             </Formik>
@@ -138,13 +156,24 @@ const Page2: React.FC = () => {
               }}
             >
               {({ isSubmitting }) => (
-                <Form>
-                  <Field type="text" name="roomId" placeholder="Room ID" className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none" />
+                <Form className="flex flex-col gap-3">
+                  <Field
+                    type="text"
+                    name="roomId"
+                    placeholder="Room ID"
+                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+                  />
                   <ErrorMessage name="roomId" component="div" className="text-red-600" />
-                  <Field type="password" name="roomPassword" placeholder="Room Password" className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none" />
-                  <ErrorMessage name="roomPassword" component="div" className="text-red-600" />
-                  <CTAButton type={"submit"} disabled={isSubmitting} label="Join Room" colour="#16a34a" onClick={() => {}} />
                   
+                  <Field
+                    type="password"
+                    name="roomPassword"
+                    placeholder="Room Password"
+                    className="text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
+                  />
+                  <ErrorMessage name="roomPassword" component="div" className="text-red-600" />
+
+                  <CTAButton type="submit" disabled={isSubmitting} label="Join Room" colour="#16a34a" onClick={() => {}}/>
                 </Form>
               )}
             </Formik>

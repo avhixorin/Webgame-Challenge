@@ -11,6 +11,7 @@ export const SOCKET_EVENTS = {
     SEND_MESSAGE: "sendMessage",
     USER_TYPING: "userTyping",
     USER_STOPPED_TYPING: "userStoppedTyping",
+    SOMEONE_JOINED: "someoneJoined",
     ANNOUNCE: "announce",
 
     // Server responses

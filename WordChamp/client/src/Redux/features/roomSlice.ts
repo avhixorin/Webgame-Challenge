@@ -28,14 +28,10 @@ const roomSlice = createSlice({
     setRoomStatus: (state, action: PayloadAction<RoomStatus>) => {
       state.status = action.payload;
     },
-    clearRoomData: (state) => {
-      state.roomId = "";
-      state.password = "";
-      state.status = RoomStatus.NONE;
-    },
+    resetRoom: () => initialState,
   },
 });
 
-export const { setRoomId, setRoomPassword, setRoomStatus, clearRoomData } =
+export const { setRoomId, setRoomPassword, setRoomStatus, resetRoom } =
   roomSlice.actions;
 export default roomSlice.reducer;

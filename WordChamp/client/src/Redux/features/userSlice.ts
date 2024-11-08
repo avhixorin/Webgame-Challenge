@@ -22,8 +22,8 @@ const userSlice = createSlice({
       if (state.user) {
         state.user.theme = action.payload;
       }
-      
-    }
+    },
+    resetUser: () => initialState,
   },
 });
 

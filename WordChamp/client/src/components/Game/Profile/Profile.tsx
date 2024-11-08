@@ -7,7 +7,7 @@ const Profile: React.FC = () => {
   const { roomId, password } = useSelector((state: RootState) => state.room);
 
   return (
-    <div className="w-full max-h-60 py-6 px-4 flex flex-col gap-6 items-center bg-white/10 backdrop-blur-md rounded-lg shadow-lg">
+    <div className="w-full max-h-60 py-4 px-4 flex flex-col gap-4 items-center bg-white/10 backdrop-blur-md rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold text-teal-600">Game Room Details</h2>
 
       <div className="flex flex-col gap-4 w-full max-w-md">

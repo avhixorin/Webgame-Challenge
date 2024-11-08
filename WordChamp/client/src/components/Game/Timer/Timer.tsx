@@ -30,9 +30,9 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
         setTime(40);
         break;
     }
+    setTimerActive(true);
     setGameOver(false);
     setShowRanking(false);
-    setTimerActive(true);
   }, [difficulty]);
 
   useEffect(() => {
@@ -98,9 +98,9 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.5 }}
-            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
           >
-            <div className="bg-red-600 text-white p-6 rounded-lg shadow-lg text-center">
+            <div className="bg-white/20 backdrop-blur-md text-white p-6 rounded-lg shadow-lg text-center">
               <h2 className="text-3xl font-bold">Game Over</h2>
               <p className="text-lg mt-2">Time's up!</p>
             </div>
@@ -115,9 +115,9 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.5 }}
-            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
           >
-            <div className="bg-blue-600 text-white p-6 rounded-lg shadow-lg text-center relative">
+            <div className="bg-white/20 backdrop-blur-md text-white p-6 rounded-lg shadow-lg text-center relative">
               <button
                 onClick={() => setShowRanking(false)}
                 className="absolute top-2 right-2 text-white hover:text-gray-300"
@@ -140,11 +140,6 @@ const Timer: React.FC<TimerProps> = ({ difficulty }) => {
           </motion.div>
         )}
       </AnimatePresence>
-      
-      {/* <div className="flex gap-4 mt-2">
-        <button onClick={applyPenalty} className="bg-red-500 px-4 py-2 rounded text-white">Penalty (-15s)</button>
-        <button onClick={applyPowerUp} className="bg-blue-500 px-4 py-2 rounded text-white">Power-Up (+15s)</button>
-      </div> */}
     </div>
   );
 };

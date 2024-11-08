@@ -3,13 +3,13 @@ import { useState } from 'react';
 
 interface ButtonProps {
   label: string;
-  colour: string; 
+  colour: string;
   type: "button" | "submit" | "reset";
   disabled: boolean;
   onClick: () => void;
 }
 
-export default function CTAButton({ label, onClick, colour,type,disabled }: ButtonProps) {
+export default function CTAButton({ label, onClick, colour, type, disabled }: ButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -22,6 +22,7 @@ export default function CTAButton({ label, onClick, colour,type,disabled }: Butt
         boxShadow: isHovered
           ? `0 10px 20px ${colour}40, 0 6px 6px ${colour}40, inset 0 -5px 10px ${colour}20`
           : `0 5px 15px ${colour}20, 0 3px 3px ${colour}20, inset 0 -2px 5px ${colour}10`,
+        cursor: disabled ? 'not-allowed' : 'pointer', // Add cursor style based on disabled state
       }}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.95 }}

@@ -12,6 +12,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './Redux/store/store.ts';
 import Memory from './components/Memory/Memory.tsx';
 import Page2 from './components/Page2/Page2.tsx';
+import WaitingRoom from './components/WaitingRoom/WaitingRoom.tsx';
+import SelectionPage from './components/SelectionPage/SelectionPage.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +23,8 @@ const router = createBrowserRouter(
       <Route path='/pg2' element={<Page2/>}/>
       <Route path='/game' element={<Game/>} />
       <Route path='/memory' element={<Memory />} />
+      <Route path='/waiting-room' element={<WaitingRoom />} />
+      <Route path='/selection' element={<SelectionPage />} />
     </Route>
   )
 );

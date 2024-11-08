@@ -171,7 +171,7 @@ const Game: React.FC = () => {
             </motion.div>
           )}
         </div>
-          <Timer difficulty={Difficulty.EASY} />
+          {/* <Timer difficulty={Difficulty.EASY} /> */}
         <ChatSection />
       </aside>
     </div>
