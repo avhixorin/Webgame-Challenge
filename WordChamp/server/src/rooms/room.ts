@@ -1,22 +1,21 @@
 import { Socket } from "socket.io";
-import { OnlineUser } from "../types/Types";
+import { UserData } from "../types/Types";
 
 
 class Room {
-  public users: { user: OnlineUser; socketId: string }[] = [];
+  public users: { user: UserData; socketId: string }[] = [];
 
   constructor(public roomId: string, public roomPassword: string) {}
 
   // Add a user to the room and make the socket join the room
-  addUser(user: OnlineUser, socket: Socket): string {
+  addUser(user: UserData, socket: Socket): string {
     if (this.users.length >= 3) {
       return "Room is full";
     }
 
     // Make the socket join the room
     socket.join(this.roomId);
-
-    // Add the user to the users list with their socket ID
+    socket.emit("someoneJoined", user?.username);
     this.users.push({ user, socketId: socket.id });
 
     return "User added to room";
@@ -31,7 +30,7 @@ class Room {
 
   // Check if a user with a specific ID is in the room
   isUserInRoom(userId: string): boolean {
-    return this.users.some(({ user }) => user.userId === userId);
+    return this.users.some(({ user }) => user.Id === userId);
   }
 
   // Validate room password

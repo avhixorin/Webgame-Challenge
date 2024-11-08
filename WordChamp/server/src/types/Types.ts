@@ -1,17 +1,22 @@
 import Room from "../rooms/room";
-
+export type UserData = {
+  Id: string;
+  username: string;
+  avatar: string;
+  theme: string;
+}
 export type OnlineUser = {
-  userId: string;
+  userData: UserData;
   socketId: string;
 };
 
 export type RegisterData = {
-  user: OnlineUser;
+  user: UserData;
 };
 
 export type HostRoomData = {
   room: Room;
-  user: OnlineUser;
+  user: UserData;
 };
 
 export type JoinRoomData = {
@@ -19,7 +24,7 @@ export type JoinRoomData = {
     roomId: string;
     roomPassword: string;
   };
-  user: OnlineUser;
+  user: UserData;
 };
 
 export type MessageData = {

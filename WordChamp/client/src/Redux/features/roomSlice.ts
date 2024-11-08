@@ -6,12 +6,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface RoomState {
   roomId: string;
   password: string;
+  currentParticipants: number;
   status: RoomStatus;
 }
 
 const initialState: RoomState = {
   roomId: "",
   password: "",
+  currentParticipants: 0,
   status: RoomStatus.NONE,
 };
 
@@ -28,10 +30,13 @@ const roomSlice = createSlice({
     setRoomStatus: (state, action: PayloadAction<RoomStatus>) => {
       state.status = action.payload;
     },
+    setParticipantsOfRoom: (state,action:PayloadAction<number>) => {
+      state.currentParticipants = action.payload;
+    },
     resetRoom: () => initialState,
   },
 });
 
-export const { setRoomId, setRoomPassword, setRoomStatus, resetRoom } =
+export const { setRoomId, setRoomPassword, setRoomStatus, resetRoom,setParticipantsOfRoom } =
   roomSlice.actions;
 export default roomSlice.reducer;

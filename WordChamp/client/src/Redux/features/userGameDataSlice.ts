@@ -46,7 +46,7 @@ const gameDataSlice = createSlice({
     addPowerUp: (state, action: PayloadAction<string>) => {
       state.powerUps.push(action.payload);
     },
-    setParticipants: (state, action: PayloadAction<number>) => {
+    setGameParticipants: (state,action:PayloadAction<number>) => {
       state.participants = action.payload;
     },
     setGameMode: (state,action:PayloadAction<gameMode>) => {
@@ -61,7 +61,7 @@ export const {
   addPowerUp,
   setCurrentGameString,
   setDifficulty,
-  setParticipants,
+  setGameParticipants,
   setGameMode,
   addScore,
   setScore,

@@ -6,11 +6,11 @@ import { useNavigate } from 'react-router-dom';
 
 const WaitingRoom: React.FC = () => {
   const [disabledStatus, setDisabledStatus] = useState(true);
-  const currentParticipants = 1;
   const { participants } = useSelector((state: RootState) => state.userGameData);
+  const { currentParticipants } = useSelector((state: RootState) => state.room);
   const { roomId, password: roomPassword, status: roomStatus } = useSelector((state: RootState) => state.room);
   useEffect(() => {
-    if (currentParticipants > participants) {
+    if ( participants === currentParticipants) {
       setDisabledStatus(false);
     } else {
       setDisabledStatus(true);

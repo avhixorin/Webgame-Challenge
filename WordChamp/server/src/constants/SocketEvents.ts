@@ -11,6 +11,7 @@ export const SOCKET_EVENTS = {
     MESSAGE_RECEIVE: "messageReceive",
     USER_TYPING: "userTyping",
     USER_STOPPED_TYPING: "userStoppedTyping",
+    NO_OF_USERS: "noOfUsers",
     ANNOUNCE: "announce",
     HOSTING_RESPONSE: "hostingResponse",
     JOINING_RESPONSE:"joiningResponse",

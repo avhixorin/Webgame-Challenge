@@ -4,6 +4,8 @@ import { SOCKET_EVENTS } from '@/constants/SocketEvents';
 import { hostingResponse, joiningResponse, Room, User } from '@/types/types';
 import { useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
+import { useDispatch } from 'react-redux';
+import { setParticipantsOfRoom } from '@/Redux/features/roomSlice';
 
 let socket: Socket | null = null;
 
@@ -17,10 +19,16 @@ const initializeSocket = (): Socket => {
 const useSocket = () => {
   const socket = initializeSocket();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleHostingResponse = (response: hostingResponse) => {
     if (response?.statusCode === 200) {
       toast.success(response.message || "Room hosted successfully! Redirecting...");
+      console.log("The response is: ", response);
+      console.log("The current no of participants are: ", response.data?.userCount);
+      if(response.data?.userCount){
+        dispatch(setParticipantsOfRoom(response.data?.userCount));
+      }
       navigate("/waiting-room");
     } else {
       toast.error("We're sorry, but hosting the room was unsuccessful.");
@@ -30,7 +38,13 @@ const useSocket = () => {
   const handleJoiningResponse = (response: joiningResponse) => {
     if (response?.statusCode === 200) {
       toast.success(response.message || "Joined room successfully! Redirecting...");
-      navigate("/game");
+      console.log("The response is: ", response);
+      console.log("The current no of participants are: ", response.data?.userCount);
+      navigate("/waiting-room");
+      if(response.data?.userCount){
+        dispatch(setParticipantsOfRoom(response.data?.userCount));
+      }
+      navigate("/waiting-room");
     } else {
       toast.error("Unable to join room. Please try again later.");
     }
@@ -38,7 +52,7 @@ const useSocket = () => {
 
   const handleSomeoneJoined = (response) => {
     if(response){
-      toast.success(response.message || "Someone joined the room!");
+      toast.success(response.message || `${response} joined the room!`);
     }
   }
 

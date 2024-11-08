@@ -83,14 +83,20 @@ export type Words = {
   wordsFetched: boolean;
 };
 
+// Types related to API responses
+
 export type hostingResponse = {
   statusCode: number,
   message:string,
-  data: object | null
+  data: {
+    userCount: number
+  } | null
 }
 
 export type joiningResponse = {
   statusCode: number,
   message:string,
-  data: object | null
+  data: {
+    userCount: number
+  } | null
 }
