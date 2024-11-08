@@ -13,6 +13,7 @@ export const SOCKET_EVENTS = {
     USER_STOPPED_TYPING: "userStoppedTyping",
     SOMEONE_JOINED: "someoneJoined",
     ANNOUNCE: "announce",
+    NO_OF_USERS: "noOfUsers",
 
     // Server responses
     HOSTING_RESPONSE: "hostingResponse",

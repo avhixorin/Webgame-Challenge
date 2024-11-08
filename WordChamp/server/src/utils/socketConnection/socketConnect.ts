@@ -40,7 +40,6 @@ const connectSocket = (app: Express) => {
         const response = roomHandlerInstance.hostRoom(room, user, socket);
 
         if (response && response.statusCode === 200) {
-          socket.join(room.roomId);
           socket.emit(SOCKET_EVENTS.HOSTING_RESPONSE, response);
           console.log(`Room ${room.roomId} created and user ${user.username} joined.`);
         } else {
@@ -52,12 +51,11 @@ const connectSocket = (app: Express) => {
     socket.on(SOCKET_EVENTS.JOIN_ROOM, ({ room, user }: JoinRoomData) => {
       if (room.roomId && room.roomPassword && user) {
         console.log("The request to join the room is received");
-        console.log("The room details are:", room);
-        console.log("The user details are:", user);
+        // console.log("The room details are:", room);
+        // console.log("The user details are:", user);
         const response = roomHandlerInstance.joinRoom(room.roomId, room.roomPassword, user, socket);
 
         if (response.statusCode === 200) {
-          socket.join(room.roomId);
           socket.emit(SOCKET_EVENTS.JOINING_RESPONSE, response);
           console.log(`User ${user.username} joined room ${room.roomId}.`);
         } else {
@@ -79,10 +77,9 @@ const connectSocket = (app: Express) => {
       socket.emit(SOCKET_EVENTS.ENQUIRY_RESPONSE, responseMessage);
     });
 
-    socket.on(SOCKET_EVENTS.DISCONNECT, () => {
-      users = users.filter(u => u.socketId !== socket.id);
-      console.log(`User with socket ID ${socket.id} disconnected`);
-    });
+    socket.on("disconnect", (reason) => {
+      console.log(`User with socket ID ${socket.id} disconnected due to: ${reason}`);
+    });    
   });
 
   server.listen(PORT, () => {

@@ -1,5 +1,5 @@
 import useSocket from "@/hooks/connectSocket";
-import { setRoomPassword, setRoomStatus } from "@/Redux/features/roomSlice";
+import { setRoomId, setRoomPassword, setRoomStatus } from "@/Redux/features/roomSlice";
 import { RootState } from "@/Redux/store/store";
 import { Room, RoomStatus } from "@/types/types";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -30,7 +30,8 @@ const JoiningForm: React.FC = () => {
           };
           console.log("Joining Room:", room);
           joinRoom(room, user);
-          dispatch(setRoomStatus(RoomStatus.HOSTING));
+          dispatch(setRoomStatus(RoomStatus.JOINING));
+          dispatch(setRoomId(values.roomId));
           dispatch(setRoomPassword(values.roomPassword));
         } else {
           console.error("User is not logged in");

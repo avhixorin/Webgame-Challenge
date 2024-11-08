@@ -85,6 +85,10 @@ export type Words = {
 
 // Types related to API responses
 
+export type UserCountResponse = {
+  userCount: number;
+};
+
 export type hostingResponse = {
   statusCode: number,
   message:string,
