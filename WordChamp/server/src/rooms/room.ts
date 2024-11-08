@@ -1,19 +1,19 @@
 import { Socket } from "socket.io";
 import { UserData } from "../types/Types";
+import ApiResponse from "../utils/ApiResponse/ApiResponse";
 
-// Room.ts
 class Room {
   public users: { user: UserData; socketId: string }[] = [];
 
   constructor(public roomId: string, public roomPassword: string) {}
 
-  addUser(user: UserData, socket: Socket): string {
-    if (this.users.length >= 3) return "Room is full";
+  addUser(user: UserData, socket: Socket): ApiResponse {
+    if (this.users.length >= 3) return new ApiResponse(403, "Room is full");
 
     this.users.push({ user, socketId: socket.id });
     socket.join(this.roomId);
 
-    return "User added to room";
+    return new ApiResponse(200, "User added to room", { userCount: this.users.length });
   }
 
   removeUser(socketId: string): string {

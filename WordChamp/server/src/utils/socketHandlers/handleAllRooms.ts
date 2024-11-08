@@ -1,5 +1,4 @@
-// RoomHandler.ts
-import { Server, Socket } from "socket.io";  // Import Server
+import { Server, Socket } from "socket.io";
 import Room from "../../rooms/room";
 import ApiResponse from "../ApiResponse/ApiResponse";
 import { SOCKET_EVENTS } from "../../constants/SocketEvents";
@@ -33,6 +32,11 @@ class RoomHandler {
     newRoom.addUser(user, socket);
     this.addRoom(newRoom);
 
+    // Emit user count to all clients in the room
+    if (this.io) {
+      this.io.to(room.roomId).emit(SOCKET_EVENTS.NO_OF_USERS, { userCount: newRoom.users.length });
+    }
+
     return new ApiResponse(200, "Room hosted successfully", {
       userCount: newRoom.users.length,
     });
@@ -44,8 +48,15 @@ class RoomHandler {
     if (!room.validatePassword(roomPassword)) return new ApiResponse(401, "Incorrect password");
     if (room.users.length >= 3) return new ApiResponse(403, "Room is full");
 
-    room.addUser(user, socket);
-    if (this.io) this.io.to(roomId).emit(SOCKET_EVENTS.NO_OF_USERS, { userCount: room.users.length });
+    const addRes: ApiResponse = room.addUser(user, socket);
+    if (addRes.statusCode !== 200) {
+      return addRes;  // Return if user could not be added
+    }
+
+    // Emit user count update to all clients in the room after user joins
+    if (this.io) {
+      this.io.to(roomId).emit(SOCKET_EVENTS.NO_OF_USERS, { userCount: room.users.length });
+    }
 
     return new ApiResponse(200, "Joined room successfully", { userCount: room.users.length });
   }
