@@ -14,6 +14,9 @@ export const SOCKET_EVENTS = {
     SOMEONE_JOINED: "someoneJoined",
     ANNOUNCE: "announce",
     NO_OF_USERS: "noOfUsers",
+    NEW_MESSAGE: "newMessage",
+    NEW_USER: "newUser",
+    MESSAGE_SEND: "messageSend",
 
     // Server responses
     HOSTING_RESPONSE: "hostingResponse",

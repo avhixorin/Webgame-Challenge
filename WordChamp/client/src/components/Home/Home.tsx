@@ -9,6 +9,8 @@ import { resetGameData } from "@/Redux/features/userGameDataSlice";
 import { resetAnswers } from "@/Redux/features/answersSlice";
 import { resetWords } from "@/Redux/features/wordsData";
 import { resetRoom } from "@/Redux/features/roomSlice";
+import { clearMessages } from "@/Redux/features/messageSlice";
+import { resetUser } from "@/Redux/features/userSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -20,6 +22,8 @@ export default function Home() {
     dispatch(resetAnswers())
     dispatch(resetWords());
     dispatch(resetRoom());
+    dispatch(clearMessages());
+    dispatch(resetUser());
   },[dispatch]);
   useEffect(() => {
     playBackgroundMusic('./sounds/background1.mp3');

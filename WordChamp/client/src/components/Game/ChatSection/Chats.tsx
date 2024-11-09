@@ -4,24 +4,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
-interface ChatMessage {
-  id: number;
-  sender: string;
-  message: string;
-  timestamp: string;
-}
-
-const dummyMessages: ChatMessage[] = [
-  { id: 1, sender: 'Alice', message: 'Hey, how are you?', timestamp: '10:00 AM' },
-  { id: 2, sender: 'Bob', message: 'I’m good! Working on the project.', timestamp: '10:02 AM' },
-  { id: 3, sender: 'Alice', message: 'Nice! Need any help?', timestamp: '10:05 AM' },
-  { id: 4, sender: 'Bob', message: 'Maybe with the UI adjustments.', timestamp: '10:07 AM' },
-  { id: 5, sender: 'Bob', message: 'Maybe with the UI adjustments.', timestamp: '10:07 AM' },
-  { id: 6, sender: 'Bob', message: 'Maybe with the UI adjustments.', timestamp: '10:07 AM' },
-];
+import { useSelector } from 'react-redux';
+import { RootState } from '@/Redux/store/store';
 
 const ChatSection: React.FC = () => {
+  const messages = useSelector((state: RootState) => Array.isArray(state.message.messages) ? state.message.messages : []);
+
   return (
     <div
       className="w-full max-h-60 bg-[rgba(255, 255, 255, 0.2)] backdrop-blur-lg border-none"
@@ -38,12 +26,16 @@ const ChatSection: React.FC = () => {
         </CardHeader>
         <CardContent className="flex-1 flex flex-col overflow-hidden">
           <ScrollArea className="flex-1 pr-2 overflow-y-auto">
-            {dummyMessages.map((msg) => (
-              <div key={msg.id} className="p-2 mb-2 w-[85%] rounded-lg bg-white/10 backdrop-blur-md shadow-lg border border-black">
-                <p className="text-sm text-gray-800 font-semibold">{msg.sender}</p>
-                <p className="text-gray-700">{msg.message}</p>
-              </div>
-            ))}
+            {messages.length > 0 ? (
+              messages.map((msg) => (
+                <div key={msg.sender.id} className="p-2 mb-2 w-[85%] rounded-lg bg-white/10 backdrop-blur-md shadow-lg border border-black">
+                  <p className="text-sm text-gray-800 font-semibold">{msg.sender.username}</p>
+                  <p className="text-gray-700">{msg.message}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center mt-4">No messages yet.</p>
+            )}
           </ScrollArea>
           <Separator />
           <div className="w-full flex items-center gap-2 mt-2">

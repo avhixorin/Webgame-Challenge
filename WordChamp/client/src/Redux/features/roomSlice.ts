@@ -1,19 +1,19 @@
-import { RoomStatus } from "@/types/types";
+import { RoomStatus, User } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-
 
 interface RoomState {
   roomId: string;
   password: string;
-  currentParticipants: number;
+  members: User[];
+  currentNoOfParticipants: number;
   status: RoomStatus;
 }
 
 const initialState: RoomState = {
   roomId: "",
   password: "",
-  currentParticipants: 0,
+  members: [],
+  currentNoOfParticipants: 0,
   status: RoomStatus.NONE,
 };
 
@@ -31,12 +31,24 @@ const roomSlice = createSlice({
       state.status = action.payload;
     },
     setCurrentParticipants: (state,action:PayloadAction<number>) => {
-      state.currentParticipants = action.payload;
+      state.currentNoOfParticipants = action.payload;
+    },
+    addMembersToRoom: (state, action: PayloadAction<User>) => {
+      const userExists = state.members.some((member) => member.id === action.payload.id);
+      if (!userExists) {
+        console.log("Adding member to room:", action.payload);
+        state.members.push(action.payload);
+      } else {
+        console.log(`User with ID ${action.payload.id} already exists in the room.`);
+      }
+    },    
+    removeMembersFromRoom: (state, action: PayloadAction<string>) => {
+      state.members = state.members.filter((member) => member.id !== action.payload);
     },
     resetRoom: () => initialState,
   },
 });
 
-export const { setRoomId, setRoomPassword, setRoomStatus, resetRoom,setCurrentParticipants } =
+export const { setRoomId, setRoomPassword, setRoomStatus, resetRoom,setCurrentParticipants, addMembersToRoom, removeMembersFromRoom } =
   roomSlice.actions;
 export default roomSlice.reducer;

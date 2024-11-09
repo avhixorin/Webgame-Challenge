@@ -31,7 +31,7 @@ export enum gameMode {
 export type User = {
   id: string;
   username: string;
-  avatar: number | null;
+  avatar: string;
   theme: Theme;
 };
 
@@ -92,15 +92,31 @@ export type UserCountResponse = {
 export type hostingResponse = {
   statusCode: number,
   message:string,
-  data: {
-    userCount: number
-  } | null
 }
 
 export type joiningResponse = {
   statusCode: number,
   message:string,
   data: {
-    userCount: number
-  } | null
+    user: User
+  }
+}
+
+export type leaveRoomResponse = {
+  message: string,
+  userId: string,
+}
+
+export type noOfUsersResponse = {
+  userCount: number,
+}
+
+export type newUserResponse = {
+  message: string,
+  user: User,
+}
+
+export type Message = {
+  message: string,
+  sender: User,
 }

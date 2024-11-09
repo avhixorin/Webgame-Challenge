@@ -33,7 +33,9 @@ class RoomHandler {
     this.addRoom(newRoom);
 
     if (this.io) {
-      this.io.to(room.roomId).emit(SOCKET_EVENTS.NO_OF_USERS, { userCount: newRoom.users.length });
+      socket.broadcast.to(newRoom.roomId).emit(SOCKET_EVENTS.NO_OF_USERS, {
+        userCount: newRoom.users.length,
+      });
     }
 
     return new ApiResponse(200, "Room hosted successfully", {
@@ -53,12 +55,14 @@ class RoomHandler {
     }
 
     if (this.io) {
-      this.io.to(roomId).emit(SOCKET_EVENTS.NO_OF_USERS, { userCount: room.users.length });
+      socket.broadcast.to(roomId).emit(SOCKET_EVENTS.NO_OF_USERS, {
+        userCount: room.users.length,
+      });
       
       // Announce that a new user has joined the room, excluding the new user
       socket.broadcast.to(roomId).emit(SOCKET_EVENTS.NEW_USER, {
-        message: `${user.username} has joined the room.`,
-        userId: user.Id,
+        message: `${user.username} has joined the game.`,
+        user: user,
       });
     }
 
@@ -92,7 +96,7 @@ class RoomHandler {
 
         if (this.io) {
             this.io.to(room.roomId).emit(SOCKET_EVENTS.LEAVE_ROOM, {
-                message: `${leavingUser.username} has left the room.`,
+                message: `${leavingUser.username} has left the game.`,
                 userId: leavingUser.Id,
             });
 
@@ -117,12 +121,11 @@ class RoomHandler {
       // Send the message to everyone in the room except the sender
       socket.broadcast.to(roomId).emit(SOCKET_EVENTS.NEW_MESSAGE, {
         message,
-        sender: sender.username,
-        userId: sender.Id,
+        sender: sender,
       });
     }
 
-    return new ApiResponse(200, "Message broadcasted successfully");
+    return new ApiResponse(200, "Message sent successfully");
   }
 }
 

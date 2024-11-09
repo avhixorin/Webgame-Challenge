@@ -1,4 +1,4 @@
-import { THEME, User } from "@/types/types";
+import { Theme, User } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -18,7 +18,7 @@ const userSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
-    setTheme: (state,action:PayloadAction<THEME>) => {
+    setTheme: (state,action:PayloadAction<Theme>) => {
       if (state.user) {
         state.user.theme = action.payload;
       }
@@ -27,6 +27,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser,setTheme } = userSlice.actions;
+export const { setUser,setTheme,resetUser } = userSlice.actions;
 
 export default userSlice.reducer;

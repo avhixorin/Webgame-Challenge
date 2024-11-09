@@ -7,7 +7,6 @@ import { v4 as uuid } from "uuid";
 import { Theme } from "@/types/types";
 import useSound from "@/hooks/useSound";
 import { Volume, VolumeX } from "lucide-react";
-import Dialogue from "@/utils/Dialogue/Dialogue";
 import CTAButton from "@/utils/CTAbutton/CTAbutton";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -21,7 +20,7 @@ const avatars = [
 export default function Welcome() {
   const dispatch = useDispatch();
   const [isEntering, setIsEntering] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [username, setUsername] = useState("@");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -61,7 +60,6 @@ export default function Welcome() {
 
   return (
     <div className="relative w-full h-full flex items-center justify-center p-4 overflow-hidden bg-game-bg bg-center bg-cover bg-white">
-      <Dialogue />
       <div className="absolute top-10 left-10 z-10">
         {muted ? (
           <button
@@ -100,22 +98,22 @@ export default function Welcome() {
               <button
                 key={index}
                 className={`p-4 rounded-xl transition-transform duration-300 ease-in-out ${
-                  selectedAvatar === index
+                  selectedAvatar === index.toString()
                     ? "bg-neonBlue scale-110 shadow-lg shadow-neonBlue/50"
                     : "bg-white/10 backdrop-blur-sm hover:backdrop-blur-md hover:scale-105 hover:shadow-lg hover:"
                 }`}
-                onClick={() => setSelectedAvatar(index)}
+                onClick={() => setSelectedAvatar(index.toString())}
               >
                 <img
                   src={avatar.src}
                   alt={avatar.name}
                   className={`w-12 h-12 mx-auto ${
-                    selectedAvatar === index ? "opacity-100" : "opacity-70"
+                    selectedAvatar === index.toString() ? "opacity-100" : "opacity-70"
                   }`}
                 />
                 <p
                   className={`mt-2 text-center font-bold text-sm ${
-                    selectedAvatar === index ? "text-red-700" : "text-slate-700"
+                    selectedAvatar === index.toString() ? "text-red-700" : "text-slate-700"
                   }`}
                 >
                   {avatar.name}
@@ -141,6 +139,8 @@ export default function Welcome() {
             <p className="text-red-600 text-center">{errorMessage}</p>
           )}
           <CTAButton
+            disabled={isEntering}
+            type="button"
             label="Enter Game"
             colour="#ece5a1"
             onClick={handleEnter}
