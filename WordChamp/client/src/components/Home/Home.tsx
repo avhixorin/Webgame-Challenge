@@ -5,7 +5,7 @@ import useSound from "@/hooks/useSound";
 import { Volume, VolumeX } from "lucide-react";
 import Rules from "../Game/Rules/Rules";
 import { useDispatch } from "react-redux";
-import { resetGameData, resetSharedGameData } from "@/Redux/features/sharedGameDataSlice";
+import { resetSharedGameData } from "@/Redux/features/sharedGameDataSlice";
 import { resetAnswers } from "@/Redux/features/answersSlice";
 import { resetWords } from "@/Redux/features/wordsData";
 import { resetRoom } from "@/Redux/features/roomSlice";
