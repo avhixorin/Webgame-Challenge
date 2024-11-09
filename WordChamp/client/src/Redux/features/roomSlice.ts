@@ -30,13 +30,13 @@ const roomSlice = createSlice({
     setRoomStatus: (state, action: PayloadAction<RoomStatus>) => {
       state.status = action.payload;
     },
-    setParticipantsOfRoom: (state,action:PayloadAction<number>) => {
+    setCurrentParticipants: (state,action:PayloadAction<number>) => {
       state.currentParticipants = action.payload;
     },
     resetRoom: () => initialState,
   },
 });
 
-export const { setRoomId, setRoomPassword, setRoomStatus, resetRoom,setParticipantsOfRoom } =
+export const { setRoomId, setRoomPassword, setRoomStatus, resetRoom,setCurrentParticipants } =
   roomSlice.actions;
 export default roomSlice.reducer;

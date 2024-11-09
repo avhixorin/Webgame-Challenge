@@ -28,8 +28,7 @@ export type JoinRoomData = {
 };
 
 export type MessageData = {
-  message: {
-    roomId: string;
-    content: string;
-  };
+  roomId: string;
+  user: UserData;
+  message:string;
 };

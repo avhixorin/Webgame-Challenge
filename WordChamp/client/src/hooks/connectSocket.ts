@@ -5,7 +5,7 @@ import { hostingResponse, joiningResponse, Room, User, UserCountResponse } from 
 import { useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
 import { useDispatch } from 'react-redux';
-import { setParticipantsOfRoom } from '@/Redux/features/roomSlice';
+import { setCurrentParticipants } from '@/Redux/features/roomSlice';
 
 let socket: Socket | null = null;
 
@@ -50,7 +50,7 @@ const useSocket = () => {
   const handleUserCount = (response: UserCountResponse) => {
     if (!response) console.log("No user count response received.");
     console.log("User count response:", response);
-    dispatch(setParticipantsOfRoom(response.userCount));
+    dispatch(setCurrentParticipants(response.userCount));
   };
 
   // Host room

@@ -20,7 +20,7 @@ const connectSocket = (app: Express) => {
       origin: process.env.ORIGIN || '*',
     },
   });
-
+  roomHandlerInstance.setIo(io);
   io.on(SOCKET_EVENTS.CONNECTION, (socket: Socket) => {
     console.log('A user connected:', socket.id);
 
@@ -64,10 +64,14 @@ const connectSocket = (app: Express) => {
       }
     });
 
-    socket.on(SOCKET_EVENTS.MESSAGE_RECEIVE, (data: MessageData) => {
-      if (data.message) {
-        console.log("The message received is:", data.message);
-        io.to(data.message.roomId).emit(SOCKET_EVENTS.MESSAGE_SEND, data.message.content);
+    socket.on(SOCKET_EVENTS.MESSAGE_SEND, (data: MessageData) => {
+      if (data.message && data.user && data.roomId) {
+        console.log("The message received is: ", data.message);
+        console.log("The message is received from the user: ", data.user);
+        console.log("The message is received in the room: ", data.roomId);
+        const res = roomHandlerInstance.broadcastMessage(data.roomId, data.user, data.message, socket);
+      }else{
+        console.log("No message received");
       }
     });
 
@@ -78,6 +82,8 @@ const connectSocket = (app: Express) => {
     });
 
     socket.on("disconnect", (reason) => {
+      const response = roomHandlerInstance.removeUserFromRoom(socket.id);
+
       console.log(`User with socket ID ${socket.id} disconnected due to: ${reason}`);
     });    
   });
