@@ -1,9 +1,15 @@
 import Room from "../rooms/room";
+
+export enum Theme {
+  LIGHT = "light",
+  DARK = "dark"
+}
+
 export type UserData = {
   Id: string;
   username: string;
   avatar: string;
-  theme: string;
+  theme: Theme;
 }
 export type OnlineUser = {
   userData: UserData;

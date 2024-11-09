@@ -6,16 +6,16 @@ import { useNavigate } from 'react-router-dom';
 
 const WaitingRoom: React.FC = () => {
   const [disabledStatus, setDisabledStatus] = useState(true);
-  const { participants } = useSelector((state: RootState) => state.userGameData);
-  const { currentParticipants } = useSelector((state: RootState) => state.room);
-  const { roomId, password: roomPassword, status: roomStatus } = useSelector((state: RootState) => state.room);
+  const { participants } = useSelector((state: RootState) => state.userGameData) || { participants: 0 };
+  const { members = [], roomId = '', password: roomPassword = '', status: roomStatus = '' } = useSelector((state: RootState) => state.room) || {};
+  
   useEffect(() => {
-    if ( participants === currentParticipants) {
+    if (participants === members.length) {
       setDisabledStatus(false);
     } else {
       setDisabledStatus(true);
     }
-  }, [currentParticipants, participants]);
+  }, [members, participants]);
 
   const navigate = useNavigate();
 
@@ -28,17 +28,16 @@ const WaitingRoom: React.FC = () => {
         <p className="text-center text-xl font-bold text-zinc-700">Room Password: <span className="text-indigo-600">{roomPassword}</span></p>
         <p className="text-center text-xl font-bold text-zinc-700">Room Status: <span className="text-indigo-600">{roomStatus}</span></p>
         <p className="text-center text-xl font-bold text-zinc-700">
-          Current number of participants: <span className="text-indigo-600">{currentParticipants}</span>
+          Current number of participants: <span className="text-indigo-600">{members.length}</span>
         </p>
         <div className='w-full flex justify-center'>
-
-        <CTAButton
-          colour="#60a5fa"
-          disabled={disabledStatus}
-          type="button"
-          label="Select Difficulty"
-          onClick={() => navigate('/selection')}
-        />
+          <CTAButton
+            colour="#60a5fa"
+            disabled={disabledStatus}
+            type="button"
+            label="Select Difficulty"
+            onClick={() => navigate('/selection')}
+          />
         </div>
       </div>
     </div>

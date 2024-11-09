@@ -92,13 +92,17 @@ export type UserCountResponse = {
 export type hostingResponse = {
   statusCode: number,
   message:string,
+  data:{
+    userCount: number
+  }
 }
 
 export type joiningResponse = {
   statusCode: number,
   message:string,
-  data: {
-    user: User
+  data:{
+    userCount: number,
+    allUsers : User[]
   }
 }
 

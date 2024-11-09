@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import { Express } from 'express';
 import roomHandlerInstance from "../socketHandlers/handleAllRooms";
 import { HostRoomData, JoinRoomData, MessageData, OnlineUser, RegisterData, UserData } from '../../types/Types';
-import { SOCKET_EVENTS } from '../../constants/SocketEvents';
+import { SOCKET_EVENTS } from '../../constants/ServerSocketEvents';
 import ApiError from '../ApiError/ApiError';
 
 dotenv.config();

@@ -8,15 +8,15 @@ export const SOCKET_EVENTS = {
     HOST_ROOM: "hostRoom",
     JOIN_ROOM: "joinRoom",
     LEAVE_ROOM: "leaveRoom",
-    SEND_MESSAGE: "sendMessage",
-    USER_TYPING: "userTyping",
-    USER_STOPPED_TYPING: "userStoppedTyping",
     SOMEONE_JOINED: "someoneJoined",
     ANNOUNCE: "announce",
     NO_OF_USERS: "noOfUsers",
     NEW_MESSAGE: "newMessage",
     NEW_USER: "newUser",
     MESSAGE_SEND: "messageSend",
+    MESSAGE_RECEIVE: "messageReceive",
+    USER_TYPING: "userTyping",
+    USER_STOPPED_TYPING: "userStoppedTyping",
 
     // Server responses
     HOSTING_RESPONSE: "hostingResponse",
@@ -24,7 +24,6 @@ export const SOCKET_EVENTS = {
     REGISTRATION_RESPONSE: "registrationResponse",
     CREATE_ROOM_RESPONSE: "createRoomResponse",
     ENQUIRY_RESPONSE: "enquiryResponse",
-    MESSAGE_RECEIVE: "messageReceive",
 
     // Room status updates
     ROOM_FULL: "roomFullStatus",
