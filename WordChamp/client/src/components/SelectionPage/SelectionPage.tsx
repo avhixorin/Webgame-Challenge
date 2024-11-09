@@ -9,17 +9,22 @@ import {
 } from "../ui/select";
 import { Difficulty } from "@/types/types";
 import CTAButton from "@/utils/CTAbutton/CTAbutton";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setDifficulty } from "@/Redux/features/sharedGameDataSlice";
-import { useNavigate } from "react-router-dom";
+import useSocket from "@/hooks/connectSocket";
+import { RootState } from "@/Redux/store/store";
+import { Button } from "../ui/button";
 
 const SelectionPage: React.FC = () => {
   const [difficulty, setLocalDifficulty] = useState<Difficulty>(Difficulty.EASY);
+  const { startGame } = useSocket();
+  const { roomId } = useSelector((state: RootState) => state.room);
+  const gameData = useSelector((state: RootState) => state.sharedGameData);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
   const handleClick = () => {
     dispatch(setDifficulty(difficulty));
-    navigate("/game")
+    startGame(roomId,gameData)
+    console.log("Starting game with difficulty: ", difficulty);
   };
   return (
     <div className="relative w-full h-full flex justify-center items-center overflow-hidden bg-game-bg bg-center bg-cover bg-no-repeat text-zinc-700">
@@ -52,13 +57,7 @@ const SelectionPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
-              <CTAButton
-                type="button"
-                label="Start Game"
-                colour="#3b82f6"
-                onClick={() => handleClick}
-                disabled={false}
-              />
+              <Button onClick={handleClick} className="w-full bg-indigo-600 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">Start Game</Button>
             
           </div>
         </CardContent>

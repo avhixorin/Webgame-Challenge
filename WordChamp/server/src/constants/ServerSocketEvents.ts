@@ -5,6 +5,8 @@ export const SOCKET_EVENTS = {
     CREATE_ROOM: "createRoom",
     HOST_ROOM: "hostRoom",
     JOIN_ROOM: "joinRoom",
+    START_GAME: "startGame",
+    START_GAME_RESPONSE: "startGameResponse",
     ENQUIRY: "enquiry",
     LEAVE_ROOM: "leaveRoom",
     NEW_MESSAGE: "newMessage",

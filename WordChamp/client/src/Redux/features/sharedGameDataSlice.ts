@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Difficulty, gameMode } from "@/types/types";
+import { Difficulty, GameMode, SharedGameData } from "@/types/types";
 
 function shuffleString(gameString: string): string {
   const lettersArray = gameString.split('');
@@ -10,12 +10,6 @@ function shuffleString(gameString: string): string {
   return lettersArray.join('');
 }
 
-interface SharedGameData {
-  maxGameParticipants: number;
-  currentGameString: string;
-  gameMode: gameMode | null;
-  difficulty: Difficulty;
-}
 
 const initialSharedState: SharedGameData = {
   maxGameParticipants: 1,
@@ -34,11 +28,14 @@ const sharedGameDataSlice = createSlice({
     setMaxGameParticipants: (state, action: PayloadAction<number>) => {
       state.maxGameParticipants = action.payload;
     },
-    setGameMode: (state, action: PayloadAction<gameMode>) => {
+    setGameMode: (state, action: PayloadAction<GameMode>) => {
       state.gameMode = action.payload;
     },
     setDifficulty: (state, action: PayloadAction<Difficulty>) => {
       state.difficulty = action.payload;
+    },
+    setSharedGameData: (state, action: PayloadAction<SharedGameData>) => {
+      state = action.payload;
     },
     resetSharedGameData: () => initialSharedState,
   }
@@ -49,6 +46,7 @@ export const {
   setMaxGameParticipants,
   setGameMode,
   setDifficulty,
+  setSharedGameData,
   resetSharedGameData
 } = sharedGameDataSlice.actions;
 

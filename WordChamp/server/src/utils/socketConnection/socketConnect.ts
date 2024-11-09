@@ -3,7 +3,7 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { Express } from 'express';
 import roomHandlerInstance from "../socketHandlers/handleAllRooms";
-import { HostRoomData, JoinRoomData, Message, OnlineUser, RegisterData, UserData } from '../../types/Types';
+import { HostRoomData, JoinRoomData, Message, OnlineUser, RegisterData, StartGameData, UserData } from '../../types/Types';
 import { SOCKET_EVENTS } from '../../constants/ServerSocketEvents';
 import ApiError from '../ApiError/ApiError';
 
@@ -66,6 +66,24 @@ const connectSocket = (app: Express) => {
         }
       }
     });
+
+    socket.on(SOCKET_EVENTS.START_GAME, (data:StartGameData) => {
+      if (data.roomId) {
+        console.log("The request to start the game is received");
+        console.log("The room details are:", data.roomId);
+        console.log("The gameData details are:", data);
+        const response = roomHandlerInstance.startGame(data.roomId, socket, data.gameData);
+        console.log("The startGame response is: ", response);
+        if (response.statusCode === 200) {
+          socket.emit(SOCKET_EVENTS.START_GAME_RESPONSE, response);
+          console.log(`Game started in room ${data.roomId}.`);
+        } else {
+          console.log("Error while starting the game");
+          socket.emit(SOCKET_EVENTS.START_GAME_RESPONSE, response);
+        }
+      }
+    })
+
 
     socket.on(SOCKET_EVENTS.MESSAGE_SEND, (data: Message) => {
       if (data.message && data.sender && data.roomId) {

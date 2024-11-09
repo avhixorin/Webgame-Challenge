@@ -1,13 +1,7 @@
+import { IndividualGameData } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface IndividualPlayerData {
-  score: number;
-  powerUps: string[];
-  isHosting: boolean;
-  isJoiningRoom: boolean;
-}
-
-const initialIndividualState: IndividualPlayerData = {
+const initialIndividualState: IndividualGameData = {
   score: 0,
   powerUps: [],
   isHosting: true,

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { SOCKET_EVENTS } from "@/constants/ClientSocketEvents";
 import {
-  GameData,
   HostingResponse,
   JoiningResponse,
   LeaveRoomResponse,
@@ -10,6 +9,8 @@ import {
   NewUserResponse,
   Room,
   RoomStatus,
+  SharedGameData,
+  StartGameResponse,
   User,
 } from "@/types/types";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +23,7 @@ import {
 } from "@/Redux/features/roomSlice";
 import { addMessage } from "@/Redux/features/messageSlice";
 import { RootState } from "@/Redux/store/store";
-import { setMaxGameParticipants } from "@/Redux/features/sharedGameDataSlice";
+import { setMaxGameParticipants, setSharedGameData } from "@/Redux/features/sharedGameDataSlice";
 
 // Singleton Socket instance
 let socket: Socket | null = null;
@@ -118,6 +119,16 @@ const useSocket = () => {
     socket.on(SOCKET_EVENTS.NEW_MESSAGE, (response: Message) => {
       handleNewMessage(response);
     });
+    socket.on(SOCKET_EVENTS.START_GAME_RESPONSE, (data:StartGameResponse) => {
+      console.log("Start Game Response",data);
+      if(data.statusCode === 200){
+        toast.success(data.message);
+        if(data.data.gameData) dispatch(setSharedGameData(data.data.gameData));
+      }else{
+        toast.error(data.message);
+      }
+      
+    })
   };
 
   const joinRoom = (room: Room, user: User) => {
@@ -135,11 +146,21 @@ const useSocket = () => {
     socket.on(SOCKET_EVENTS.NEW_MESSAGE, (response: Message) => {
       handleNewMessage(response);
     });
+    socket.on(SOCKET_EVENTS.START_GAME_RESPONSE, (data:StartGameResponse) => {
+      if(data.statusCode === 200){
+        toast.success(data.message);
+        if(data.data.gameData) dispatch(setSharedGameData(data.data.gameData));
+        navigate("/game");
+      }else{
+        toast.error(data.message);
+      }
+      
+    })
   };
 
-  const startGame = (room: Room,gameData: GameData) => {
+  const startGame = (roomId: string,gameData: SharedGameData) => {
     socket.emit(SOCKET_EVENTS.START_GAME,{
-      room,
+      roomId,
       gameData
     });
   }

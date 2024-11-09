@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import Room from "../../rooms/room";
 import ApiResponse from "../ApiResponse/ApiResponse";
 import { SOCKET_EVENTS } from "../../constants/ServerSocketEvents";
-import { UserData } from "../../types/Types";
+import { SharedGameData, UserData } from "../../types/Types";
 
 class RoomHandler {
   private static instance: RoomHandler;
@@ -122,7 +122,20 @@ class RoomHandler {
       return new ApiResponse(404, "User not found in any room");
     }
   }
-
+  public startGame(roomId: string, requesterSocket: Socket,gameData:SharedGameData): ApiResponse {
+    const room = this.getRoomById(roomId);
+    if (!room) return new ApiResponse(404, "Room not found");
+  
+    if (this.io) {
+      // Emit the start game event to all users in the room except the requester
+      requesterSocket.broadcast.to(roomId).emit(SOCKET_EVENTS.START_GAME, {
+        message: "The game has started!",
+      });
+    }
+  
+    return new ApiResponse(200, "Game started successfully");
+  }
+  
   public broadcastMessage(
     roomId: string,
     sender: UserData,

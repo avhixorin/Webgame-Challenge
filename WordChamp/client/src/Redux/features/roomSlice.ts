@@ -1,15 +1,7 @@
-import { RoomStatus, User } from "@/types/types";
+import { RoomData, RoomStatus, User } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface RoomState {
-  roomId: string;
-  password: string;
-  members: User[];
-  currentNoOfParticipants: number;
-  status: RoomStatus;
-}
-
-const initialState: RoomState = {
+const initialState: RoomData = {
   roomId: "",
   password: "",
   members: [],

@@ -5,6 +5,7 @@ export const SOCKET_EVENTS = {
 
     // User actions
     START_GAME: "startGame",
+    START_GAME_RESPONSE: "startGameResponse",
     REGISTER: "register",
     HOST_ROOM: "hostRoom",
     JOIN_ROOM: "joinRoom",

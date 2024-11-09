@@ -5,6 +5,18 @@ export enum Theme {
   DARK = "dark"
 }
 
+export enum Difficulty {
+  EASY = "easy",
+  MEDIUM = "medium",
+  HARD = "hard",
+  GOD = "god"
+}
+
+export enum GameMode {
+  SOLO = "solo",
+  MULTIPLAYER = "multiplayer"
+}
+
 export type UserData = {
   Id: string;
   username: string;
@@ -38,4 +50,14 @@ export type Message = {
   message: string;
   sender: UserData;
   roomId: string;
+};
+export type SharedGameData = {
+  maxGameParticipants: number;
+  currentGameString: string;
+  gameMode: GameMode | null;
+  difficulty: Difficulty;
+};
+export type StartGameData = {
+  roomId: string;
+  gameData: SharedGameData;
 };

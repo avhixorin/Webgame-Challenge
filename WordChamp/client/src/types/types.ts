@@ -41,6 +41,14 @@ export type Room = {
   roomPassword: string;
 };
 
+export type RoomData = {
+  roomId: string;
+  password: string;
+  members: User[];
+  currentNoOfParticipants: number;
+  status: RoomStatus;
+};
+
 export type HostRoomData = {
   room: Room;
   user: User;
@@ -69,16 +77,19 @@ export type Answer = {
   verdict: Verdict;
 };
 
-export type GameData = {
-  score: number;
-  powerUps: string[];
+export type SharedGameData = {
   maxGameParticipants: number;
   currentGameString: string;
   gameMode: GameMode | null;
   difficulty: Difficulty;
+};
+
+export type IndividualGameData = {
+  score: number;
+  powerUps: string[];
   isHosting: boolean;
   isJoiningRoom: boolean;
-};
+}
 
 export type Words = {
   wordCount: number;
@@ -89,10 +100,6 @@ export type Words = {
 
 // API response types
 
-export type UserCountResponse = {
-  userCount: number;
-};
-
 export type HostingResponse = {
   statusCode: number;
   message: string;
@@ -100,6 +107,14 @@ export type HostingResponse = {
     userCount: number;
   };
 };
+
+export type StartGameResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    gameData: SharedGameData;
+  };
+}
 
 export type JoiningResponse = {
   statusCode: number;
