@@ -14,9 +14,9 @@ const HostingForm: React.FC = () => {
   const dispatch = useDispatch();
   const { createRoomId } = useRoomID();
   const { hostRoom } = useSocket();
-  const roomId = useSelector((state: RootState) => state.room.roomId);
+  const { roomId } = useSelector((state: RootState) => state.room);
   const { maxGameParticipants } = useSelector((state:RootState) => state.sharedGameData)
-  const user = useSelector((state: RootState) => state.user.user);
+  const { user } = useSelector((state: RootState) => state.user);
   const validationSchema = Yup.object({
     roomPassword: Yup.string().required("Room password is required"),
     roomId: Yup.string().when("$isJoining", {
@@ -42,10 +42,11 @@ const HostingForm: React.FC = () => {
         if (user) {
           const room: Room = { roomId, roomPassword: values.roomPassword };
           console.log("The hosting room is: ", room);
-          hostRoom(room, user, maxGameParticipants);
-          dispatch(setMaxGameParticipants(parseInt(values.numOfPlayers, 10)));
           dispatch(setRoomStatus(RoomStatus.HOSTING));
+          dispatch(setMaxGameParticipants(parseInt(values.numOfPlayers,10)));
           dispatch(setRoomPassword(values.roomPassword));
+          console.log("The maxGameParticipants are:", maxGameParticipants);
+          hostRoom(room, user, parseInt(values.numOfPlayers,10));
         } else {
           console.error("User is not logged in");
         }

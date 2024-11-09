@@ -22,12 +22,12 @@ export enum Difficulty {
   GOD = "god"
 }
 
-export enum gameMode {
+export enum GameMode {
   SOLO = "solo",
   MULTIPLAYER = "multiplayer"
 }
 
-// Types related to user
+// User-related types
 export type User = {
   id: string;
   username: string;
@@ -35,7 +35,7 @@ export type User = {
   theme: Theme;
 };
 
-// Types related to rooms and connections
+// Room-related types
 export type Room = {
   roomId: string;
   roomPassword: string;
@@ -51,15 +51,19 @@ export type JoinRoomData = {
   user: User;
 };
 
-// Types related to messaging
+// Messaging-related types
 export type MessageData = {
-  message: {
-      roomId: string;
-      content: string;
-  };
+  roomId: string;
+  content: string;
 };
 
-// Types related to gameplay
+export type Message = {
+  message: string;
+  sender: User;
+  roomId: string;
+};
+
+// Gameplay-related types
 export type Answer = {
   word: string;
   verdict: Verdict;
@@ -70,7 +74,7 @@ export type GameData = {
   powerUps: string[];
   maxGameParticipants: number;
   currentGameString: string;
-  gameMode: gameMode | null;
+  gameMode: GameMode | null;
   difficulty: Difficulty;
   isHosting: boolean;
   isJoiningRoom: boolean;
@@ -83,45 +87,40 @@ export type Words = {
   wordsFetched: boolean;
 };
 
-// Types related to API responses
+// API response types
 
 export type UserCountResponse = {
   userCount: number;
 };
 
-export type hostingResponse = {
-  statusCode: number,
-  message:string,
-  data:{
-    userCount: number
-  }
-}
+export type HostingResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    userCount: number;
+  };
+};
 
-export type joiningResponse = {
-  statusCode: number,
-  message:string,
-  data:{
-    userCount: number,
-    allUsers : User[],
-    maxGameParticipants: number
-  }
-}
+export type JoiningResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    userCount: number;
+    allUsers: User[];
+    maxGameParticipants: number;
+  };
+};
 
-export type leaveRoomResponse = {
-  message: string,
-  userId: string,
-}
+export type LeaveRoomResponse = {
+  message: string;
+  userId: string;
+};
 
-export type noOfUsersResponse = {
-  userCount: number,
-}
+export type NoOfUsersResponse = {
+  userCount: number;
+};
 
-export type newUserResponse = {
-  message: string,
-  user: User,
-}
-
-export type Message = {
-  message: string,
-  sender: User,
-}
+export type NewUserResponse = {
+  message: string;
+  user: User;
+};

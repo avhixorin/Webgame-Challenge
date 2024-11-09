@@ -1,14 +1,13 @@
 import { RootState } from '@/Redux/store/store';
 import { RoomStatus } from '@/types/types';
 import CTAButton from '@/utils/CTAbutton/CTAbutton';
-import { stat } from 'fs';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const WaitingRoom: React.FC = () => {
   const [disabledStatus, setDisabledStatus] = useState(true);
-  const { maxGameParticipants } = useSelector((state: RootState) => state.userGameData) || { participants: 0 };
+  const { maxGameParticipants } = useSelector((state: RootState) => state.sharedGameData) || { participants: 0 };
   const { members = [], roomId = '', password: roomPassword = '', status: roomStatus = '' } = useSelector((state: RootState) => state.room) || {};
   
   useEffect(() => {

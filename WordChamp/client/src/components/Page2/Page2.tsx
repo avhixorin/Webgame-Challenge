@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/Redux/store/store';
-import { gameMode as GameModes } from '@/types/types';
+import { GameMode } from '@/types/types';
 import { useNavigate } from 'react-router-dom';
 import { Volume, VolumeX } from 'lucide-react';
 import useSound from '@/hooks/useSound';
@@ -15,7 +15,7 @@ const Page2: React.FC = () => {
   const dispatch = useDispatch();
   const [isHosting, setIsHosting] = useState(false);
   const [isJoiningRoom, setIsJoiningRoom] = useState(false);
-  const [localMode, setLocalMode] = useState<GameModes | null>(null);
+  const [localMode, setLocalMode] = useState<GameMode | null>(null);
   const [muted, setMuted] = useState(false);
 
   const { playBackgroundMusic, stopBackgroundMusic } = useSound();
@@ -30,10 +30,10 @@ const Page2: React.FC = () => {
 
 
 
-  const handleGameModeChange = (mode: GameModes) => {
+  const handleGameModeChange = (mode: GameMode) => {
     setLocalMode(mode);
     dispatch(setGameMode(mode));
-    if (mode === GameModes.SOLO) {
+    if (mode === GameMode.SOLO) {
       navigate('/game');
     }
   };
@@ -50,12 +50,12 @@ const Page2: React.FC = () => {
         <h1 className="text-3xl font-bold text-white">Mode Selection</h1>
         {!localMode && (
           <div className="flex gap-4">
-            <CTAButton type='button' disabled={false} label="Solo" colour="#2563eb" onClick={() => handleGameModeChange(GameModes.SOLO)} />
-            <CTAButton type='button' disabled={false} label="Multiplayer" colour="#16a34a" onClick={() => handleGameModeChange(GameModes.MULTIPLAYER)} />
+            <CTAButton type='button' disabled={false} label="Solo" colour="#2563eb" onClick={() => handleGameModeChange(GameMode.SOLO)} />
+            <CTAButton type='button' disabled={false} label="Multiplayer" colour="#16a34a" onClick={() => handleGameModeChange(GameMode.MULTIPLAYER)} />
           </div>
         )}
 
-        {localMode && gameMode === GameModes.MULTIPLAYER && (
+        {localMode && gameMode === GameMode.MULTIPLAYER && (
           <div className="flex gap-4">
             {!isJoiningRoom && (
               <CTAButton type='button' disabled={false} label={isHosting ? 'Cancel Host' : 'Host'} colour="#2563eb" onClick={() => setIsHosting((prev) => !prev)} />

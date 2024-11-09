@@ -3,7 +3,7 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { Express } from 'express';
 import roomHandlerInstance from "../socketHandlers/handleAllRooms";
-import { HostRoomData, JoinRoomData, MessageData, OnlineUser, RegisterData, UserData } from '../../types/Types';
+import { HostRoomData, JoinRoomData, Message, OnlineUser, RegisterData, UserData } from '../../types/Types';
 import { SOCKET_EVENTS } from '../../constants/ServerSocketEvents';
 import ApiError from '../ApiError/ApiError';
 
@@ -37,6 +37,7 @@ const connectSocket = (app: Express) => {
         console.log("The request to host the room is received");
         console.log("The room details are:", room);
         console.log("The user details are:", user);
+        console.log("The maxGameParticipants are:", maxGameParticipants);
         const response = roomHandlerInstance.hostRoom(room, user, maxGameParticipants, socket);
 
         if (response && response.statusCode === 200) {
@@ -49,27 +50,29 @@ const connectSocket = (app: Express) => {
     });
 
     socket.on(SOCKET_EVENTS.JOIN_ROOM, ({ room, user }: JoinRoomData) => {
+      
       if (room.roomId && room.roomPassword && user) {
         console.log("The request to join the room is received");
         // console.log("The room details are:", room);
         // console.log("The user details are:", user);
         const response = roomHandlerInstance.joinRoom(room.roomId, room.roomPassword, user, socket);
-
+        console.log("The joinRoom response is: ", response);
         if (response.statusCode === 200) {
           socket.emit(SOCKET_EVENTS.JOINING_RESPONSE, response);
           console.log(`User ${user.username} joined room ${room.roomId}.`);
         } else {
-          socket.emit(SOCKET_EVENTS.JOINING_RESPONSE, new ApiError(500, "Error while joining the room"));
+          console.log("Error while joining the room");
+          socket.emit(SOCKET_EVENTS.JOINING_RESPONSE, response);
         }
       }
     });
 
-    socket.on(SOCKET_EVENTS.MESSAGE_SEND, (data: MessageData) => {
-      if (data.message && data.user && data.roomId) {
+    socket.on(SOCKET_EVENTS.MESSAGE_SEND, (data: Message) => {
+      if (data.message && data.sender && data.roomId) {
         console.log("The message received is: ", data.message);
-        console.log("The message is received from the user: ", data.user);
+        console.log("The message is received from the user: ", data.sender.username);
         console.log("The message is received in the room: ", data.roomId);
-        const res = roomHandlerInstance.broadcastMessage(data.roomId, data.user, data.message, socket);
+        const res = roomHandlerInstance.broadcastMessage(data.roomId, data.sender, data.message, socket);
       }else{
         console.log("No message received");
       }

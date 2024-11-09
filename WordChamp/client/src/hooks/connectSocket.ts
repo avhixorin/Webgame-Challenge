@@ -3,16 +3,14 @@ import { io, Socket } from "socket.io-client";
 import { SOCKET_EVENTS } from "@/constants/ClientSocketEvents";
 import {
   GameData,
-  hostingResponse,
-  joiningResponse,
-  leaveRoomResponse,
+  HostingResponse,
+  JoiningResponse,
+  LeaveRoomResponse,
   Message,
-  newUserResponse,
-  noOfUsersResponse,
+  NewUserResponse,
   Room,
   RoomStatus,
   User,
-  UserCountResponse,
 } from "@/types/types";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -46,7 +44,7 @@ const useSocket = () => {
   const socket = initializeSocket();
 
   // Event handler functions with debug logs
-  const handleHostingResponse = (response: hostingResponse) => {
+  const handleHostingResponse = (response: HostingResponse) => {
     if (response?.statusCode === 200) {
       toast.success(
         response.message || "Room hosted successfully! Redirecting..."
@@ -61,7 +59,7 @@ const useSocket = () => {
     }
   };
 
-  const handleJoiningResponse = (response: joiningResponse) => {
+  const handleJoiningResponse = (response: JoiningResponse) => {
     console.log("Joining response:", response);
     if (response?.statusCode === 200) {
       toast.success(
@@ -78,11 +76,11 @@ const useSocket = () => {
     }
   };
 
-  const handleUserCount = (response: UserCountResponse) => {
-    dispatch(setCurrentParticipants(response.userCount));
-  };
+  // const handleUserCount = (response: UserCountResponse) => {
+  //   dispatch(setCurrentParticipants(response.userCount));
+  // };
 
-  const handleLeaveRoom = (data: leaveRoomResponse) => {
+  const handleLeaveRoom = (data: LeaveRoomResponse) => {
     console.log("User left response:", data);
     toast(`${data.message}`, {
       icon: "👋",
@@ -91,7 +89,7 @@ const useSocket = () => {
     dispatch(removeMembersFromRoom(data.userId));
   };
 
-  const handleNewUser = (data: newUserResponse) => {
+  const handleNewUser = (data: NewUserResponse) => {
     console.log("New user response:", data);
     toast(`${data.message}`, {
       icon: "👋",
@@ -108,13 +106,13 @@ const useSocket = () => {
   const hostRoom = (room: Room, user: User, maxGameParticipants: number) => {
     console.log("Emitting HOST_ROOM event:", { room, user, maxGameParticipants });
     socket.emit(SOCKET_EVENTS.HOST_ROOM, { room, user, maxGameParticipants });
-    socket.on(SOCKET_EVENTS.NO_OF_USERS, (response: noOfUsersResponse) => {
-      handleUserCount(response);
-    });
-    socket.on(SOCKET_EVENTS.LEAVE_ROOM, (response: leaveRoomResponse) => {
+    // socket.on(SOCKET_EVENTS.NO_OF_USERS, (response: NoOfUsersResponse) => {
+    //   handleUserCount(response);
+    // });
+    socket.on(SOCKET_EVENTS.LEAVE_ROOM, (response: LeaveRoomResponse) => {
       handleLeaveRoom(response);
     });
-    socket.on(SOCKET_EVENTS.NEW_USER, (response: newUserResponse) => {
+    socket.on(SOCKET_EVENTS.NEW_USER, (response: NewUserResponse) => {
       handleNewUser(response);
     });
     socket.on(SOCKET_EVENTS.NEW_MESSAGE, (response: Message) => {
@@ -125,13 +123,13 @@ const useSocket = () => {
   const joinRoom = (room: Room, user: User) => {
     console.log("Emitting JOIN_ROOM event:", { room, user });
     socket.emit(SOCKET_EVENTS.JOIN_ROOM, { room, user });
-    socket.on(SOCKET_EVENTS.NO_OF_USERS, (response: noOfUsersResponse) => {
-      handleUserCount(response);
-    });
-    socket.on(SOCKET_EVENTS.LEAVE_ROOM, (response: leaveRoomResponse) => {
+    // socket.on(SOCKET_EVENTS.NO_OF_USERS, (response: NoOfUsersResponse) => {
+    //   handleUserCount(response);
+    // });
+    socket.on(SOCKET_EVENTS.LEAVE_ROOM, (response: LeaveRoomResponse) => {
       handleLeaveRoom(response);
     });
-    socket.on(SOCKET_EVENTS.NEW_USER, (response: newUserResponse) => {
+    socket.on(SOCKET_EVENTS.NEW_USER, (response: NewUserResponse) => {
       handleNewUser(response);
     });
     socket.on(SOCKET_EVENTS.NEW_MESSAGE, (response: Message) => {
@@ -140,7 +138,14 @@ const useSocket = () => {
   };
 
   const startGame = (room: Room,gameData: GameData) => {
-    socket.emit(SOCKET_EVENTS.START_GAME,);
+    socket.emit(SOCKET_EVENTS.START_GAME,{
+      room,
+      gameData
+    });
+  }
+
+  const sendMessage = (message: Message) => {
+    socket.emit(SOCKET_EVENTS.MESSAGE_SEND, message);
   }
 
   useEffect(() => {
@@ -150,12 +155,11 @@ const useSocket = () => {
 
     socket.on(SOCKET_EVENTS.HOSTING_RESPONSE, handleHostingResponse);
     socket.on(SOCKET_EVENTS.JOINING_RESPONSE, handleJoiningResponse);
-    socket.on(SOCKET_EVENTS.NO_OF_USERS, handleUserCount);
 
     return () => {
       socket.off(SOCKET_EVENTS.HOSTING_RESPONSE, handleHostingResponse);
       socket.off(SOCKET_EVENTS.JOINING_RESPONSE, handleJoiningResponse);
-      socket.off(SOCKET_EVENTS.NO_OF_USERS, handleUserCount);
+      // socket.off(SOCKET_EVENTS.NO_OF_USERS, handleUserCount);
       socket.off(SOCKET_EVENTS.LEAVE_ROOM, handleLeaveRoom);
       socket.off(SOCKET_EVENTS.NEW_USER, handleNewUser);
       socket.off(SOCKET_EVENTS.NEW_MESSAGE, handleNewMessage);
@@ -163,7 +167,7 @@ const useSocket = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomStatus, user]);
 
-  return { hostRoom, joinRoom };
+  return { hostRoom, joinRoom, sendMessage, startGame };
 };
 
 export default useSocket;
