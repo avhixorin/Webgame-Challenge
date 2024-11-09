@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const useValidate = (word: string) => {
   const currentGameString = useSelector(
-    (state: RootState) => state.userGameData.currentGameString
+    (state: RootState) => state.sharedGameData.currentGameString
   );
 
   const doesIncludes = (primary: string, secondary: string) => {

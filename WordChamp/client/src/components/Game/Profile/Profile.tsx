@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 const Profile: React.FC = () => {
-  const { difficulty, participants: numPlayers } = useSelector((state: RootState) => state.userGameData);
+  const { difficulty, maxGameParticipants: numPlayers } = useSelector((state: RootState) => state.sharedGameData);
   const { roomId, password } = useSelector((state: RootState) => state.room);
 
   return (

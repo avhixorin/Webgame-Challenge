@@ -9,7 +9,7 @@ const useWords = () => {
   const dispatch = useDispatch();
   const wordCount = useSelector((state: RootState) => state.wordsData.wordCount);
   const areWordsFetched = useSelector((state: RootState) => state.wordsData.wordsFetched);
-  const difficulty = useSelector((state: RootState) => state.userGameData.difficulty);
+  const difficulty = useSelector((state: RootState) => state.sharedGameData.difficulty);
   const words = useSelector((state: RootState) => state.wordsData.words);
 
   function shuffleString(gameString: string): string {

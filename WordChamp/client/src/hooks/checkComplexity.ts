@@ -1,4 +1,5 @@
-import { addScore } from '@/Redux/features/sharedGameDataSlice';
+
+import { addScore } from '@/Redux/features/individualPlayerDataSlice';
 import { useDispatch } from 'react-redux';
 
 const countVowels = (word:string) => word.match(/[aeiou]/gi)?.length || 0;

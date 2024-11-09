@@ -15,7 +15,7 @@ const HostingForm: React.FC = () => {
   const { createRoomId } = useRoomID();
   const { hostRoom } = useSocket();
   const roomId = useSelector((state: RootState) => state.room.roomId);
-  const { maxGameParticipants } = useSelector((state:RootState) => state.userGameData)
+  const { maxGameParticipants } = useSelector((state:RootState) => state.sharedGameData)
   const user = useSelector((state: RootState) => state.user.user);
   const validationSchema = Yup.object({
     roomPassword: Yup.string().required("Room password is required"),

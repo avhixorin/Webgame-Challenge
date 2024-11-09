@@ -19,7 +19,7 @@ const AlphabetSection: React.FC = () => {
   useWords();
 
   const gameString = useSelector((state: RootState) =>
-    state.userGameData.currentGameString.toUpperCase().split("")
+    state.sharedGameData.currentGameString.toUpperCase().split("")
   );
 
   return (

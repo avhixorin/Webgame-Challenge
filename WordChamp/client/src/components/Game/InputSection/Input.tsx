@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/store/store";
 import { Filter } from "bad-words";
-import { addScore } from "@/Redux/features/sharedGameDataSlice";
 import useValidate from "@/hooks/validateWord";
 import useComplexity from "@/hooks/checkComplexity";
 import useMistake from "@/hooks/checkNegatives";
@@ -14,12 +13,13 @@ import { addGuessedWord } from "@/Redux/features/wordsData";
 import { Verdict } from "@/types/types";
 import { addAnswer } from "@/Redux/features/answersSlice";
 import toast from "react-hot-toast";
+import { addScore } from "@/Redux/features/individualPlayerDataSlice";
 
 const InputSection: React.FC = () => {
   const dispatch = useDispatch();
   const filter = new Filter();
   const gameString = useSelector((state: RootState) =>
-    state.userGameData.currentGameString.toUpperCase().split("")
+    state.sharedGameData.currentGameString.toUpperCase().split("")
   );
   const [inputWord, setInputWord] = useState<string>("");
 

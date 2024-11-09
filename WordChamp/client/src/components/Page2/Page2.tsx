@@ -20,8 +20,7 @@ const Page2: React.FC = () => {
 
   const { playBackgroundMusic, stopBackgroundMusic } = useSound();
   const navigate = useNavigate();
-  const gameMode = useSelector((state: RootState) => state.userGameData.gameMode);
-
+  const gameMode = useSelector((state: RootState) => state.sharedGameData.gameMode);
 
   useEffect(() => {
     if (muted) stopBackgroundMusic();
