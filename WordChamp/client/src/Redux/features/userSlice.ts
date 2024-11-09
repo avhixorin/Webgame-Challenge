@@ -2,7 +2,6 @@ import { Theme, User } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
-
 type UserState = {
   user: User | null;
 };

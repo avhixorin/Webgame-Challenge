@@ -27,8 +27,8 @@ class RoomHandler {
     return new ApiResponse(200, "Room created successfully");
   }
 
-  public hostRoom(room: Room, user: UserData, socket: Socket): ApiResponse {
-    const newRoom = new Room(room.roomId, room.roomPassword);
+  public hostRoom(room: Room, user: UserData, maxGameParticipants:number, socket: Socket): ApiResponse {
+    const newRoom = new Room(room.roomId, room.roomPassword, maxGameParticipants);
     newRoom.addUser(user, socket);
     this.addRoom(newRoom);
 
@@ -75,6 +75,7 @@ class RoomHandler {
     return new ApiResponse(200, "Joined room successfully", {
       userCount: room.users.length,
       allUsers: room.getAllUsers(),
+      maxGameParticipants: room.maxGameParticipants
     });
   }
 

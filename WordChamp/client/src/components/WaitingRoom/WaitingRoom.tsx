@@ -1,21 +1,23 @@
 import { RootState } from '@/Redux/store/store';
+import { RoomStatus } from '@/types/types';
 import CTAButton from '@/utils/CTAbutton/CTAbutton';
+import { stat } from 'fs';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const WaitingRoom: React.FC = () => {
   const [disabledStatus, setDisabledStatus] = useState(true);
-  const { participants } = useSelector((state: RootState) => state.userGameData) || { participants: 0 };
+  const { maxGameParticipants } = useSelector((state: RootState) => state.userGameData) || { participants: 0 };
   const { members = [], roomId = '', password: roomPassword = '', status: roomStatus = '' } = useSelector((state: RootState) => state.room) || {};
   
   useEffect(() => {
-    if (participants === members.length) {
+    if (maxGameParticipants === members.length) {
       setDisabledStatus(false);
     } else {
       setDisabledStatus(true);
     }
-  }, [members, participants]);
+  }, [members, maxGameParticipants]);
 
   const navigate = useNavigate();
 
@@ -30,7 +32,9 @@ const WaitingRoom: React.FC = () => {
         <p className="text-center text-xl font-bold text-zinc-700">
           Current number of participants: <span className="text-indigo-600">{members.length}</span>
         </p>
-        <div className='w-full flex justify-center'>
+        {
+          roomStatus === RoomStatus.HOSTING && (
+            <div className='w-full flex justify-center'>
           <CTAButton
             colour="#60a5fa"
             disabled={disabledStatus}
@@ -39,6 +43,9 @@ const WaitingRoom: React.FC = () => {
             onClick={() => navigate('/selection')}
           />
         </div>
+          )
+        }
+        
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { SOCKET_EVENTS } from "@/constants/ClientSocketEvents";
 import {
+  GameData,
   hostingResponse,
   joiningResponse,
   leaveRoomResponse,
@@ -23,6 +24,7 @@ import {
 } from "@/Redux/features/roomSlice";
 import { addMessage } from "@/Redux/features/messageSlice";
 import { RootState } from "@/Redux/store/store";
+import { setMaxGameParticipants } from "@/Redux/features/sharedGameDataSlice";
 
 // Singleton Socket instance
 let socket: Socket | null = null;
@@ -60,10 +62,12 @@ const useSocket = () => {
   };
 
   const handleJoiningResponse = (response: joiningResponse) => {
+    console.log("Joining response:", response);
     if (response?.statusCode === 200) {
       toast.success(
-        response.message || "Joined room successfully! Redirecting..."
+        response.message || "Joined room successfully!"
       );
+      if(roomStatus === RoomStatus.JOINING) dispatch(setMaxGameParticipants(response.data.maxGameParticipants));
       dispatch(setCurrentParticipants(response.data.userCount || 1));
       response.data.allUsers.forEach((user) => {
         dispatch(addMembersToRoom(user));
@@ -101,9 +105,9 @@ const useSocket = () => {
     dispatch(addMessage(data));
   };
 
-  const hostRoom = (room: Room, user: User) => {
-    console.log("Emitting HOST_ROOM event:", { room, user });
-    socket.emit(SOCKET_EVENTS.HOST_ROOM, { room, user });
+  const hostRoom = (room: Room, user: User, maxGameParticipants: number) => {
+    console.log("Emitting HOST_ROOM event:", { room, user, maxGameParticipants });
+    socket.emit(SOCKET_EVENTS.HOST_ROOM, { room, user, maxGameParticipants });
     socket.on(SOCKET_EVENTS.NO_OF_USERS, (response: noOfUsersResponse) => {
       handleUserCount(response);
     });
@@ -134,6 +138,10 @@ const useSocket = () => {
       handleNewMessage(response);
     });
   };
+
+  const startGame = (room: Room,gameData: GameData) => {
+    socket.emit(SOCKET_EVENTS.START_GAME,);
+  }
 
   useEffect(() => {
     if (socket && !socket.connected) {

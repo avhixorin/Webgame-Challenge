@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/store/store";
 import { Filter } from "bad-words";
-import { addScore } from "@/Redux/features/userGameDataSlice";
+import { addScore } from "@/Redux/features/sharedGameDataSlice";
 import useValidate from "@/hooks/validateWord";
 import useComplexity from "@/hooks/checkComplexity";
 import useMistake from "@/hooks/checkNegatives";

@@ -1,4 +1,4 @@
-import { setCurrentGameString } from "@/Redux/features/userGameDataSlice";
+import { setCurrentGameString } from "@/Redux/features/sharedGameDataSlice";
 import { setWords, setWordsFetched } from "@/Redux/features/wordsData";
 import { RootState } from "@/Redux/store/store";
 import { Difficulty } from "@/types/types";

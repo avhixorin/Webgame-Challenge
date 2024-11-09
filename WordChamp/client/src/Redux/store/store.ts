@@ -1,11 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userSlice from "../features/userSlice";
-import userGameDataSlice from "../features/userGameDataSlice";
+import individualPlayerDataSlice from "../features/individualPlayerDataSlice";
+import sharedGameDataSlice from "../features/sharedGameDataSlice";
 import wordsDataSlice from "../features/wordsData";
 import answerSlice from "../features/answersSlice";
 import roomSlice from "../features/roomSlice";
 import messageSlice from "../features/messageSlice";
-import { persistStore, persistReducer, PURGE } from "redux-persist";
+import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
@@ -15,7 +16,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userSlice,
-  userGameData: userGameDataSlice,
+  individualPlayerData: individualPlayerDataSlice,
+  sharedGameData: sharedGameDataSlice,
   wordsData: wordsDataSlice,
   answers: answerSlice,
   room: roomSlice,

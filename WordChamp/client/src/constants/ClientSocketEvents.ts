@@ -4,6 +4,7 @@ export const SOCKET_EVENTS = {
     DISCONNECT: "disconnect",
 
     // User actions
+    START_GAME: "startGame",
     REGISTER: "register",
     HOST_ROOM: "hostRoom",
     JOIN_ROOM: "joinRoom",

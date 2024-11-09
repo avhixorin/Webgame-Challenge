@@ -23,6 +23,7 @@ export type RegisterData = {
 export type HostRoomData = {
   room: Room;
   user: UserData;
+  maxGameParticipants: number;
 };
 
 export type JoinRoomData = {

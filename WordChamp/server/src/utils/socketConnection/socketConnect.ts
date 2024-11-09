@@ -32,12 +32,12 @@ const connectSocket = (app: Express) => {
       }
     });
 
-    socket.on(SOCKET_EVENTS.HOST_ROOM, ({ room, user }: HostRoomData) => {
+    socket.on(SOCKET_EVENTS.HOST_ROOM, ({ room, user, maxGameParticipants }: HostRoomData) => {
       if (room.roomId && room.roomPassword && user) {
         console.log("The request to host the room is received");
         console.log("The room details are:", room);
         console.log("The user details are:", user);
-        const response = roomHandlerInstance.hostRoom(room, user, socket);
+        const response = roomHandlerInstance.hostRoom(room, user, maxGameParticipants, socket);
 
         if (response && response.statusCode === 200) {
           socket.emit(SOCKET_EVENTS.HOSTING_RESPONSE, response);

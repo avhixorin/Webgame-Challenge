@@ -5,10 +5,10 @@ import ApiResponse from "../utils/ApiResponse/ApiResponse";
 class Room {
   public users: { user: UserData; socketId: string }[] = [];
 
-  constructor(public roomId: string, public roomPassword: string) {}
+  constructor(public roomId: string, public roomPassword: string, public maxGameParticipants:number) {}
 
   addUser(user: UserData, socket: Socket): ApiResponse {
-    if (this.users.length >= 3) return new ApiResponse(403, "Room is full");
+    if (this.users.length >= this.maxGameParticipants) return new ApiResponse(403, "Room is full");
 
     this.users.push({ user, socketId: socket.id });
     socket.join(this.roomId);

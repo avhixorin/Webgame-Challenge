@@ -10,7 +10,7 @@ import {
 import { Difficulty } from "@/types/types";
 import CTAButton from "@/utils/CTAbutton/CTAbutton";
 import { useDispatch } from "react-redux";
-import { setDifficulty } from "@/Redux/features/userGameDataSlice";
+import { setDifficulty } from "@/Redux/features/sharedGameDataSlice";
 import { useNavigate } from "react-router-dom";
 
 const SelectionPage: React.FC = () => {

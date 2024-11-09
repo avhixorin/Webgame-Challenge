@@ -8,13 +8,14 @@ import * as Yup from "yup";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useRoomID from "@/hooks/getRoomId";
-import { setGameParticipants } from "@/Redux/features/userGameDataSlice";
+import { setMaxGameParticipants } from "@/Redux/features/sharedGameDataSlice";
 
 const HostingForm: React.FC = () => {
   const dispatch = useDispatch();
   const { createRoomId } = useRoomID();
   const { hostRoom } = useSocket();
   const roomId = useSelector((state: RootState) => state.room.roomId);
+  const { maxGameParticipants } = useSelector((state:RootState) => state.userGameData)
   const user = useSelector((state: RootState) => state.user.user);
   const validationSchema = Yup.object({
     roomPassword: Yup.string().required("Room password is required"),
@@ -41,8 +42,8 @@ const HostingForm: React.FC = () => {
         if (user) {
           const room: Room = { roomId, roomPassword: values.roomPassword };
           console.log("The hosting room is: ", room);
-          hostRoom(room, user);
-          dispatch(setGameParticipants(parseInt(values.numOfPlayers, 10)));
+          hostRoom(room, user, maxGameParticipants);
+          dispatch(setMaxGameParticipants(parseInt(values.numOfPlayers, 10)));
           dispatch(setRoomStatus(RoomStatus.HOSTING));
           dispatch(setRoomPassword(values.roomPassword));
         } else {

@@ -1,4 +1,4 @@
-import { addScore } from "@/Redux/features/userGameDataSlice";
+import { addScore } from "@/Redux/features/sharedGameDataSlice";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 

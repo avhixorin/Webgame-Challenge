@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Volume, VolumeX } from 'lucide-react';
 import useSound from '@/hooks/useSound';
 import Rules from '../Game/Rules/Rules';
-import { setGameMode } from '@/Redux/features/userGameDataSlice';
+import { setGameMode } from '@/Redux/features/sharedGameDataSlice';
 import CTAButton from '@/utils/CTAbutton/CTAbutton';
 import HostingForm from './HostingForm/HostingForm';
 import JoiningForm from './JoiningForm/JoiningForm';

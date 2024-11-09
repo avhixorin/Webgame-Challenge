@@ -5,12 +5,13 @@ import useSound from "@/hooks/useSound";
 import { Volume, VolumeX } from "lucide-react";
 import Rules from "../Game/Rules/Rules";
 import { useDispatch } from "react-redux";
-import { resetGameData } from "@/Redux/features/userGameDataSlice";
+import { resetGameData, resetSharedGameData } from "@/Redux/features/sharedGameDataSlice";
 import { resetAnswers } from "@/Redux/features/answersSlice";
 import { resetWords } from "@/Redux/features/wordsData";
 import { resetRoom } from "@/Redux/features/roomSlice";
 import { clearMessages } from "@/Redux/features/messageSlice";
 import { resetUser } from "@/Redux/features/userSlice";
+import { resetIndividualPlayerData } from "@/Redux/features/individualPlayerDataSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -18,8 +19,9 @@ export default function Home() {
   const [isEntering, setIsEntering] = useState(false);
   const { playEnterSound, playBackgroundMusic, stopBackgroundMusic } = useSound();
   useEffect(() => {
-    dispatch(resetGameData());
-    dispatch(resetAnswers())
+    dispatch(resetIndividualPlayerData());
+    dispatch(resetSharedGameData());
+    dispatch(resetAnswers());
     dispatch(resetWords());
     dispatch(resetRoom());
     dispatch(clearMessages());

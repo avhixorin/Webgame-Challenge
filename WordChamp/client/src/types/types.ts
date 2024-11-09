@@ -68,7 +68,7 @@ export type Answer = {
 export type GameData = {
   score: number;
   powerUps: string[];
-  participants: number;
+  maxGameParticipants: number;
   currentGameString: string;
   gameMode: gameMode | null;
   difficulty: Difficulty;
@@ -102,7 +102,8 @@ export type joiningResponse = {
   message:string,
   data:{
     userCount: number,
-    allUsers : User[]
+    allUsers : User[],
+    maxGameParticipants: number
   }
 }
 
