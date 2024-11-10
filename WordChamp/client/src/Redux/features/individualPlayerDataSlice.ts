@@ -36,6 +36,9 @@ const individualPlayerDataSlice = createSlice({
       }
     },
     addGuessedWord: (state, action: PayloadAction<string>) => {
+      if (state.guessedWords.length >= 10) {
+        state.guessedWords.shift(); 
+      }
       state.guessedWords.push(action.payload);
     },
     resetGuesses: (state) => {
