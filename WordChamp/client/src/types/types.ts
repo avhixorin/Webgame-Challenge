@@ -97,8 +97,9 @@ export type IndividualGameData = {
 }
 
 export type Score = {
-  [member: string]: number;
-}
+  user: User;
+  score: number;
+}[]
 
 export type Words = {
   words: string[];
@@ -112,6 +113,20 @@ export type HostingResponse = {
   message: string;
   data: {
     userCount: number;
+  };
+};
+export type ScoreData = {
+  playerId: string;
+  score: number;
+  roomId: string;
+  guessedWord?: string;
+}
+export type UpdateScoreResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    user: User;
+    score: number;
   };
 };
 

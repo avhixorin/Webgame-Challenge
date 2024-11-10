@@ -13,6 +13,8 @@ export const SOCKET_EVENTS = {
     NEW_MESSAGE_RESPONSE: "newMessageResponse",
     NEW_USER: "newUser",
     USER_TYPING: "userTyping",
+    UPDATE_SCORE: "updateScore",
+    UPDATE_SCORE_RESPONSE: "updateScoreResponse",
     TIMER: "timer",
     USER_STOPPED_TYPING: "userStoppedTyping",
     NO_OF_USERS: "noOfUsers",

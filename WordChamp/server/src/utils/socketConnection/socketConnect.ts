@@ -3,7 +3,7 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { Express } from 'express';
 import roomHandlerInstance from "../SocketHandlers/handleAllRooms";
-import { HostRoomData, JoinRoomData, Message, OnlineUser, RegisterData, StartGameData, UserData } from '../../types/Types';
+import { HostRoomData, JoinRoomData, Message, OnlineUser, RegisterData, ScoreData, StartGameData, UserData } from '../../types/Types';
 import { SOCKET_EVENTS } from '../../constants/ServerSocketEvents';
 import ApiError from '../ApiError/ApiError';
 
@@ -99,10 +99,21 @@ const connectSocket = (app: Express) => {
       }
     });
 
-    socket.on(SOCKET_EVENTS.ENQUIRY, ({ roomId }: { roomId: string }) => {
-      const roomExists = roomHandlerInstance.getRoomById(roomId);
-      const responseMessage = roomExists ? "The room exists" : "The room does not exist";
-      socket.emit(SOCKET_EVENTS.ENQUIRY_RESPONSE, responseMessage);
+    socket.on(SOCKET_EVENTS.UPDATE_SCORE, (data: ScoreData) => {
+      console.log("The score data received is: ", data);
+      if (data.playerId && data.roomId && data.score) {
+        console.log("The score data received is: ", data);
+        const res = roomHandlerInstance.updateScore(data.playerId, data.roomId, data.guessedWord, data.score, socket);
+        console.log("The updateScore response is: ", res);
+        if(res){
+          console.log("Score updated successfully");
+          console.log("The updateScoreResponse is: ", res);
+        }else{
+          console.log("Error while updating the score");
+        }
+      }else{
+        console.log("No score data received");
+      }
     });
 
     socket.on("disconnect", (reason) => {

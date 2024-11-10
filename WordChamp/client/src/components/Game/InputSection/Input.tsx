@@ -14,9 +14,12 @@ import { addAnswer } from "@/Redux/features/answersSlice";
 import toast from "react-hot-toast";
 import { addGuessedWord } from "@/Redux/features/individualPlayerDataSlice";
 import { updateScore } from "@/Redux/features/scoreSlice";
+import useSocket from "@/hooks/connectSocket";
 
 const InputSection: React.FC = () => {
   const dispatch = useDispatch();
+  const { roomId } = useSelector((state: RootState) => state.room);
+  const { updateUserScore } = useSocket();
   const filter = new Filter();
   const gameString = useSelector((state: RootState) =>
     state.sharedGameData.currentGameString.toUpperCase().split("")
@@ -49,6 +52,9 @@ const InputSection: React.FC = () => {
       })
 
       dispatch(updateScore({ playerId: user?.username ?? "unknown", score: -3 }));
+      if (user && user.username) {
+        updateUserScore({ playerId: user.username, score: -3, roomId: roomId });
+      }
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.PROFANE })
       );
@@ -70,7 +76,10 @@ const InputSection: React.FC = () => {
         },
       })
       
-      dispatch(addScore(finalScore));
+      dispatch(updateScore({ playerId: user?.username ?? "unknown", score: finalScore }));
+      if (user && user.username) {
+        updateUserScore({ playerId: user.username, score: finalScore, roomId: roomId, guessedWord: inputWord });
+      }
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.RIGHT })
       );
@@ -93,6 +102,7 @@ const InputSection: React.FC = () => {
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.WRONG })
       );
+      
     }
   };
 

@@ -123,6 +123,7 @@ class RoomHandler {
       return new ApiResponse(404, "User not found in any room");
     }
   }
+
   public startGame(roomId: string, gameData: SharedGameData): ApiResponse {
     const room = this.getRoomById(roomId);
     if (!room) return new ApiResponse(404, "Room not found");
@@ -143,8 +144,34 @@ class RoomHandler {
 
     return new ApiResponse(200, "Game started successfully", { gameData });
   }
+
+  // New updateScore function
+  public updateScore(
+    userId: string,
+    roomId: string,
+    guessedWord: string | undefined,
+    score: number,
+    socket: Socket
+  ): ApiResponse {
+    const room = this.getRoomById(roomId);
+    if (!room) return new ApiResponse(404, "Room not found");
   
+    const user = room.users.find((u) => u.user.username === userId);
+    if (!user) return new ApiResponse(404, "User not found in room");
   
+    // Emit updated score to all users except the requester
+    if (this.io) {
+      // Emit to all users except the sender (requester)
+      socket.broadcast.to(roomId).emit(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, new ApiResponse(200, "Score updated successfully", { user, score }));
+    }
+  
+    return new ApiResponse(200, "Score updated successfully", {
+      userId: userId,
+      score: score,
+    });
+  }
+  
+
   public broadcastMessage(
     roomId: string,
     sender: UserData,

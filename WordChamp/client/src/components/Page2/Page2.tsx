@@ -28,13 +28,11 @@ const Page2: React.FC = () => {
   }, [muted, playBackgroundMusic, stopBackgroundMusic]);
 
 
-
-
   const handleGameModeChange = (mode: GameMode) => {
     setLocalMode(mode);
     dispatch(setGameMode(mode));
     if (mode === GameMode.SOLO) {
-      navigate('/game');
+      navigate('/selection');
     }
   };
 

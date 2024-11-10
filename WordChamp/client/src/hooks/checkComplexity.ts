@@ -2,6 +2,7 @@
 import { updateScore } from '@/Redux/features/scoreSlice';
 import { RootState } from '@/Redux/store/store';
 import { useDispatch, useSelector } from 'react-redux';
+import useSocket from './connectSocket';
 
 const countVowels = (word:string) => word.match(/[aeiou]/gi)?.length || 0;
 const countConsonants = (word:string) => word.match(/[bcdfghjklmnpqrstvwxyz]/gi)?.length || 0;
@@ -13,6 +14,8 @@ const countSyllables = (word:string) => {
 
 const useComplexity = () => {
   const dispatch = useDispatch();
+  const { updateUserScore } = useSocket();
+  const { roomId } = useSelector((state: RootState) => state.room);
   const user = useSelector((state: RootState) => state.user);
 
   const getScore = (word:string) => {
@@ -34,6 +37,9 @@ const useComplexity = () => {
 
     const finalScore = Math.min(Math.max(score, 1), 5);
     if(user.user) dispatch(updateScore({ playerId: user.user?.username, score: finalScore }));
+    if (user.user?.username) {
+      updateUserScore({ playerId: user.user.username, score: finalScore, roomId: roomId });
+    }
     return finalScore
   };
 

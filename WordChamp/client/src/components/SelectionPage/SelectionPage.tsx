@@ -7,22 +7,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Difficulty } from "@/types/types";
+import { Difficulty, GameMode } from "@/types/types";
 import { useDispatch, useSelector } from "react-redux";
 import { setDifficulty } from "@/Redux/features/sharedGameDataSlice";
 import useSocket from "@/hooks/connectSocket";
 import { RootState } from "@/Redux/store/store";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 const SelectionPage: React.FC = () => {
   const [difficulty, setLocalDifficulty] = useState<Difficulty>(Difficulty.EASY);
+  const navigate = useNavigate();
   const { startGame } = useSocket();
   const { roomId } = useSelector((state: RootState) => state.room);
   const gameData = useSelector((state: RootState) => state.sharedGameData);
+  const { gameMode } = useSelector((state: RootState) => state.individualPlayerData);
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch(setDifficulty(difficulty));
-    startGame(roomId,gameData)
+    if(gameMode === GameMode.MULTIPLAYER){
+      startGame(roomId,gameData)
+    }else{
+      navigate("/game");
+    }
+    
     console.log("Starting game with difficulty: ", difficulty);
   };
   return (

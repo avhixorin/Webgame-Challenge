@@ -10,8 +10,10 @@ import {
   NewUserResponse,
   Room,
   RoomStatus,
+  ScoreData,
   SharedGameData,
   StartGameResponse,
+  UpdateScoreResponse,
   User,
 } from "@/types/types";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +27,7 @@ import {
 import { addMessage } from "@/Redux/features/messageSlice";
 import { RootState } from "@/Redux/store/store";
 import { setMaxGameParticipants, setSharedGameData } from "@/Redux/features/sharedGameDataSlice";
+import { updateScore } from "@/Redux/features/scoreSlice";
 
 // Singleton Socket instance
 let socket: Socket | null = null;
@@ -131,7 +134,10 @@ const useSocket = () => {
     socket.on(SOCKET_EVENTS.START_GAME_RESPONSE, (data:StartGameResponse) => {
       handleStartGameResponse(data);
     })
-
+    socket.on(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, (data:UpdateScoreResponse) => {
+      console.log("Score update response",data);
+      dispatch(updateScore({ playerId: data.data.user.username, score: data.data.score }));
+    });
   };
 
   const joinRoom = (room: Room, user: User) => {
@@ -150,6 +156,10 @@ const useSocket = () => {
     socket.on(SOCKET_EVENTS.START_GAME_RESPONSE, (data:StartGameResponse) => {
       handleStartGameResponse(data);
     })
+    socket.on(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, (data:UpdateScoreResponse) => {
+      console.log("Score update response",data);
+      dispatch(updateScore({ playerId: data.data.user.username, score: data.data.score }));
+    });
   };
 
   const startGame = (roomId: string,gameData: SharedGameData) => {
@@ -163,6 +173,11 @@ const useSocket = () => {
   const sendMessage = (message: Message) => {
     console.log("Emitting NEW_MESSAGE event:", message);
     socket.emit(SOCKET_EVENTS.NEW_MESSAGE, message);
+  }
+  
+  const updateUserScore = (scoreData:ScoreData) => {
+    console.log("Emitting UPDATE_SCORE event:", scoreData);
+    socket.emit(SOCKET_EVENTS.UPDATE_SCORE, scoreData);
   }
 
   useEffect(() => {
@@ -185,7 +200,7 @@ const useSocket = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomStatus, user]);
 
-  return { hostRoom, joinRoom, sendMessage, startGame };
+  return { hostRoom, joinRoom, sendMessage, startGame, updateUserScore };
 };
 
 export default useSocket;

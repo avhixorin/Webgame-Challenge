@@ -60,3 +60,18 @@ export type StartGameData = {
   roomId: string;
   gameData: SharedGameData;
 };
+
+export type ScoreData = {
+  playerId: string;
+  score: number;
+  roomId: string;
+  guessedWord?: string;
+}
+export type UpdateScoreResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    user: UserData;
+    score: number;
+  };
+};

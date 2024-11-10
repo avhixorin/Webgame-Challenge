@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Score } from "@/types/types";
 
 interface ScoreState {
-  scores: Score[];
+  scores: Score; 
 }
 
 const initialScoreState: ScoreState = {
@@ -13,18 +13,18 @@ const scoreSlice = createSlice({
   name: "score",
   initialState: initialScoreState,
   reducers: {
-    setScores: (state, action: PayloadAction<Score[]>) => {
+    setScores: (state, action: PayloadAction<Score>) => {
       state.scores = action.payload;
     },
-    addScore: (state, action: PayloadAction<Score>) => {
+    addScore: (state, action: PayloadAction<Score[0]>) => {
       state.scores.push(action.payload);
     },
     resetScores: () => initialScoreState,
     updateScore: (state, action: PayloadAction<{ playerId: string, score: number }>) => {
       const { playerId, score } = action.payload;
-      const player = state.scores.find((score) => score.playerId.toString() === playerId);
+      const player = state.scores.find((scoreObj) => scoreObj.user.id === playerId);
       if (player) {
-        player.score = score;
+        player.score = score; 
       }
     },
   },

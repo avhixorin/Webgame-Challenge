@@ -2,9 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { RootState } from "@/Redux/store/store";
 import { updateScore } from "@/Redux/features/scoreSlice";
+import useSocket from "./connectSocket";
 
 const useMistake = () => {
   const dispatch = useDispatch();
+  const { roomId } = useSelector((state: RootState) => state.room);
+  const { updateUserScore } = useSocket();
   const user = useSelector((state: RootState) => state.user);
   const buildCharCount = (word: string) => {
     const charCount: { [key: string]: number } = {};
@@ -85,6 +88,9 @@ const useMistake = () => {
       });
     }
     if(user.user) dispatch(updateScore({ playerId: user.user?.username, score: score }));
+    if (user.user?.username) {
+      updateUserScore({ playerId: user.user.username, score: score, roomId: roomId });
+    }
   };
 
   return { getNegativeScore };
