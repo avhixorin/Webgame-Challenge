@@ -40,7 +40,7 @@ const ChatSection: React.FC = () => {
 
   return (
     <div
-      className="w-full max-h-60 bg-[rgba(255,255,255,0.5)] backdrop-blur-lg rounded-lg shadow-lg"
+      className="w-full max-h-60 bg-[rgba(255,255,255,0.1)] backdrop-blur-lg rounded-lg shadow-lg"
       style={{
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",

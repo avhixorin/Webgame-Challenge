@@ -47,7 +47,7 @@ const ScoreCard: React.FC = () => {
   return (
     <div className="flex flex-col items-center w-full">
       {gameMode === GameMode.MULTIPLAYER ? (
-        scores.map((scoreObj, index) => (
+        scores.length > 0 ? (scores.map((scoreObj, index) => (
           <ScoreCardBadge
             key={scoreObj.user.id}
             avatar={getAvatar(index)} 
@@ -62,7 +62,10 @@ const ScoreCard: React.FC = () => {
             }
             avatarSizeClass={avatarSizeClass}
           />
-        ))
+        ))) : (
+          <p className="text-zinc-600 text-lg italic opacity-70">No scores to display</p>
+        )
+        
       ) : (
         <ScoreCardBadge
           avatar={getAvatar(typeof user?.avatar === 'number' ? user.avatar : 0) || "👤"}

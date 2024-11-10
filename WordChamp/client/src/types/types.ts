@@ -129,6 +129,7 @@ export type UpdateScoreResponse = {
   data: {
     user: User;
     score: number;
+    guessedWord?: string;
   };
 };
 

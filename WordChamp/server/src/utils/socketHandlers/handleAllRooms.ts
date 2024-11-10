@@ -162,7 +162,7 @@ class RoomHandler {
     // Emit updated score to all users except the requester
     if (this.io) {
       // Emit to all users except the sender (requester)
-      socket.broadcast.to(roomId).emit(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, new ApiResponse(200, "Score updated successfully", { user, score }));
+      socket.broadcast.to(roomId).emit(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, new ApiResponse(200, `${user.user.username} guessed the word ${guessedWord} and got + ${score}`, { user, score, guessedWord }));
     }
   
     return new ApiResponse(200, "Score updated successfully", {

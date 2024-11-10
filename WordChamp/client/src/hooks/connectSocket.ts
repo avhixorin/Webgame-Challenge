@@ -30,7 +30,7 @@ import { addMessage } from "@/Redux/features/messageSlice";
 import { RootState } from "@/Redux/store/store";
 import { setMaxGameParticipants, setSharedGameData } from "@/Redux/features/sharedGameDataSlice";
 import { updateScore } from "@/Redux/features/scoreSlice";
-import { setSoloGameString } from "@/Redux/features/individualPlayerDataSlice";
+import { addGuessedWord, setSoloGameString } from "@/Redux/features/individualPlayerDataSlice";
 
 // Singleton Socket instance
 let socket: Socket | null = null;
@@ -151,6 +151,7 @@ const useSocket = () => {
       console.log("Score update response",data);
       dispatch(updateScore({ playerId: data.data.user.username, score: data.data.score }));
     });
+    
   };
 
   const joinRoom = (room: Room, user: User) => {
@@ -172,6 +173,7 @@ const useSocket = () => {
     socket.on(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, (data:UpdateScoreResponse) => {
       console.log("Score update response",data);
       dispatch(updateScore({ playerId: data.data.user.username, score: data.data.score }));
+      if(data.data.guessedWord) dispatch(addGuessedWord(data.data.guessedWord));
     });
   };
 
@@ -187,6 +189,7 @@ const useSocket = () => {
     console.log("Emitting NEW_MESSAGE event:", message);
     socket.emit(SOCKET_EVENTS.NEW_MESSAGE, message);
   }
+
 
   const getGameStringForSoloUser = (difficulty: Difficulty) => {
     console.log("Emitting GET_GAME_STRING event:", difficulty);
@@ -213,7 +216,7 @@ const useSocket = () => {
       socket.off(SOCKET_EVENTS.NEW_USER, handleNewUser);
       socket.off(SOCKET_EVENTS.NEW_MESSAGE, handleNewMessage);
       socket.off(SOCKET_EVENTS.START_GAME_RESPONSE, handleStartGameResponse);
-
+      socket.off(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomStatus, user]);
