@@ -9,7 +9,6 @@ import {
   ScrollText,
   Shield,
   Timer,
-  TimerIcon,
   Volume,
   VolumeX,
   X,
@@ -58,6 +57,7 @@ const Game: React.FC = () => {
     if (timer <= 0) {
       handleGameOver();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer]);
 
   const handleMuteToggle = () => {
