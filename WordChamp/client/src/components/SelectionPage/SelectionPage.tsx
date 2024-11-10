@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react"; 
 import { Card, CardContent, CardHeader } from "../ui/card";
 import {
   Select,
@@ -18,27 +18,33 @@ import { useNavigate } from "react-router-dom";
 const SelectionPage: React.FC = () => {
   const [difficulty, setLocalDifficulty] = useState<Difficulty>(Difficulty.EASY);
   const navigate = useNavigate();
-  const { startGame,getGameStringForSoloUser } = useSocket();
+  const { startGame, getGameStringForSoloUser } = useSocket();
   const { roomId } = useSelector((state: RootState) => state.room);
   const gameData = useSelector((state: RootState) => state.sharedGameData);
   const { gameMode } = useSelector((state: RootState) => state.individualPlayerData);
   const dispatch = useDispatch();
-  const handleClick = () => {
+
+  const handleClick = useCallback(() => {
     dispatch(setDifficulty(difficulty));
-    if(gameMode === GameMode.MULTIPLAYER){
-      startGame(roomId,gameData)
-    }else{
+    
+    if (gameMode === GameMode.MULTIPLAYER) {
+      if (roomId) {
+        startGame(roomId, gameData);
+      }
+    } else {
       getGameStringForSoloUser(difficulty);
       navigate("/game");
     }
     
     console.log("Starting game with difficulty: ", difficulty);
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [difficulty, gameMode, navigate, roomId, gameData, startGame, getGameStringForSoloUser]);
+
   return (
     <div className="relative w-full h-full flex justify-center items-center overflow-hidden bg-game-bg bg-center bg-cover bg-no-repeat text-zinc-700">
       <Card className="px-6 bg-opacity-80 shadow-lg backdrop-blur-md rounded-lg">
         <CardHeader>
-          <h1 className="text-3xl text-center font-bold  mb-4">
+          <h1 className="text-3xl text-center font-bold mb-4">
             Select Game Difficulty
           </h1>
         </CardHeader>
@@ -65,8 +71,12 @@ const SelectionPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
-              <Button onClick={handleClick} className="w-full bg-indigo-600 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">Start Game</Button>
-            
+            <Button 
+              onClick={handleClick} 
+              className="w-full bg-indigo-600 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              Start Game
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -14,15 +14,15 @@ interface BadgeProps {
 const ScoreCardBadge: React.FC<BadgeProps> = ({ avatar, username, score, roundedClass, avatarSizeClass }) => {
   return (
     <div
-      className={`w-full flex items-center gap-4 py-3 px-4 bg-white/20 backdrop-blur-md ${roundedClass} shadow-lg transform transition-transform duration-200 hover:scale-[1.02] border-b border-white/30`}
+      className={`w-full flex items-center gap-4 py-3 px-4 bg-white/20 backdrop-blur-md ${roundedClass} shadow-lg transform transition-transform duration-200 hover:scale-[1.02] border-b border-white/30 text-zinc-700`}
     >
       <div className={`${avatarSizeClass}`}>
         <img src={avatar} alt={`${username}'s avatar`} className="rounded-full" />
       </div>
       <div className="flex-1">
-        <p className="text-lg font-semibold text-white">{username}</p>
+        <p className="text-lg font-semibold">{username}</p>
       </div>
-      <div className="text-xl font-bold text-white">{score}</div>
+      <div className="text-xl font-bold">{score}</div>
     </div>
   );
 };

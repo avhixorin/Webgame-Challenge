@@ -12,14 +12,14 @@ import CTAButton from "@/utils/CTAbutton/CTAbutton";
 import { GameMode, Verdict } from "@/types/types";
 import { addAnswer } from "@/Redux/features/answersSlice";
 import toast from "react-hot-toast";
-import { addGuessedWord } from "@/Redux/features/individualPlayerDataSlice";
+import { addGuessedWord, addIndividualScore } from "@/Redux/features/individualPlayerDataSlice";
 import { updateScore } from "@/Redux/features/scoreSlice";
 import useSocket from "@/hooks/connectSocket";
 
 const InputSection: React.FC = () => {
   const dispatch = useDispatch();
-  const { roomId } = useSelector((state: RootState) => state.room); 
-  const { gameMode } = useSelector((state: RootState) => state.individualPlayerData);  
+  const { roomId } = useSelector((state: RootState) => state.room);
+  const { gameMode } = useSelector((state: RootState) => state.individualPlayerData);
   const { updateMultiPlayerUserScore } = useSocket();
   const filter = new Filter();
   const gameString = useSelector((state: RootState) =>
@@ -52,23 +52,22 @@ const InputSection: React.FC = () => {
         },
       });
 
-      dispatch(updateScore({ playerId: user?.username ?? "unknown", score: -3 }));
-      
-      // Only trigger socket update for multiplayer
       if (gameMode === GameMode.MULTIPLAYER && user?.username) {
         updateMultiPlayerUserScore({ playerId: user.username, score: -3, roomId: roomId });
+        dispatch(updateScore({ playerId: user?.username ?? "unknown", score: -3 }));
+      }
+      if (gameMode === GameMode.SOLO) {
+        dispatch(addIndividualScore(-3));
       }
 
-      dispatch(
-        addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.PROFANE })
-      );
+      dispatch(addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.PROFANE }));
       return;
     }
 
     const isValid = await validate();
     if (isValid) {
       const finalScore = getScore(inputWord.toLowerCase());
-      toast(`That's correct! You’ve earned + ${finalScore} points!`, {
+      toast(`That's correct! You’ve earned +${finalScore} points!`, {
         icon: "🎉",
         style: {
           background: "rgba(255, 255, 255, 0.1)",
@@ -80,25 +79,22 @@ const InputSection: React.FC = () => {
         },
       });
 
-      dispatch(updateScore({ playerId: user?.username ?? "unknown", score: finalScore }));
-
-      // Only trigger socket update for multiplayer
+      // Handle multiplayer or solo game correct word input
       if (gameMode === GameMode.MULTIPLAYER && user?.username) {
         updateMultiPlayerUserScore({ playerId: user.username, score: finalScore, roomId: roomId, guessedWord: inputWord });
+        dispatch(updateScore({ playerId: user?.username ?? "unknown", score: finalScore }));
+      }
+      if (gameMode === GameMode.SOLO) {
+        dispatch(addIndividualScore(finalScore));
       }
 
-      dispatch(
-        addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.RIGHT })
-      );
+      dispatch(addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.RIGHT }));
       setInputWord("");
       dispatch(addGuessedWord(inputWord.toUpperCase()));
-      console.log("The guessed word is: ", inputWord);
     } else {
       // Handle invalid word
       getNegativeScore(gameString.join(""), inputWord);
-      dispatch(
-        addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.WRONG })
-      );
+      dispatch(addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.WRONG }));
     }
   };
 

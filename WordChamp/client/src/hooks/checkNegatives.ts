@@ -4,6 +4,7 @@ import { RootState } from "@/Redux/store/store";
 import { updateScore } from "@/Redux/features/scoreSlice";
 import useSocket from "./connectSocket";
 import { GameMode } from "@/types/types";
+import { addIndividualScore } from "@/Redux/features/individualPlayerDataSlice";
 
 const useMistake = () => {
   const dispatch = useDispatch();
@@ -95,6 +96,12 @@ const useMistake = () => {
 
     if (gameMode === GameMode.MULTIPLAYER && user.user?.username) {
       updateMultiPlayerUserScore({ playerId: user.user.username, score: score, roomId: roomId });
+
+      dispatch(updateScore({ playerId: user.user?.username ?? "unknown", score: score }));
+    }
+
+    if(gameMode === GameMode.SOLO){
+      dispatch(addIndividualScore(score));
     }
   };
 
