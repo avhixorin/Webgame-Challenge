@@ -155,7 +155,7 @@ class RoomHandler {
   ): ApiResponse {
     const room = this.getRoomById(roomId);
     if (!room) return new ApiResponse(404, "Room not found");
-  
+    console.log("Inside updateScore function", userId, roomId, guessedWord, score);
     const user = room.users.find((u) => u.user.username === userId);
     if (!user) return new ApiResponse(404, "User not found in room");
   

@@ -104,7 +104,6 @@ const connectSocket = (app: Express) => {
     socket.on(SOCKET_EVENTS.UPDATE_SCORE, (data: ScoreData) => {
       console.log("The score data received is: ", data);
       if (data.playerId && data.roomId && data.score) {
-        console.log("The score data received is: ", data);
         const res = roomHandlerInstance.updateScore(data.playerId, data.roomId, data.guessedWord, data.score, socket);
         console.log("The updateScore response is: ", res);
         if(res){

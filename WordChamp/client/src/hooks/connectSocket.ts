@@ -148,10 +148,9 @@ const useSocket = () => {
       handleStartGameResponse(data);
     })
     socket.on(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, (data:UpdateScoreResponse) => {
-      console.log("Score update response",data);
+      console.log("Score update response inside the hostRoom function",data);
       dispatch(updateScore({ playerId: data.data.user.username, score: data.data.score }));
     });
-    
   };
 
   const joinRoom = (room: Room, user: User) => {
@@ -171,7 +170,7 @@ const useSocket = () => {
       handleStartGameResponse(data);
     })
     socket.on(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, (data:UpdateScoreResponse) => {
-      console.log("Score update response",data);
+      console.log("Score update response inside the joinRoom function",data);
       dispatch(updateScore({ playerId: data.data.user.username, score: data.data.score }));
       if(data.data.guessedWord) dispatch(addGuessedWord(data.data.guessedWord));
     });
@@ -209,6 +208,10 @@ const useSocket = () => {
     socket.on(SOCKET_EVENTS.HOSTING_RESPONSE, handleHostingResponse);
     socket.on(SOCKET_EVENTS.JOINING_RESPONSE, handleJoiningResponse);
     socket.on(SOCKET_EVENTS.SOLO_GAME_STRING_RESPONSE,handleSoloGameStringResponse);
+    socket.on(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, (data:UpdateScoreResponse) => {
+      console.log("Score update response outside both the functions",data);
+      dispatch(updateScore({ playerId: data.data.user.username, score: data.data.score }));
+    });
     return () => {
       socket.off(SOCKET_EVENTS.HOSTING_RESPONSE, handleHostingResponse);
       socket.off(SOCKET_EVENTS.JOINING_RESPONSE, handleJoiningResponse);
@@ -216,7 +219,10 @@ const useSocket = () => {
       socket.off(SOCKET_EVENTS.NEW_USER, handleNewUser);
       socket.off(SOCKET_EVENTS.NEW_MESSAGE, handleNewMessage);
       socket.off(SOCKET_EVENTS.START_GAME_RESPONSE, handleStartGameResponse);
-      socket.off(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE);
+      socket.on(SOCKET_EVENTS.UPDATE_SCORE_RESPONSE, (data:UpdateScoreResponse) => {
+        console.log("Score update response outside both the functions",data);
+        dispatch(updateScore({ playerId: data.data.user.username, score: data.data.score }));
+      });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomStatus, user]);
