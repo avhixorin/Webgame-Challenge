@@ -6,6 +6,7 @@ import {
   JoiningResponse,
   LeaveRoomResponse,
   Message,
+  MessageResponse,
   NewUserResponse,
   Room,
   RoomStatus,
@@ -62,6 +63,7 @@ const useSocket = () => {
 
   const handleJoiningResponse = (response: JoiningResponse) => {
     console.log("Joining response:", response);
+
     if (response?.statusCode === 200) {
       toast.success(
         response.message || "Joined room successfully!"
@@ -77,9 +79,6 @@ const useSocket = () => {
     }
   };
 
-  // const handleUserCount = (response: UserCountResponse) => {
-  //   dispatch(setCurrentParticipants(response.userCount));
-  // };
 
   const handleLeaveRoom = (data: LeaveRoomResponse) => {
     console.log("User left response:", data);
@@ -99,66 +98,62 @@ const useSocket = () => {
     dispatch(addMembersToRoom(data.user));
   };
 
-  const handleNewMessage = (data: Message) => {
+  const handleNewMessage = (data: MessageResponse) => {
     console.log("New message response:", data);
     dispatch(addMessage(data));
   };
 
+  const handleStartGameResponse = (data: StartGameResponse) => {
+    console.log("Start Game Response",data);
+    if(data.statusCode === 200){
+      toast.success(data.message);
+      if(data.data.gameData) dispatch(setSharedGameData(data.data.gameData));
+      navigate("/game");
+    }else{
+      toast.error(data.message);
+    }
+  }
+
+
   const hostRoom = (room: Room, user: User, maxGameParticipants: number) => {
     console.log("Emitting HOST_ROOM event:", { room, user, maxGameParticipants });
     socket.emit(SOCKET_EVENTS.HOST_ROOM, { room, user, maxGameParticipants });
-    // socket.on(SOCKET_EVENTS.NO_OF_USERS, (response: NoOfUsersResponse) => {
-    //   handleUserCount(response);
-    // });
+
     socket.on(SOCKET_EVENTS.LEAVE_ROOM, (response: LeaveRoomResponse) => {
       handleLeaveRoom(response);
     });
     socket.on(SOCKET_EVENTS.NEW_USER, (response: NewUserResponse) => {
       handleNewUser(response);
     });
-    socket.on(SOCKET_EVENTS.NEW_MESSAGE, (response: Message) => {
+    socket.on(SOCKET_EVENTS.NEW_MESSAGE_RESPONSE, (response: MessageResponse) => {
       handleNewMessage(response);
     });
     socket.on(SOCKET_EVENTS.START_GAME_RESPONSE, (data:StartGameResponse) => {
-      console.log("Start Game Response",data);
-      if(data.statusCode === 200){
-        toast.success(data.message);
-        if(data.data.gameData) dispatch(setSharedGameData(data.data.gameData));
-      }else{
-        toast.error(data.message);
-      }
-      
+      handleStartGameResponse(data);
     })
+
   };
 
   const joinRoom = (room: Room, user: User) => {
     console.log("Emitting JOIN_ROOM event:", { room, user });
     socket.emit(SOCKET_EVENTS.JOIN_ROOM, { room, user });
-    // socket.on(SOCKET_EVENTS.NO_OF_USERS, (response: NoOfUsersResponse) => {
-    //   handleUserCount(response);
-    // });
+
     socket.on(SOCKET_EVENTS.LEAVE_ROOM, (response: LeaveRoomResponse) => {
       handleLeaveRoom(response);
     });
     socket.on(SOCKET_EVENTS.NEW_USER, (response: NewUserResponse) => {
       handleNewUser(response);
     });
-    socket.on(SOCKET_EVENTS.NEW_MESSAGE, (response: Message) => {
+    socket.on(SOCKET_EVENTS.NEW_MESSAGE_RESPONSE, (response: MessageResponse) => {
       handleNewMessage(response);
     });
     socket.on(SOCKET_EVENTS.START_GAME_RESPONSE, (data:StartGameResponse) => {
-      if(data.statusCode === 200){
-        toast.success(data.message);
-        if(data.data.gameData) dispatch(setSharedGameData(data.data.gameData));
-        navigate("/game");
-      }else{
-        toast.error(data.message);
-      }
-      
+      handleStartGameResponse(data);
     })
   };
 
   const startGame = (roomId: string,gameData: SharedGameData) => {
+    console.log("Emitting START_GAME event:", { roomId, gameData });
     socket.emit(SOCKET_EVENTS.START_GAME,{
       roomId,
       gameData
@@ -166,7 +161,8 @@ const useSocket = () => {
   }
 
   const sendMessage = (message: Message) => {
-    socket.emit(SOCKET_EVENTS.MESSAGE_SEND, message);
+    console.log("Emitting NEW_MESSAGE event:", message);
+    socket.emit(SOCKET_EVENTS.NEW_MESSAGE, message);
   }
 
   useEffect(() => {
@@ -180,10 +176,11 @@ const useSocket = () => {
     return () => {
       socket.off(SOCKET_EVENTS.HOSTING_RESPONSE, handleHostingResponse);
       socket.off(SOCKET_EVENTS.JOINING_RESPONSE, handleJoiningResponse);
-      // socket.off(SOCKET_EVENTS.NO_OF_USERS, handleUserCount);
       socket.off(SOCKET_EVENTS.LEAVE_ROOM, handleLeaveRoom);
       socket.off(SOCKET_EVENTS.NEW_USER, handleNewUser);
       socket.off(SOCKET_EVENTS.NEW_MESSAGE, handleNewMessage);
+      socket.off(SOCKET_EVENTS.START_GAME_RESPONSE, handleStartGameResponse);
+
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomStatus, user]);

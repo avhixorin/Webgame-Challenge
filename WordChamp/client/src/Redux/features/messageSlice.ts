@@ -1,8 +1,8 @@
-import { Message } from "@/types/types";
-import { createSlice } from "@reduxjs/toolkit";
+import { MessageResponse } from "@/types/types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface MessageState {
-  messages: Message[];
+  messages: MessageResponse[];
 }
 
 const initialState: MessageState = {
@@ -13,7 +13,7 @@ const messageSlice = createSlice({
   name: "messageSlice",
   initialState,
   reducers: {
-    addMessage: (state, action) => {
+    addMessage: (state, action:PayloadAction<MessageResponse>) => {
       state.messages.push(action.payload);
     },
     clearMessages: () => initialState,

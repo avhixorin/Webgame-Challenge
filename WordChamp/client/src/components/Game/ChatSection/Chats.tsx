@@ -1,29 +1,42 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/Redux/store/store';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import CTAButton from '@/utils/CTAbutton/CTAbutton';
 import useSocket from '@/hooks/connectSocket';
+import { addMessage } from '@/Redux/features/messageSlice';
+import { Button } from '@/components/ui/button';
 
 const ChatSection: React.FC = () => {
-  const messages = useSelector((state: RootState) => 
+  const messages = useSelector((state: RootState) =>
     Array.isArray(state.message.messages) ? state.message.messages : []
   );
   const { sendMessage } = useSocket();
-  // Validation schema for message input
+  
   const validationSchema = Yup.object({
     message: Yup.string().required('Message cannot be empty'),
   });
+
+  const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.user);
   const { roomId } = useSelector((state: RootState) => state.room);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to the bottom when messages change
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   const handleSendMessage = (values: { message: string }) => {
-    if(!user) return;
+    if (!user) return;
     sendMessage({ message: values.message, sender: user, roomId: roomId });
     console.log('Sending message:', values.message);
+    dispatch(addMessage({ message: values.message, sender: user }));
   };
 
   return (
@@ -43,9 +56,10 @@ const ChatSection: React.FC = () => {
         <CardContent className="flex-1 flex flex-col overflow-hidden">
           <ScrollArea className="flex-1 pr-2 overflow-y-auto">
             {messages.length > 0 ? (
-              messages.map((msg) => (
+              messages.map((msg, index) => (
                 <div 
-                  key={msg.sender.id} 
+                  key={`${msg.sender.id}-${index}`} 
+                  ref={index === messages.length - 1 ? lastMessageRef : null}
                   className="p-2 mb-2 w-[85%] rounded-lg bg-white/10 backdrop-blur-md shadow-lg border border-black"
                 >
                   <p className="text-sm text-gray-800 font-semibold">{msg.sender.username}</p>
@@ -74,14 +88,14 @@ const ChatSection: React.FC = () => {
                     placeholder="Type a message"
                     className="flex-1 text-center text-gray-800 bg-white/60 py-2 px-4 rounded-md border border-gray-300 focus:outline-none"
                   />
-                  <ErrorMessage name="message" component="div" className="text-red-600" />
-                  <CTAButton
+                  {/* <ErrorMessage name="message" component="div" className="text-red-600" /> */}
+                  <Button
                     type="submit"
                     disabled={isSubmitting}
-                    label="Send"
-                    colour="#7e22ce"
-                    onClick={() => {}}
-                  />
+                    className='bg-[#7e22ce]'
+                  >
+                    Send
+                  </Button>
                 </Form>
               )}
             </Formik>

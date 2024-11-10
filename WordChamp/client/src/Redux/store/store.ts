@@ -5,6 +5,7 @@ import sharedGameDataSlice from "../features/sharedGameDataSlice";
 import answerSlice from "../features/answersSlice";
 import roomSlice from "../features/roomSlice";
 import messageSlice from "../features/messageSlice";
+import scoreSlice from "../features/scoreSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   answers: answerSlice,
   room: roomSlice,
   message: messageSlice,
+  scores: scoreSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

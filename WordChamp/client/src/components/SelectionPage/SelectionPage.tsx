@@ -8,7 +8,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Difficulty } from "@/types/types";
-import CTAButton from "@/utils/CTAbutton/CTAbutton";
 import { useDispatch, useSelector } from "react-redux";
 import { setDifficulty } from "@/Redux/features/sharedGameDataSlice";
 import useSocket from "@/hooks/connectSocket";

@@ -10,7 +10,6 @@ import ChatSection from "./ChatSection/Chats";
 import { rulesContent } from "@/constants/Rules";
 import { motion } from "framer-motion";
 import Timer from "./Timer/Timer";
-import { Difficulty } from "@/types/types";
 import Profile from "./Profile/Profile";
 
 const Game: React.FC = () => {
@@ -26,7 +25,7 @@ const Game: React.FC = () => {
     const exitFullScreen = () => document.exitFullscreen();
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code === "Space") {
+      if (event.code === "F") {
         if (document.fullscreenElement) exitFullScreen();
         else enterFullScreen();
       }
@@ -171,7 +170,7 @@ const Game: React.FC = () => {
             </motion.div>
           )}
         </div>
-          {/* <Timer difficulty={Difficulty.EASY} /> */}
+          
         <ChatSection />
       </aside>
     </div>

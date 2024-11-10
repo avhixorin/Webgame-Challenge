@@ -65,6 +65,11 @@ export type MessageData = {
   content: string;
 };
 
+export type MessageResponse = {
+  message: string;
+  sender: User;
+};
+
 export type Message = {
   message: string;
   sender: User;
@@ -84,12 +89,15 @@ export type SharedGameData = {
 };
 
 export type IndividualGameData = {
-  score: number;
   powerUps: string[];
   guessedWords: string[];
   gameMode: GameMode;
   isHosting: boolean;
   isJoiningRoom: boolean;
+}
+
+export type Score = {
+  [member: string]: number;
 }
 
 export type Words = {
@@ -107,11 +115,28 @@ export type HostingResponse = {
   };
 };
 
+export type InitialGameData = {
+  maxGameParticipants: number;
+  currentGameString: string;
+  difficulty: Difficulty;
+  players: User[];
+  currentRound: number;
+  timer: number;
+}
+
 export type StartGameResponse = {
   statusCode: number;
   message: string;
   data: {
     gameData: SharedGameData;
+  };
+}
+
+export type TimerResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    timer: number;
   };
 }
 

@@ -54,7 +54,6 @@ export type Message = {
 export type SharedGameData = {
   maxGameParticipants: number;
   currentGameString: string;
-  gameMode: GameMode | null;
   difficulty: Difficulty;
 };
 export type StartGameData = {

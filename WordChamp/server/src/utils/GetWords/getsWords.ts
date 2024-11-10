@@ -1,40 +1,32 @@
 import { easyWords, godWords, hardWords, mediumWords } from "../../constants/Words";
 import { Difficulty } from "../../types/Types";
 
-const getCurrentGameString = (difficulty: Difficulty): string => {
-  let wordPool: string[] = [];
-  let wordCount: number;
-
+export const getDifficultySettings = (difficulty: Difficulty) => {
   switch (difficulty) {
     case Difficulty.EASY:
-      wordPool = easyWords;
-      wordCount = 5;
-      break;
+      return { wordPool: easyWords, wordCount: 5, timer: 5 * 60 };
     case Difficulty.MEDIUM:
-      wordPool = mediumWords;
-      wordCount = 4;
-      break;
+      return { wordPool: mediumWords, wordCount: 4, timer: 3.5 * 60 };
     case Difficulty.HARD:
-      wordPool = hardWords;
-      wordCount = 3;
-      break;
+      return { wordPool: hardWords, wordCount: 3, timer: 2 * 60 };
     case Difficulty.GOD:
-      wordPool = godWords;
-      wordCount = 1;
-      break;
+      return { wordPool: godWords, wordCount: 1, timer: 40 };
     default:
-      wordPool = easyWords;
-      wordCount = 5;
+      return { wordPool: easyWords, wordCount: 5, timer: 5 * 60 };
   }
+};
 
-  const shuffleString = (gameString: string): string => {
-    const lettersArray = gameString.split("");
-    for (let i = lettersArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [lettersArray[i], lettersArray[j]] = [lettersArray[j], lettersArray[i]];
-    }
-    return lettersArray.join("");
-  };
+const shuffleString = (gameString: string): string => {
+  const lettersArray = gameString.split("");
+  for (let i = lettersArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [lettersArray[i], lettersArray[j]] = [lettersArray[j], lettersArray[i]];
+  }
+  return lettersArray.join("");
+};
+
+const getCurrentGameString = (difficulty: Difficulty): string => {
+  const { wordPool, wordCount } = getDifficultySettings(difficulty);
 
   let tempString = "";
   for (let i = 0; i < wordCount && i < wordPool.length; i++) {

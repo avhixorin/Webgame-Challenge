@@ -3,6 +3,7 @@ import Room from "../../rooms/room";
 import ApiResponse from "../ApiResponse/ApiResponse";
 import { SOCKET_EVENTS } from "../../constants/ServerSocketEvents";
 import { SharedGameData, UserData } from "../../types/Types";
+import getCurrentGameString, { getDifficultySettings } from "../GetWords/getsWords";
 
 class RoomHandler {
   private static instance: RoomHandler;
@@ -122,19 +123,27 @@ class RoomHandler {
       return new ApiResponse(404, "User not found in any room");
     }
   }
-  public startGame(roomId: string, requesterSocket: Socket,gameData:SharedGameData): ApiResponse {
+  public startGame(roomId: string, gameData: SharedGameData): ApiResponse {
     const room = this.getRoomById(roomId);
     if (!room) return new ApiResponse(404, "Room not found");
-  
+
+    const gameString = getCurrentGameString(gameData.difficulty);
+    gameData.currentGameString = gameString;
+    const { timer } = getDifficultySettings(gameData.difficulty);
+
     if (this.io) {
-      // Emit the start game event to all users in the room except the requester
-      requesterSocket.broadcast.to(roomId).emit(SOCKET_EVENTS.START_GAME, {
-        message: "The game has started!",
-      });
+      // Emit to all users in the room, including the requester
+      this.io.to(roomId).emit(SOCKET_EVENTS.START_GAME_RESPONSE, new ApiResponse(200, "Game started successfully", { gameData }));
     }
-  
-    return new ApiResponse(200, "Game started successfully");
+
+    if (this.io) {
+      // Emit to all users in the room, including the requester
+      this.io.to(roomId).emit(SOCKET_EVENTS.TIMER, new ApiResponse(200, "Game started successfully", { timer }));
+    }
+
+    return new ApiResponse(200, "Game started successfully", { gameData });
   }
+  
   
   public broadcastMessage(
     roomId: string,
@@ -148,8 +157,7 @@ class RoomHandler {
       return new ApiResponse(403, "Sender is not a member of the room");
 
     if (this.io) {
-      // Send the message to everyone in the room except the sender
-      socket.broadcast.to(roomId).emit(SOCKET_EVENTS.NEW_MESSAGE, {
+      socket.broadcast.to(roomId).emit(SOCKET_EVENTS.NEW_MESSAGE_RESPONSE, {
         message,
         sender,
       });

@@ -18,7 +18,7 @@ const WordsCover: React.FC<WordProps> = ({ word }) => {
 
 
 const GuessedWords: React.FC = () => {
-  const guessedWords = useSelector((state: RootState) => state.wordsData.guessedWords);
+  const guessedWords = useSelector((state: RootState) => state.individualPlayerData.guessedWords);
 
   return (
     <Card className="w-full flex flex-col items-center bg-transparent py-4 space-y-4 border-none shadow-none">

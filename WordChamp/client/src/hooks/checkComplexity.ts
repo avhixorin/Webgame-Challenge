@@ -1,5 +1,7 @@
-import { addScore } from '@/Redux/features/individualPlayerDataSlice';
-import { useDispatch } from 'react-redux';
+// import { addScore } from '@/Redux/features/individualPlayerDataSlice';
+import { updateScore } from '@/Redux/features/scoreSlice';
+import { RootState } from '@/Redux/store/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 const countVowels = (word:string) => word.match(/[aeiou]/gi)?.length || 0;
 const countConsonants = (word:string) => word.match(/[bcdfghjklmnpqrstvwxyz]/gi)?.length || 0;
@@ -11,6 +13,7 @@ const countSyllables = (word:string) => {
 
 const useComplexity = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
 
   const getScore = (word:string) => {
     if (!word || typeof word !== 'string') return 1;
@@ -30,7 +33,7 @@ const useComplexity = () => {
     score += uncommonLetters;
 
     const finalScore = Math.min(Math.max(score, 1), 5);
-    dispatch(addScore(finalScore));
+    if(user.user) dispatch(updateScore({ playerId: user.user?.username, score: finalScore }));
     return finalScore
   };
 

@@ -11,6 +11,7 @@ import { resetRoom } from "@/Redux/features/roomSlice";
 import { clearMessages } from "@/Redux/features/messageSlice";
 import { resetUser } from "@/Redux/features/userSlice";
 import { resetIndividualPlayerData } from "@/Redux/features/individualPlayerDataSlice";
+import { resetScores } from "@/Redux/features/scoreSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ export default function Home() {
     dispatch(resetRoom());
     dispatch(clearMessages());
     dispatch(resetUser());
+    dispatch(resetScores());
   },[dispatch]);
   useEffect(() => {
     playBackgroundMusic('./sounds/background1.mp3');

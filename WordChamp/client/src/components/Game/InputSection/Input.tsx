@@ -12,7 +12,8 @@ import CTAButton from "@/utils/CTAbutton/CTAbutton";
 import { Verdict } from "@/types/types";
 import { addAnswer } from "@/Redux/features/answersSlice";
 import toast from "react-hot-toast";
-import { addGuessedWord, addScore } from "@/Redux/features/individualPlayerDataSlice";
+import { addGuessedWord } from "@/Redux/features/individualPlayerDataSlice";
+import { updateScore } from "@/Redux/features/scoreSlice";
 
 const InputSection: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const InputSection: React.FC = () => {
   const gameString = useSelector((state: RootState) =>
     state.sharedGameData.currentGameString.toUpperCase().split("")
   );
+  const user = useSelector((state: RootState) => state.user.user);
   const [inputWord, setInputWord] = useState<string>("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +48,7 @@ const InputSection: React.FC = () => {
         },
       })
 
-      dispatch(addScore(-3));
+      dispatch(updateScore({ playerId: user?.username ?? "unknown", score: -3 }));
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.PROFANE })
       );

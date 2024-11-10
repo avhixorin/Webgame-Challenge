@@ -72,25 +72,28 @@ const connectSocket = (app: Express) => {
         console.log("The request to start the game is received");
         console.log("The room details are:", data.roomId);
         console.log("The gameData details are:", data);
-        const response = roomHandlerInstance.startGame(data.roomId, socket, data.gameData);
+        const response = roomHandlerInstance.startGame(data.roomId, data.gameData);
         console.log("The startGame response is: ", response);
         if (response.statusCode === 200) {
-          socket.emit(SOCKET_EVENTS.START_GAME_RESPONSE, response);
           console.log(`Game started in room ${data.roomId}.`);
         } else {
           console.log("Error while starting the game");
-          socket.emit(SOCKET_EVENTS.START_GAME_RESPONSE, response);
         }
       }
     })
 
 
-    socket.on(SOCKET_EVENTS.MESSAGE_SEND, (data: Message) => {
+    socket.on(SOCKET_EVENTS.NEW_MESSAGE, (data: Message) => {
       if (data.message && data.sender && data.roomId) {
         console.log("The message received is: ", data.message);
         console.log("The message is received from the user: ", data.sender.username);
         console.log("The message is received in the room: ", data.roomId);
         const res = roomHandlerInstance.broadcastMessage(data.roomId, data.sender, data.message, socket);
+
+        if(res){
+          console.log("Message broadcasted successfully");
+          console.log("The boradcastResponse is: ", res);
+        }
       }else{
         console.log("No message received");
       }

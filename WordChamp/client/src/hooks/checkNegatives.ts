@@ -1,10 +1,11 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { addScore } from "@/Redux/features/individualPlayerDataSlice";
+import { RootState } from "@/Redux/store/store";
+import { updateScore } from "@/Redux/features/scoreSlice";
 
 const useMistake = () => {
   const dispatch = useDispatch();
-
+  const user = useSelector((state: RootState) => state.user);
   const buildCharCount = (word: string) => {
     const charCount: { [key: string]: number } = {};
     for (const char of word) {
@@ -13,7 +14,6 @@ const useMistake = () => {
     return charCount;
   };
 
-  // Minor Mistake: Minor mismatches in character count but overall includes necessary letters
   const isMinorMistake = (primary: string, secondary: string) => {
     if (!primary || !secondary) {
       console.warn("Words are missing");
@@ -25,17 +25,16 @@ const useMistake = () => {
 
     for (const char of secondary) {
       if (!primaryCount[char]) {
-        return false; // If character is absent in `primary`, not a minor mistake
+        return false;
       }
       primaryCount[char]--;
       if (primaryCount[char] < 0) {
-        minorMistake = true; // Indicates slight overuse but not a grave mistake
+        minorMistake = true;
       }
     }
-    return minorMistake; // Returns true if it's close to matching
+    return minorMistake; 
   };
 
-  // Grave Mistake: Marks only if there’s a character entirely missing or way off
   const isGraveMistake = (primary: string, secondary: string) => {
     if (!primary || !secondary) {
       console.warn("Words are missing");
@@ -46,14 +45,14 @@ const useMistake = () => {
 
     for (const char of secondary) {
       if (!primaryCount[char]) {
-        return true; // Character entirely missing from `primary` = Grave Mistake
+        return true; 
       }
       primaryCount[char]--;
       if (primaryCount[char] < -1) {
-        return true; // Excessive overuse (e.g., more than one extra use) counts as grave
+        return true;
       }
     }
-    return false; // No missing characters, so not a grave mistake
+    return false; 
   };
 
   const getNegativeScore = (primary: string, secondary: string) => {
@@ -85,7 +84,7 @@ const useMistake = () => {
         },
       });
     }
-    dispatch(addScore(score));
+    if(user.user) dispatch(updateScore({ playerId: user.user?.username, score: score }));
   };
 
   return { getNegativeScore };
