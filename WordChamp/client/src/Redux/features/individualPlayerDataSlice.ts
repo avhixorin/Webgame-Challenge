@@ -4,6 +4,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const initialIndividualState: IndividualGameData = {
   powerUps: [],
   guessedWords: [],
+  score: 0,
+  soloGameString: "",
   gameMode: GameMode.SOLO,
   isHosting: true,
   isJoiningRoom: false,
@@ -22,8 +24,16 @@ const individualPlayerDataSlice = createSlice({
     setGameMode: (state, action: PayloadAction<GameMode>) => {
       state.gameMode = action.payload;
     },
+    setSoloGameString: (state, action: PayloadAction<string>) => {
+      state.soloGameString = action.payload;
+    },
     setJoiningStatus: (state, action: PayloadAction<boolean>) => {
       state.isJoiningRoom = action.payload;
+    },
+    addIndividualScore: (state, action: PayloadAction<number>) => {
+      if(state.gameMode === GameMode.SOLO && state.score >= 0) {
+        state.score += action.payload;
+      }
     },
     addGuessedWord: (state, action: PayloadAction<string>) => {
       state.guessedWords.push(action.payload);
@@ -34,8 +44,10 @@ const individualPlayerDataSlice = createSlice({
 
 export const {
   addPowerUp,
+  addIndividualScore,
   setGameMode,
   addGuessedWord,
+  setSoloGameString,
   setHostingStatus,
   setJoiningStatus,
   resetIndividualPlayerData

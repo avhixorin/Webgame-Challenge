@@ -90,7 +90,9 @@ export type SharedGameData = {
 
 export type IndividualGameData = {
   powerUps: string[];
+  score: number;
   guessedWords: string[];
+  soloGameString: string;
   gameMode: GameMode;
   isHosting: boolean;
   isJoiningRoom: boolean;
@@ -137,6 +139,14 @@ export type InitialGameData = {
   players: User[];
   currentRound: number;
   timer: number;
+}
+
+export type SoloGameStringResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    gameString: string;
+  };
 }
 
 export type StartGameResponse = {

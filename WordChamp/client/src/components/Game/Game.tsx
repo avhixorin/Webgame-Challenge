@@ -4,13 +4,22 @@ import AlphabetSection from "./AlphabetSection/Alphabets";
 import InputSection from "./InputSection/Input";
 import GuessedWords from "./GuessedWords/GuessedWords";
 import useSound from "@/hooks/useSound";
-import { Axe, ScrollText, Shield, Timer, TimerIcon, Volume, VolumeX, X } from "lucide-react";
+import {
+  Axe,
+  ScrollText,
+  Shield,
+  Timer,
+  TimerIcon,
+  Volume,
+  VolumeX,
+  X,
+} from "lucide-react";
 import ScoreCard from "../ScoreCard/ScoreCard";
 import ChatSection from "./ChatSection/Chats";
 import { rulesContent } from "@/constants/Rules";
 import { motion } from "framer-motion";
 import Profile from "./Profile/Profile";
-import { Difficulty } from "@/types/types";
+import { Difficulty, GameMode } from "@/types/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store/store";
 import GameOver from "./GameOver/GameOver";
@@ -20,9 +29,14 @@ const Game: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [muted, setMuted] = useState(false);
   const [powerUpVisible, setPowerUpVisible] = useState(false);
-  const [timer, setTimer] = useState<number>(0);
+  const [timer, setTimer] = useState<number>(1);
   const { playBackgroundMusic, stopBackgroundMusic } = useSound();
-  const { difficulty } = useSelector((state: RootState) => state.sharedGameData);
+  const { difficulty } = useSelector(
+    (state: RootState) => state.sharedGameData
+  );
+  const { gameMode } = useSelector(
+    (state: RootState) => state.individualPlayerData
+  );
 
   useEffect(() => {
     enableFullScreenOnKeyPress();
@@ -63,11 +77,11 @@ const Game: React.FC = () => {
   const navigate = useNavigate();
   const [gameOver, setGameOver] = useState(false);
   const handleNewGame = () => {
-    navigate("/")
+    navigate("/");
   };
   return (
     <div className="relative flex justify-around items-center bg-game-bg1 bg-center bg-cover w-full p-4 h-full gap-2">
-      {/* <GameOver gameOver={gameOver} handleNewGame={handleNewGame} /> */}
+      <GameOver gameOver={gameOver} handleNewGame={handleNewGame} />
       {/* Left Sidebar */}
       <SidebarLeft handleMuteToggle={handleMuteToggle} muted={muted} />
 
@@ -82,6 +96,7 @@ const Game: React.FC = () => {
         togglePowerUpMenu={togglePowerUpMenu}
         timer={timer}
         timerColor={timerColor(timer)}
+        gameMode={gameMode}
       />
     </div>
   );
@@ -127,11 +142,21 @@ const getMaxTimeForDifficulty = (difficulty: Difficulty) => {
   }
 };
 
-const SidebarLeft = ({ handleMuteToggle, muted }: { handleMuteToggle: () => void; muted: boolean }) => (
+const SidebarLeft = ({
+  handleMuteToggle,
+  muted,
+}: {
+  handleMuteToggle: () => void;
+  muted: boolean;
+}) => (
   <aside className="w-full max-w-80 h-full py-6 rounded-lg flex flex-col justify-between items-center">
-    <div className="absolute top-10 left-10 z-10">
+    <div className="ml-10 w-full">
       <button onClick={handleMuteToggle} aria-label="Toggle Mute">
-        {muted ? <VolumeX size={32} stroke="#27272a" /> : <Volume size={32} stroke="#27272a" />}
+        {muted ? (
+          <VolumeX size={32} stroke="#27272a" />
+        ) : (
+          <Volume size={32} stroke="#27272a" />
+        )}
       </button>
     </div>
     <ScoreCard />
@@ -154,6 +179,7 @@ const SidebarRight = ({
   togglePowerUpMenu,
   timer,
   timerColor,
+  gameMode,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -161,16 +187,29 @@ const SidebarRight = ({
   togglePowerUpMenu: () => void;
   timer: number;
   timerColor: string;
+  gameMode: GameMode;
 }) => (
   <aside className="max-w-96 w-full h-full py-6 rounded-lg flex flex-col justify-between items-center">
     <RulesSection open={open} setOpen={setOpen} />
-    <PowerUpSection powerUpVisible={powerUpVisible} togglePowerUpMenu={togglePowerUpMenu} />
+    {gameMode === GameMode.MULTIPLAYER && (
+      <PowerUpSection
+        powerUpVisible={powerUpVisible}
+        togglePowerUpMenu={togglePowerUpMenu}
+      />
+    )}
+
     <TimerDisplay timer={timer} timerColor={timerColor} />
-    <ChatSection />
+    {gameMode === GameMode.MULTIPLAYER && <ChatSection />}
   </aside>
 );
 
-const RulesSection = ({ open, setOpen }: { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => (
+const RulesSection = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => (
   <div className="w-full flex flex-col items-end gap-4">
     {!open ? (
       <button onClick={() => setOpen(true)} aria-label="Show Rules">
@@ -181,7 +220,9 @@ const RulesSection = ({ open, setOpen }: { open: boolean; setOpen: React.Dispatc
         <div className="bg-[url('/placeholder.svg?height=600&width=400')] bg-cover bg-center w-full max-w-2xl h-[80vh] rounded-lg shadow-2xl overflow-hidden relative animate-unfurl">
           <div className="absolute inset-0 bg-stone-100 bg-opacity-90"></div>
           <div className="relative h-full flex flex-col p-6 overflow-hidden custom-scrollbar">
-            <h2 className="text-3xl font-bold mb-4 text-center text-amber-800 drop-shadow-md">WordChamp Rules</h2>
+            <h2 className="text-3xl font-bold mb-4 text-center text-amber-800 drop-shadow-md">
+              WordChamp Rules
+            </h2>
             <div className="flex-grow overflow-y-auto custom-scrollbar">
               {rulesContent.map((rule, index) => (
                 <div key={index} className="mb-6">
@@ -193,7 +234,10 @@ const RulesSection = ({ open, setOpen }: { open: boolean; setOpen: React.Dispatc
                 </div>
               ))}
             </div>
-            <button onClick={() => setOpen(false)} className="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-200">
+            <button
+              onClick={() => setOpen(false)}
+              className="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-200"
+            >
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -203,9 +247,21 @@ const RulesSection = ({ open, setOpen }: { open: boolean; setOpen: React.Dispatc
   </div>
 );
 
-const PowerUpSection = ({ powerUpVisible, togglePowerUpMenu }: { powerUpVisible: boolean; togglePowerUpMenu: () => void }) => (
+const PowerUpSection = ({
+  powerUpVisible,
+  togglePowerUpMenu,
+}: {
+  powerUpVisible: boolean;
+  togglePowerUpMenu: () => void;
+}) => (
   <div className="relative transition-transform transform hover:scale-110 duration-300 cursor-pointer">
-    <img src="./images/thunder.svg" width={32} height={32} alt="PowerUp Icon" onClick={togglePowerUpMenu} />
+    <img
+      src="./images/thunder.svg"
+      width={32}
+      height={32}
+      alt="PowerUp Icon"
+      onClick={togglePowerUpMenu}
+    />
     {powerUpVisible && (
       <motion.div
         initial={{ opacity: 0, scaleY: 0 }}
@@ -225,14 +281,24 @@ const PowerUpSection = ({ powerUpVisible, togglePowerUpMenu }: { powerUpVisible:
             initial={{ y: 50 }}
             animate={{ y: 0 }}
             exit={{ y: -50 }}
-            transition={{ type: "spring", stiffness: 100, damping: 25, delay: index * 0.1 }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 25,
+              delay: index * 0.1,
+            }}
             whileHover={{
               scale: 1.1,
               rotate: 15,
               transition: { type: "spring", stiffness: 300, damping: 15 },
             }}
           >
-            <Icon size={30} stroke="#000" fill="#fff" className="cursor-pointer" />
+            <Icon
+              size={30}
+              stroke="#000"
+              fill="#fff"
+              className="cursor-pointer"
+            />
           </motion.div>
         ))}
       </motion.div>
@@ -240,22 +306,46 @@ const PowerUpSection = ({ powerUpVisible, togglePowerUpMenu }: { powerUpVisible:
   </div>
 );
 
-const TimerDisplay = ({ timer, timerColor }: { timer: number; timerColor: string }) => {
+type TimerDisplayProps = {
+  timer: number;
+  timerColor: string;
+};
+
+const TimerDisplay = ({ timer, timerColor }: TimerDisplayProps) => {
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+      2,
+      "0"
+    )}`;
   };
-  return(
-    <div className={`relative flex items-center gap-2 ${timerColor} transition-all duration-500 p-3 rounded-lg shadow-lg`}>
-      <TimerIcon size={28} stroke="#4b5563" />
-      <span className="text-2xl font-semibold tracking-wide">{formatTime(timer)}</span>
+
+  return (
+    <div
+      aria-label="Timer display"
+      className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[rgba(255, 255, 255, 0.2)] backdrop-blur-lg border-none transition-all duration-300 hover:shadow-lg"
+      style={{
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+      }}
+    >
+      <Timer size={28} strokeWidth={3} className="text-gray-600" />
+      <span
+        className="text-3xl font-semibold tracking-wider"
+        style={{ color: timerColor }}
+        aria-live="polite"
+      >
+        {formatTime(timer)}
+      </span>
     </div>
   );
-}
-  
-  
+};
 
 const timerColor = (timer: number) => {
-  return timer <= 10 ? "bg-red-500" : timer <= 30 ? "bg-amber-500" : "bg-emerald-500";
+  return timer <= 10
+    ? "bg-red-500"
+    : timer <= 30
+    ? "bg-amber-500"
+    : "bg-emerald-500";
 };

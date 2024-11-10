@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { SOCKET_EVENTS } from "@/constants/ClientSocketEvents";
 import {
+  Difficulty,
   HostingResponse,
   JoiningResponse,
   LeaveRoomResponse,
@@ -12,6 +13,7 @@ import {
   RoomStatus,
   ScoreData,
   SharedGameData,
+  SoloGameStringResponse,
   StartGameResponse,
   UpdateScoreResponse,
   User,
@@ -28,6 +30,7 @@ import { addMessage } from "@/Redux/features/messageSlice";
 import { RootState } from "@/Redux/store/store";
 import { setMaxGameParticipants, setSharedGameData } from "@/Redux/features/sharedGameDataSlice";
 import { updateScore } from "@/Redux/features/scoreSlice";
+import { setSoloGameString } from "@/Redux/features/individualPlayerDataSlice";
 
 // Singleton Socket instance
 let socket: Socket | null = null;
@@ -117,6 +120,16 @@ const useSocket = () => {
     }
   }
 
+  const handleSoloGameStringResponse = (data:SoloGameStringResponse) => {
+    console.log("Solo Game String Response",data);
+    if(data.statusCode === 200){
+      dispatch(setSoloGameString(data.data.gameString));
+      toast.success(data.message);
+      navigate("/game");
+    }else{
+      toast.error(data.message);
+    }
+  }
 
   const hostRoom = (room: Room, user: User, maxGameParticipants: number) => {
     console.log("Emitting HOST_ROOM event:", { room, user, maxGameParticipants });
@@ -174,8 +187,13 @@ const useSocket = () => {
     console.log("Emitting NEW_MESSAGE event:", message);
     socket.emit(SOCKET_EVENTS.NEW_MESSAGE, message);
   }
+
+  const getGameStringForSoloUser = (difficulty: Difficulty) => {
+    console.log("Emitting GET_GAME_STRING event:", difficulty);
+    socket.emit(SOCKET_EVENTS.GET_SOLO_GAME_STRING, difficulty);
+  }
   
-  const updateUserScore = (scoreData:ScoreData) => {
+  const updateMultiPlayerUserScore = (scoreData:ScoreData) => {
     console.log("Emitting UPDATE_SCORE event:", scoreData);
     socket.emit(SOCKET_EVENTS.UPDATE_SCORE, scoreData);
   }
@@ -187,7 +205,7 @@ const useSocket = () => {
 
     socket.on(SOCKET_EVENTS.HOSTING_RESPONSE, handleHostingResponse);
     socket.on(SOCKET_EVENTS.JOINING_RESPONSE, handleJoiningResponse);
-
+    socket.on(SOCKET_EVENTS.SOLO_GAME_STRING_RESPONSE,handleSoloGameStringResponse);
     return () => {
       socket.off(SOCKET_EVENTS.HOSTING_RESPONSE, handleHostingResponse);
       socket.off(SOCKET_EVENTS.JOINING_RESPONSE, handleJoiningResponse);
@@ -200,7 +218,7 @@ const useSocket = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomStatus, user]);
 
-  return { hostRoom, joinRoom, sendMessage, startGame, updateUserScore };
+  return { hostRoom, joinRoom, sendMessage, startGame, updateMultiPlayerUserScore, getGameStringForSoloUser };
 };
 
 export default useSocket;

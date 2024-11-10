@@ -2,9 +2,14 @@ import { RootState } from "@/Redux/store/store";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { GameMode } from "@/types/types";
 
 const useValidate = (word: string) => {
   const { currentGameString } = useSelector((state: RootState) => state.sharedGameData);
+  const { gameMode } = useSelector((state: RootState) => state.individualPlayerData);
+  const { soloGameString } = useSelector((state: RootState) => state.individualPlayerData);
+
+  const gameString = gameMode === GameMode.MULTIPLAYER ? currentGameString : soloGameString;
 
   const doesIncludes = (primary: string, secondary: string) => {
     if (primary && secondary) {
@@ -31,7 +36,7 @@ const useValidate = (word: string) => {
   };
 
   const validate = useCallback(async (): Promise<boolean> => {
-    if (word.length > 0 && doesIncludes(currentGameString, word)) { 
+    if (word.length > 0 && doesIncludes(gameString, word)) { 
       try {
         const response = await fetch(
           `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
@@ -64,12 +69,9 @@ const useValidate = (word: string) => {
         });
         return false;
       }
-    } else {
-     
-      return false;
-    }
-  }, [word, currentGameString]);
-
+    } 
+    return false;
+  }, [word, gameString]);
   return validate;
 };
 

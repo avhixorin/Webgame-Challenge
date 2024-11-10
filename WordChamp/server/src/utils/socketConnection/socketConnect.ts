@@ -3,9 +3,11 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { Express } from 'express';
 import roomHandlerInstance from "../SocketHandlers/handleAllRooms";
-import { HostRoomData, JoinRoomData, Message, OnlineUser, RegisterData, ScoreData, StartGameData, UserData } from '../../types/Types';
+import { Difficulty, HostRoomData, JoinRoomData, Message, OnlineUser, RegisterData, ScoreData, StartGameData, UserData } from '../../types/Types';
 import { SOCKET_EVENTS } from '../../constants/ServerSocketEvents';
 import ApiError from '../ApiError/ApiError';
+import getCurrentGameString from '../GetWords/getsWords';
+import ApiResponse from '../ApiResponse/ApiResponse';
 
 dotenv.config();
 
@@ -113,6 +115,18 @@ const connectSocket = (app: Express) => {
         }
       }else{
         console.log("No score data received");
+      }
+    });
+
+    socket.on(SOCKET_EVENTS.GET_SOLO_GAME_STRING, (data: Difficulty) => {
+      console.log("The solo game string request received is: ", data);
+      if (data) {
+        console.log("The solo game string request received is: ", data);
+        const gameString = getCurrentGameString(data);
+        console.log("The soloGameString is: ", gameString);
+        socket.emit(SOCKET_EVENTS.SOLO_GAME_STRING_RESPONSE, new ApiResponse(200,"Game started successfully", {gameString}));
+      }else{
+        console.log("No solo game string request received");
       }
     });
 

@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 const SelectionPage: React.FC = () => {
   const [difficulty, setLocalDifficulty] = useState<Difficulty>(Difficulty.EASY);
   const navigate = useNavigate();
-  const { startGame } = useSocket();
+  const { startGame,getGameStringForSoloUser } = useSocket();
   const { roomId } = useSelector((state: RootState) => state.room);
   const gameData = useSelector((state: RootState) => state.sharedGameData);
   const { gameMode } = useSelector((state: RootState) => state.individualPlayerData);
@@ -28,6 +28,7 @@ const SelectionPage: React.FC = () => {
     if(gameMode === GameMode.MULTIPLAYER){
       startGame(roomId,gameData)
     }else{
+      getGameStringForSoloUser(difficulty);
       navigate("/game");
     }
     

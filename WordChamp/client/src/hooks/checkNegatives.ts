@@ -3,12 +3,15 @@ import toast from "react-hot-toast";
 import { RootState } from "@/Redux/store/store";
 import { updateScore } from "@/Redux/features/scoreSlice";
 import useSocket from "./connectSocket";
+import { GameMode } from "@/types/types";
 
 const useMistake = () => {
   const dispatch = useDispatch();
   const { roomId } = useSelector((state: RootState) => state.room);
-  const { updateUserScore } = useSocket();
+  const { gameMode } = useSelector((state:RootState) => state.individualPlayerData)  // Destructure gameMode here
+  const { updateMultiPlayerUserScore } = useSocket();
   const user = useSelector((state: RootState) => state.user);
+
   const buildCharCount = (word: string) => {
     const charCount: { [key: string]: number } = {};
     for (const char of word) {
@@ -35,7 +38,7 @@ const useMistake = () => {
         minorMistake = true;
       }
     }
-    return minorMistake; 
+    return minorMistake;
   };
 
   const isGraveMistake = (primary: string, secondary: string) => {
@@ -48,14 +51,14 @@ const useMistake = () => {
 
     for (const char of secondary) {
       if (!primaryCount[char]) {
-        return true; 
+        return true;
       }
       primaryCount[char]--;
       if (primaryCount[char] < -1) {
         return true;
       }
     }
-    return false; 
+    return false;
   };
 
   const getNegativeScore = (primary: string, secondary: string) => {
@@ -87,9 +90,11 @@ const useMistake = () => {
         },
       });
     }
-    if(user.user) dispatch(updateScore({ playerId: user.user?.username, score: score }));
-    if (user.user?.username) {
-      updateUserScore({ playerId: user.user.username, score: score, roomId: roomId });
+
+    dispatch(updateScore({ playerId: user.user?.username ?? "unknown", score: score }));
+
+    if (gameMode === GameMode.MULTIPLAYER && user.user?.username) {
+      updateMultiPlayerUserScore({ playerId: user.user.username, score: score, roomId: roomId });
     }
   };
 

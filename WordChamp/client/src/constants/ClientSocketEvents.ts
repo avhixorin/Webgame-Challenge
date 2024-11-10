@@ -19,6 +19,8 @@ export const SOCKET_EVENTS = {
     USER_TYPING: "userTyping",
     USER_STOPPED_TYPING: "userStoppedTyping",
     UPDATE_SCORE: "updateScore",
+    GET_SOLO_GAME_STRING: "getSoloGameString",
+    SOLO_GAME_STRING_RESPONSE: "soloGameStringResponse",
     UPDATE_SCORE_RESPONSE: "updateScoreResponse",
 
     // Server responses

@@ -9,7 +9,7 @@ import useComplexity from "@/hooks/checkComplexity";
 import useMistake from "@/hooks/checkNegatives";
 import { motion } from "framer-motion";
 import CTAButton from "@/utils/CTAbutton/CTAbutton";
-import { Verdict } from "@/types/types";
+import { GameMode, Verdict } from "@/types/types";
 import { addAnswer } from "@/Redux/features/answersSlice";
 import toast from "react-hot-toast";
 import { addGuessedWord } from "@/Redux/features/individualPlayerDataSlice";
@@ -18,8 +18,9 @@ import useSocket from "@/hooks/connectSocket";
 
 const InputSection: React.FC = () => {
   const dispatch = useDispatch();
-  const { roomId } = useSelector((state: RootState) => state.room);
-  const { updateUserScore } = useSocket();
+  const { roomId } = useSelector((state: RootState) => state.room); 
+  const { gameMode } = useSelector((state: RootState) => state.individualPlayerData);  
+  const { updateMultiPlayerUserScore } = useSocket();
   const filter = new Filter();
   const gameString = useSelector((state: RootState) =>
     state.sharedGameData.currentGameString.toUpperCase().split("")
@@ -49,12 +50,15 @@ const InputSection: React.FC = () => {
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           backdropFilter: "blur(50px)",
         },
-      })
+      });
 
       dispatch(updateScore({ playerId: user?.username ?? "unknown", score: -3 }));
-      if (user && user.username) {
-        updateUserScore({ playerId: user.username, score: -3, roomId: roomId });
+      
+      // Only trigger socket update for multiplayer
+      if (gameMode === GameMode.MULTIPLAYER && user?.username) {
+        updateMultiPlayerUserScore({ playerId: user.username, score: -3, roomId: roomId });
       }
+
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.PROFANE })
       );
@@ -74,12 +78,15 @@ const InputSection: React.FC = () => {
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           backdropFilter: "blur(50px)",
         },
-      })
-      
+      });
+
       dispatch(updateScore({ playerId: user?.username ?? "unknown", score: finalScore }));
-      if (user && user.username) {
-        updateUserScore({ playerId: user.username, score: finalScore, roomId: roomId, guessedWord: inputWord });
+
+      // Only trigger socket update for multiplayer
+      if (gameMode === GameMode.MULTIPLAYER && user?.username) {
+        updateMultiPlayerUserScore({ playerId: user.username, score: finalScore, roomId: roomId, guessedWord: inputWord });
       }
+
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.RIGHT })
       );
@@ -87,22 +94,11 @@ const InputSection: React.FC = () => {
       dispatch(addGuessedWord(inputWord.toUpperCase()));
       console.log("The guessed word is: ", inputWord);
     } else {
-      // toast("That's not a valid word!", {
-      //   icon: "😬",
-      //   style: {
-      //     background: "rgba(255, 165, 0, 0.4)",
-      //     border: "1px solid rgba(255, 255, 255, 0.3)",
-      //     opacity: 0.9,
-      //     color: "#fff",
-      //     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-      //     backdropFilter: "blur(50px)",
-      //   }
-      // });
+      // Handle invalid word
       getNegativeScore(gameString.join(""), inputWord);
       dispatch(
         addAnswer({ word: inputWord.toUpperCase(), verdict: Verdict.WRONG })
       );
-      
     }
   };
 
