@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"; 
+import React, { useState, useCallback, useEffect } from "react"; 
 import { Card, CardContent, CardHeader } from "../ui/card";
 import {
   Select,
@@ -16,29 +16,27 @@ import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 
 const SelectionPage: React.FC = () => {
-  const [difficulty, setLocalDifficulty] = useState<Difficulty>(Difficulty.EASY);
+  const [localDifficulty, setLocalDifficulty] = useState<Difficulty>(Difficulty.EASY);
   const navigate = useNavigate();
   const { startGame, getGameStringForSoloUser } = useSocket();
   const { roomId } = useSelector((state: RootState) => state.room);
   const gameData = useSelector((state: RootState) => state.sharedGameData);
+  const difficulty = useSelector((state: RootState) => state.sharedGameData.difficulty);
   const { gameMode } = useSelector((state: RootState) => state.individualPlayerData);
   const dispatch = useDispatch();
 
   const handleClick = useCallback(() => {
-    dispatch(setDifficulty(difficulty));
-    
-    if (gameMode === GameMode.MULTIPLAYER) {
-      if (roomId) {
-        startGame(roomId, gameData);
-      }
+    console.log("difficulty before state update: ", difficulty);
+    dispatch(setDifficulty(localDifficulty));
+    if (gameMode === GameMode.MULTIPLAYER && roomId) {
+      startGame(roomId, { ...gameData, difficulty: localDifficulty });
     } else {
-      getGameStringForSoloUser(difficulty);
+      getGameStringForSoloUser(localDifficulty);
       navigate("/game");
     }
-    
-    console.log("Starting game with difficulty: ", difficulty);
+    console.log("Starting game with difficulty: ", localDifficulty);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [difficulty, gameMode, navigate, roomId, gameData, startGame, getGameStringForSoloUser]);
+  }, [localDifficulty, gameMode, navigate, roomId, gameData, startGame, getGameStringForSoloUser]);
 
   return (
     <div className="relative w-full h-full flex justify-center items-center overflow-hidden bg-game-bg bg-center bg-cover bg-no-repeat text-zinc-700">
