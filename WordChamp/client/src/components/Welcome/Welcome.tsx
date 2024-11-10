@@ -25,6 +25,7 @@ export default function Welcome() {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { playEnterSound, playBackgroundMusic, stopBackgroundMusic } = useSound();
+  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
     playBackgroundMusic("./sounds/background1.mp3");
@@ -32,8 +33,7 @@ export default function Welcome() {
   }, [playBackgroundMusic, stopBackgroundMusic]);
 
   const handleEnter = useCallback(() => {
-    // Validation for avatar selection and username
-    if (selectedAvatar === null || !username || username === "@") {
+    if (!selectedAvatar || !username || username === "@") {
       setErrorMessage("Please select an avatar and enter a valid username.");
       return;
     }
@@ -55,8 +55,17 @@ export default function Welcome() {
     }, 1500);
   }, [stopBackgroundMusic, playEnterSound, dispatch, username, selectedAvatar, navigate]);
 
+  const handleKeydown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Enter") handleEnter();
+  }, [handleEnter]);
+
+  useEffect(() => {
+    setUsername("@");
+    document.querySelector("html")?.addEventListener("keydown", handleKeydown);
+    return () => document.querySelector("html")?.removeEventListener("keydown", handleKeydown);
+  }, [handleKeydown]);
+
   const avatarList = useMemo(() => avatars, []);
-  const [muted, setMuted] = useState(false);
 
   return (
     <div className="relative w-full h-full flex items-center justify-center p-4 overflow-hidden bg-game-bg bg-center bg-cover bg-white">
@@ -94,26 +103,26 @@ export default function Welcome() {
             Choose Your Avatar
           </h2>
           <div className="grid grid-cols-2 gap-4">
-            {avatarList.map((avatar, index) => (
+            {avatarList.map((avatar) => (
               <button
-                key={index}
+                key={avatar.name}
                 className={`p-4 rounded-xl transition-transform duration-300 ease-in-out ${
-                  selectedAvatar === index.toString()
+                  selectedAvatar === avatar.name
                     ? "bg-neonBlue scale-110 shadow-lg shadow-neonBlue/50"
-                    : "bg-white/10 backdrop-blur-sm hover:backdrop-blur-md hover:scale-105 hover:shadow-lg hover:"
+                    : "bg-white/10 backdrop-blur-sm hover:backdrop-blur-md hover:scale-105"
                 }`}
-                onClick={() => setSelectedAvatar(index.toString())}
+                onClick={() => setSelectedAvatar(avatar.name)}
               >
                 <img
                   src={avatar.src}
                   alt={avatar.name}
                   className={`w-12 h-12 mx-auto ${
-                    selectedAvatar === index.toString() ? "opacity-100" : "opacity-70"
+                    selectedAvatar === avatar.name ? "opacity-100" : "opacity-70"
                   }`}
                 />
                 <p
                   className={`mt-2 text-center font-bold text-sm ${
-                    selectedAvatar === index.toString() ? "text-red-700" : "text-slate-700"
+                    selectedAvatar === avatar.name ? "text-red-700" : "text-slate-700"
                   }`}
                 >
                   {avatar.name}
@@ -151,11 +160,6 @@ export default function Welcome() {
       <style>{`
         @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap");
 
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-40px); }
-        }
-
         .animate-bounce {
           animation: bounce 1s ease-in-out infinite;
         }
@@ -165,6 +169,7 @@ export default function Welcome() {
           50% { transform: translateY(0); }
         }
       `}</style>
+
       <AnimatePresence>
         {isEntering && (
           <motion.div
