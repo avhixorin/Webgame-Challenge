@@ -20,10 +20,11 @@ import { rulesContent } from "@/constants/Rules";
 import { motion } from "framer-motion";
 import Profile from "./Profile/Profile";
 import { Difficulty, GameMode } from "@/types/types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/store/store";
 import GameOver from "./GameOver/GameOver";
 import { useNavigate } from "react-router-dom";
+import { resetGuesses } from "@/Redux/features/individualPlayerDataSlice";
 
 const Game: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -69,8 +70,9 @@ const Game: React.FC = () => {
   };
 
   const togglePowerUpMenu = () => setPowerUpVisible((prev) => !prev);
-
+  const dispatch = useDispatch();
   const handleGameOver = () => {
+    dispatch(resetGuesses());
     setGameOver(true);
     console.log("Game over!");
   };

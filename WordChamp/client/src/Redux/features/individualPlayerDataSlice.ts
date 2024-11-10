@@ -38,6 +38,9 @@ const individualPlayerDataSlice = createSlice({
     addGuessedWord: (state, action: PayloadAction<string>) => {
       state.guessedWords.push(action.payload);
     },
+    resetGuesses: (state) => {
+      state.guessedWords = [];
+    },
     resetIndividualPlayerData: () => initialIndividualState,
   }
 });
@@ -50,6 +53,7 @@ export const {
   setSoloGameString,
   setHostingStatus,
   setJoiningStatus,
+  resetGuesses,
   resetIndividualPlayerData
 } = individualPlayerDataSlice.actions;
 
