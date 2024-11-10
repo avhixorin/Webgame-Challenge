@@ -9,11 +9,10 @@ import useComplexity from "@/hooks/checkComplexity";
 import useMistake from "@/hooks/checkNegatives";
 import { motion } from "framer-motion";
 import CTAButton from "@/utils/CTAbutton/CTAbutton";
-import { addGuessedWord } from "@/Redux/features/wordsData";
 import { Verdict } from "@/types/types";
 import { addAnswer } from "@/Redux/features/answersSlice";
 import toast from "react-hot-toast";
-import { addScore } from "@/Redux/features/individualPlayerDataSlice";
+import { addGuessedWord, addScore } from "@/Redux/features/individualPlayerDataSlice";
 
 const InputSection: React.FC = () => {
   const dispatch = useDispatch();

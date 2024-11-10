@@ -60,7 +60,6 @@ export default function Welcome() {
   }, [handleEnter]);
 
   useEffect(() => {
-    setUsername("@");
     document.querySelector("html")?.addEventListener("keydown", handleKeydown);
     return () => document.querySelector("html")?.removeEventListener("keydown", handleKeydown);
   }, [handleKeydown]);

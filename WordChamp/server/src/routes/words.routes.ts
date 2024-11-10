@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { easyWords, godWords, hardWords, mediumWords } from '../constants/words';
+import { easyWords, godWords, hardWords, mediumWords } from '../constants/Words';
 import ApiResponse from "../utils/ApiResponse/ApiResponse";
 import ApiError from '../utils/ApiError/ApiError';
 

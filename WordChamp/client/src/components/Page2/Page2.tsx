@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { Volume, VolumeX } from 'lucide-react';
 import useSound from '@/hooks/useSound';
 import Rules from '../Game/Rules/Rules';
-import { setGameMode } from '@/Redux/features/sharedGameDataSlice';
 import CTAButton from '@/utils/CTAbutton/CTAbutton';
 import HostingForm from './HostingForm/HostingForm';
 import JoiningForm from './JoiningForm/JoiningForm';
+import { setGameMode } from '@/Redux/features/individualPlayerDataSlice';
 
 const Page2: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const Page2: React.FC = () => {
 
   const { playBackgroundMusic, stopBackgroundMusic } = useSound();
   const navigate = useNavigate();
-  const gameMode = useSelector((state: RootState) => state.sharedGameData.gameMode);
+  const gameMode = useSelector((state: RootState) => state.individualPlayerData.gameMode);
 
   useEffect(() => {
     if (muted) stopBackgroundMusic();

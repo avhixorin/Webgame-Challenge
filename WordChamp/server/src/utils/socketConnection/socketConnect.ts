@@ -2,7 +2,7 @@ import { Server, Socket } from 'socket.io';
 import http from 'http';
 import dotenv from 'dotenv';
 import { Express } from 'express';
-import roomHandlerInstance from "../socketHandlers/handleAllRooms";
+import roomHandlerInstance from "../SocketHandlers/handleAllRooms";
 import { HostRoomData, JoinRoomData, Message, OnlineUser, RegisterData, StartGameData, UserData } from '../../types/Types';
 import { SOCKET_EVENTS } from '../../constants/ServerSocketEvents';
 import ApiError from '../ApiError/ApiError';

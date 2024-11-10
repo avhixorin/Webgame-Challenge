@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import AlphaContainer from "./AlphaContainer/AlphaContainer";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store/store";
-import useWords from "@/hooks/getAllWords";
 
 const AlphabetSection: React.FC = () => {
   const containerVariants = {
@@ -15,8 +14,6 @@ const AlphabetSection: React.FC = () => {
       },
     },
   };
-
-  useWords();
 
   const gameString = useSelector((state: RootState) =>
     state.sharedGameData.currentGameString.toUpperCase().split("")

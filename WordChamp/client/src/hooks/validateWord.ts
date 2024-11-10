@@ -4,9 +4,7 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
 const useValidate = (word: string) => {
-  const currentGameString = useSelector(
-    (state: RootState) => state.sharedGameData.currentGameString
-  );
+  const { currentGameString } = useSelector((state: RootState) => state.sharedGameData);
 
   const doesIncludes = (primary: string, secondary: string) => {
     if (primary && secondary) {

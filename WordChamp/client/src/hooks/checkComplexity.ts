@@ -1,4 +1,3 @@
-
 import { addScore } from '@/Redux/features/individualPlayerDataSlice';
 import { useDispatch } from 'react-redux';
 

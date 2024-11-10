@@ -1,4 +1,4 @@
-import RoomsHandler from "../socketHandlers/handleAllRooms";
+import RoomsHandler from "./handleAllRooms";
 import { User } from "../../types/Types";
 import ApiResponse from "../ApiResponse/ApiResponse";
 

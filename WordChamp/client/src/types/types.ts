@@ -80,22 +80,21 @@ export type Answer = {
 export type SharedGameData = {
   maxGameParticipants: number;
   currentGameString: string;
-  gameMode: GameMode | null;
   difficulty: Difficulty;
 };
 
 export type IndividualGameData = {
   score: number;
   powerUps: string[];
+  guessedWords: string[];
+  gameMode: GameMode;
   isHosting: boolean;
   isJoiningRoom: boolean;
 }
 
 export type Words = {
-  wordCount: number;
   words: string[];
   guessedWords: string[];
-  wordsFetched: boolean;
 };
 
 // API response types

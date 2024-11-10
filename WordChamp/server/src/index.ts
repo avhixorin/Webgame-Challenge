@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import wordRouter from './routes/words.routes';
-import connectSocket from './utils/socketConnection/socketConnect';
+import connectSocket from './utils/SocketConnection/socketConnect';
 
 dotenv.config();
 

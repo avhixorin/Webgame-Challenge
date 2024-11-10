@@ -2,7 +2,6 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userSlice from "../features/userSlice";
 import individualPlayerDataSlice from "../features/individualPlayerDataSlice";
 import sharedGameDataSlice from "../features/sharedGameDataSlice";
-import wordsDataSlice from "../features/wordsData";
 import answerSlice from "../features/answersSlice";
 import roomSlice from "../features/roomSlice";
 import messageSlice from "../features/messageSlice";
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
   user: userSlice,
   individualPlayerData: individualPlayerDataSlice,
   sharedGameData: sharedGameDataSlice,
-  wordsData: wordsDataSlice,
   answers: answerSlice,
   room: roomSlice,
   message: messageSlice,

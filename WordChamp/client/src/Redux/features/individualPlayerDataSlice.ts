@@ -1,9 +1,11 @@
-import { IndividualGameData } from "@/types/types";
+import { GameMode, IndividualGameData } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialIndividualState: IndividualGameData = {
   score: 0,
   powerUps: [],
+  guessedWords: [],
+  gameMode: GameMode.SOLO,
   isHosting: true,
   isJoiningRoom: false,
 };
@@ -24,8 +26,14 @@ const individualPlayerDataSlice = createSlice({
     setHostingStatus: (state, action: PayloadAction<boolean>) => {
       state.isHosting = action.payload;
     },
+    setGameMode: (state, action: PayloadAction<GameMode>) => {
+      state.gameMode = action.payload;
+    },
     setJoiningStatus: (state, action: PayloadAction<boolean>) => {
       state.isJoiningRoom = action.payload;
+    },
+    addGuessedWord: (state, action: PayloadAction<string>) => {
+      state.guessedWords.push(action.payload);
     },
     resetIndividualPlayerData: () => initialIndividualState,
   }
@@ -35,6 +43,8 @@ export const {
   addScore,
   setScore,
   addPowerUp,
+  setGameMode,
+  addGuessedWord,
   setHostingStatus,
   setJoiningStatus,
   resetIndividualPlayerData

@@ -7,7 +7,6 @@ import Rules from "../Game/Rules/Rules";
 import { useDispatch } from "react-redux";
 import { resetSharedGameData } from "@/Redux/features/sharedGameDataSlice";
 import { resetAnswers } from "@/Redux/features/answersSlice";
-import { resetWords } from "@/Redux/features/wordsData";
 import { resetRoom } from "@/Redux/features/roomSlice";
 import { clearMessages } from "@/Redux/features/messageSlice";
 import { resetUser } from "@/Redux/features/userSlice";
@@ -22,7 +21,6 @@ export default function Home() {
     dispatch(resetIndividualPlayerData());
     dispatch(resetSharedGameData());
     dispatch(resetAnswers());
-    dispatch(resetWords());
     dispatch(resetRoom());
     dispatch(clearMessages());
     dispatch(resetUser());
